@@ -14,9 +14,9 @@ public class PathFinish : MonoBehaviour
 
     private void OnCollisionEnter2D(Collision2D col)
     {
-        if (CompareTag("Enemy"))
+        if (col.collider.CompareTag("Enemy"))
         {
-           StatsKeeper.hp -= col.gameObject.GetComponent<Enemy>().hp;
+            StatsKeeper.hp -= col.gameObject.GetComponent<Enemy>().hp;
         }
         Destroy(col.gameObject);
     }

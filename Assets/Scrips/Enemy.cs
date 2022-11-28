@@ -9,7 +9,7 @@ public class Enemy : MonoBehaviour
     private int nextPointInArry = 0;
     public int hp = 1;
 
-    private float speed = 2f;
+    private float speed = 10f;
     // Start is called before the first frame update
     void Start()
     {
