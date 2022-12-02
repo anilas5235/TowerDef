@@ -30,7 +30,7 @@ public class Enemy : MonoBehaviour
             if (nextPointInArry == PathKeeper.PathPoints.Length -1)
             { _statsKeeper.hp -= hp; TakeDamage(d); return;}
             nextPointInArry++;
-            print(""+PathKeeper.PathPoints[nextPointInArry].transform.position);
+            //print(""+PathKeeper.PathPoints[nextPointInArry].transform.position);
         }
        
     }
@@ -56,7 +56,7 @@ public class Enemy : MonoBehaviour
     {
         hp -= Damage;
         if (hp <1)
-        { Destroy(this); return; }
+        { Destroy(this.gameObject); return; }
         SetColor();
     }
 }

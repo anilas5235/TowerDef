@@ -24,10 +24,10 @@ public class EnemySpawner : MonoBehaviour
             nextTimeToSpawn += SpawnDelay;
             SpawnedAmount++;
         }
-        else if(AmountToSpawn <1 )
+        else if(SpawnedAmount >= AmountToSpawn )
         {
-            SpawnManager.IsWaveFinished();
-            Destroy(this);
+            SpawnManager.InvokeWaveCheck();
+            Destroy(this.gameObject);
         }
     }
 
