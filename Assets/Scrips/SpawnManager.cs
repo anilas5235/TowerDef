@@ -1,5 +1,6 @@
 using Unity.Mathematics;
 using UnityEngine;
+using UnityEngine.Serialization;
 
 public class SpawnManager : MonoBehaviour
 {
@@ -10,18 +11,37 @@ public class SpawnManager : MonoBehaviour
     [SerializeField] private Wave[] Waves;
     public bool WaveIsRunning = false;
     private StatsKeeper StatsKeeper;
+    public bool wavesFinished = false;
     
     // Start is called before the first frame update
     void Start()
     {
-        if(Waves.Length <1){print("no Waves defined");}
-        print("Enemy arry leangth "+ Enemys.Length );
+        if (Waves.Length < 1)
+        {
+            print("no Waves defined");
+            wavesFinished = true;
+        }
+        else if (currentWave >= Waves.Length)
+        {
+            print("waves finished");
+            wavesFinished = true;
+        }
+
+        //print("Enemy arry leangth " + Enemys.Length);
         StatsKeeper = FindObjectOfType<StatsKeeper>();
+
     }
 
     // Update is called once per frame
     void Update()
     {
+        if(wavesFinished ){return;}
+        
+        if(currentWave >= Waves.Length-1)
+        {
+            print("waves finished");
+            wavesFinished = true;
+        }
         if(Input.GetButton("Jump")&& !WaveIsRunning)
         { currentWave++; SetUpSpawners(); WaveIsRunning = true; }
     }
