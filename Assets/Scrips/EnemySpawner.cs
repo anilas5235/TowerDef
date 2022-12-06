@@ -11,8 +11,7 @@ public class EnemySpawner : MonoBehaviour
     public float SpawnDelay;
     public int AmountToSpawn ;
     private int SpawnedAmount;
-    public SpawnManager SpawnManager;
-    public StatsKeeper StatsKeeper;
+    public SpawnManager SpawnManager = SpawnManager.Instance;
 
     // Update is called once per frame
     void Update()
@@ -20,7 +19,6 @@ public class EnemySpawner : MonoBehaviour
         if (nextTimeToSpawn< Time.time && SpawnedAmount < AmountToSpawn )
         {
             Enemy E = Instantiate(Enemy, transform.position, quaternion.identity).GetComponent<Enemy>();
-            E._statsKeeper = StatsKeeper;
             nextTimeToSpawn += SpawnDelay;
             SpawnedAmount++;
         }

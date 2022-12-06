@@ -6,18 +6,18 @@ public class Enemy : MonoBehaviour
 {
    
     private PathKeeper PathKeeper;
+    private StatsKeeper StatsKeeper;
     private int nextPointInArry = 0;
     public int hp = 1;
     private SpriteRenderer SpriteRenderer;
-    public StatsKeeper _statsKeeper;
     private float speed;
-
-    private int d = 99999;
+    public float distance =0;
 
     // Start is called before the first frame update
     void Start()
     {
-        PathKeeper = GameObject.FindObjectOfType<PathKeeper>();
+        PathKeeper = PathKeeper.Instance;
+        StatsKeeper = StatsKeeper.Instance;
         SpriteRenderer = GetComponent<SpriteRenderer>();
         SetColorAndSpeed();
     }
@@ -26,10 +26,11 @@ public class Enemy : MonoBehaviour
     void Update()
     {
         transform.Translate((PathKeeper.PathPoints[nextPointInArry].transform.position - transform.position).normalized * Time.deltaTime * speed);
+        distance += Time.deltaTime * speed;
         if (Vector3.Distance( transform.position, PathKeeper.PathPoints[nextPointInArry].transform.position) < 0.1f)
         {
             if (nextPointInArry == PathKeeper.PathPoints.Length -1)
-            { _statsKeeper.hp -= hp; TakeDamage(d); return;}
+            { StatsKeeper.hp -= hp; StatsKeeper.UpdateUI(); Destroy(this.gameObject); return;}
             nextPointInArry++;
             //print(""+PathKeeper.PathPoints[nextPointInArry].transform.position);
         }
@@ -55,9 +56,9 @@ public class Enemy : MonoBehaviour
 
     public void TakeDamage(int Damage)
     {
-        hp -= Damage;
+        hp -= Damage;StatsKeeper.Money += Damage;
         if (hp <1)
-        { Destroy(this.gameObject); return; }
+        {  Destroy(this.gameObject); return; }
         SetColorAndSpeed();
     }
 }

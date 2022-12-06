@@ -4,32 +4,28 @@ using UnityEngine.Serialization;
 
 public class SpawnManager : MonoBehaviour
 {
+    public static SpawnManager Instance;
+    private void Awake()
+    {
+        if (Instance == null) { Instance = this; }
+        else { Destroy(this); }
+    }
 
     [SerializeField] private GameObject[] Enemys;
     [SerializeField] private GameObject Spawner;
     private int currentWave = -1;
     [SerializeField] private Wave[] Waves;
     public bool WaveIsRunning = false;
-    private StatsKeeper StatsKeeper;
+    
     public bool wavesFinished = false;
     
     // Start is called before the first frame update
     void Start()
     {
         if (Waves.Length < 1)
-        {
-            print("no Waves defined");
-            wavesFinished = true;
-        }
+        { print("no Waves defined"); wavesFinished = true; }
         else if (currentWave >= Waves.Length)
-        {
-            print("waves finished");
-            wavesFinished = true;
-        }
-
-        //print("Enemy arry leangth " + Enemys.Length);
-        StatsKeeper = FindObjectOfType<StatsKeeper>();
-
+        { print("waves finished"); wavesFinished = true; }
     }
 
     // Update is called once per frame
@@ -43,7 +39,7 @@ public class SpawnManager : MonoBehaviour
             wavesFinished = true;
         }
         if(Input.GetButton("Jump")&& !WaveIsRunning)
-        { currentWave++; SetUpSpawners(); WaveIsRunning = true; }
+        { StartWave(); }
     }
 
     private void SetUpSpawners()
@@ -55,7 +51,6 @@ public class SpawnManager : MonoBehaviour
             SpawnerRef.AmountToSpawn = Waves[currentWave].SpawnAmountOfEnemys[i];
             SpawnerRef.SpawnDelay =  Waves[currentWave].SpawnDelay[i];
             SpawnerRef.nextTimeToSpawn = Time.time +  Waves[currentWave].StartSpawnIn[i];
-            SpawnerRef.StatsKeeper = StatsKeeper;
             SpawnerRef.SpawnManager = this;
             if(Waves[currentWave].SpawnAmountOfEnemys[i] <1){Destroy(SpawnerRef.gameObject); return;}
         }
@@ -68,5 +63,11 @@ public class SpawnManager : MonoBehaviour
     private void IsWaveFinished()
     {
         if (FindObjectOfType<EnemySpawner>() == null) { print("Wave is finished"); WaveIsRunning = false; }
+    }
+
+    public void StartWave()
+    {
+        if(wavesFinished || WaveIsRunning ){return;}
+        currentWave++; SetUpSpawners(); WaveIsRunning = true;
     }
 }

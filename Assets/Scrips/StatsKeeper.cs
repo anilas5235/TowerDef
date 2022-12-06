@@ -5,18 +5,31 @@ using TMPro;
 using UnityEngine;
 
 
+
 public class StatsKeeper : MonoBehaviour
 {
-    public int hp = 100;
-    private TextMeshProUGUI HP;
+    public static StatsKeeper Instance;
+    
+    public int hp = 100, Money =100;
+    private TextMeshProUGUI HPUI,MoneyUI;
+
+
+    private void Awake()
+    {
+        if (Instance == null) { Instance = this; }
+        else { Destroy(this); }
+    }
 
     private void Start()
     {
-        HP = GameObject.Find("Hp_Anzeige").GetComponent<TextMeshProUGUI>();
+        HPUI = GameObject.Find("Hp_Anzeige").GetComponent<TextMeshProUGUI>();
+        MoneyUI = GameObject.Find("money_Anzeige").GetComponent<TextMeshProUGUI>();
+        UpdateUI();
     }
 
-    private void Update()
+    public void UpdateUI()
     {
-        HP.text = "leben :" + hp;
+        HPUI.text = "leben :" + hp;
+        MoneyUI.text = "Money :" + Money;
     }
 }
