@@ -21,7 +21,7 @@ public class TowerBasic : MonoBehaviour
 
     private StatsKeeper StatsKeeper;
 
-    [SerializeField] private LayerMask blockingLayer;
+    [SerializeField] private LayerMask blockingLayer, towerLayer;
 
     [SerializeField] private LayerMask EnemysLayer;
     // Start is called before the first frame update
@@ -43,7 +43,7 @@ public class TowerBasic : MonoBehaviour
     {
         if (!placed)
         {
-            nowPlacable = Physics2D.OverlapCircleAll(transform.position, colloderRadius, blockingLayer).Length <= 1 && StatsKeeper.Money >= TowerData.placingCosts;
+            nowPlacable = Physics2D.OverlapCircleAll(transform.position, colloderRadius, blockingLayer + towerLayer).Length <= 1 && StatsKeeper.Money >= TowerData.placingCosts;
             Vector3 mousePosition = cam.ScreenToWorldPoint(Input.mousePosition);
             mousePosition.z = 0;
             transform.position = mousePosition;
@@ -103,11 +103,12 @@ public class TowerBasic : MonoBehaviour
         StatsKeeper.UpdateUI();
         upgradeLevel += upgrade;
 
-        attackRadius += (int) upgrade.x;
-        attackDamage += (int) upgrade.y /2;
+        attackRadius += upgrade.x / 2;
+        attackDamage += (int) upgrade.y;
         multiHit += (int) upgrade.z;
         
         //set Color and Indictor for radius
-        mainBodySpriteRenderer.color = SetColor();Indicator.gameObject.transform.localScale = new Vector3(attackRadius*2, attackRadius*2, 1);
+        mainBodySpriteRenderer.color = SetColor();
+        Indicator.gameObject.transform.localScale = new Vector3(attackRadius*2, attackRadius*2, 1);
     }
 }
