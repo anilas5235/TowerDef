@@ -1,23 +1,23 @@
-using System;
-using System.Collections;
-using System.Collections.Generic;
-using UnityEditor;
 using UnityEngine;
-using UnityEngine.Serialization;
+
+
 
 public class TowerBasic : MonoBehaviour
 {
-    private bool placed = false, nowPlacable = true;
+    public bool placed = false;
+    private bool nowPlacable = true;
     private float attackRadius = 3f; 
     private  int attackDamage = 1, multiHit = 1;
-    private Vector3 UpgradeLevel = Vector3.zero;
+    public Vector3 upgradeLevel = Vector3.zero;
 
     private Camera cam;
     private GameObject Target,barrel;
-    private SpriteRenderer Indicator,MainBody;
+    private SpriteRenderer mainBodySpriteRenderer;
+    public SpriteRenderer Indicator;
     private float colloderRadius;
 
-    [SerializeField] private Tower TowerData;
+    public bool selected = false;
+    public Tower TowerData;
 
     private StatsKeeper StatsKeeper;
 
@@ -27,16 +27,15 @@ public class TowerBasic : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        UpgradeLevel = new Vector3(attackRadius, attackDamage, multiHit);
         cam = Camera.main;
         Indicator = gameObject.transform.GetChild(0).GetComponent<SpriteRenderer>();
-        MainBody = GetComponent<SpriteRenderer>();
+        mainBodySpriteRenderer = GetComponent<SpriteRenderer>();
         Indicator.gameObject.transform.localScale = new Vector3(attackRadius*2, attackRadius*2, 1);
         colloderRadius = GetComponent<CircleCollider2D>().radius;
         barrel = gameObject.transform.GetChild(1).gameObject;
         StatsKeeper = StatsKeeper.Instance;
-        
-        SetColor();
+
+        mainBodySpriteRenderer.color = SetColor();
     }
 
     // Update is called once per frame
@@ -50,6 +49,7 @@ public class TowerBasic : MonoBehaviour
             transform.position = mousePosition;
             Indicator.color = nowPlacable ? new Color(1,1,1,0.2f) : new Color(1,0,0,0.2f);
             if (Input.GetMouseButtonDown(0)&& nowPlacable) { placed = true; Indicator.enabled = false; StatsKeeper.Money -= TowerData.placingCosts; StatsKeeper.UpdateUI(); }
+            else if(Input.GetMouseButtonDown(1)) { Destroy(gameObject); }
         }
         else
         {
@@ -78,7 +78,7 @@ public class TowerBasic : MonoBehaviour
         }
     }
     
-    private void SetColor()
+    public Color SetColor()
     {
         Color currentColor = Color.red;
         switch (attackDamage)
@@ -95,19 +95,19 @@ public class TowerBasic : MonoBehaviour
             default: print("Color for "+ attackDamage+ " attackdamage is not defined"); break;
         }
 
-        MainBody.color = currentColor;
+        return currentColor;
     }
 
-    public void UpgradeTower(Vector3 upgrade, int cost)
+    public void UpgradeTower(Vector3 upgrade)
     {
-        StatsKeeper.Money -= cost; StatsKeeper.UpdateUI();
-        UpgradeLevel += upgrade;
+        StatsKeeper.UpdateUI();
+        upgradeLevel += upgrade;
 
-        attackRadius = UpgradeLevel.x;
-        attackDamage = (int) UpgradeLevel.y;
-        multiHit = (int) UpgradeLevel.z;
+        attackRadius += (int) upgrade.x;
+        attackDamage += (int) upgrade.y /2;
+        multiHit += (int) upgrade.z;
         
-        SetColor();
+        //set Color and Indictor for radius
+        mainBodySpriteRenderer.color = SetColor();Indicator.gameObject.transform.localScale = new Vector3(attackRadius*2, attackRadius*2, 1);
     }
-
 }

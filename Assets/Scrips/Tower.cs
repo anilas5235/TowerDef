@@ -8,4 +8,6 @@ public class Tower : ScriptableObject
     public int[] attackradiusUpgradeCosts;
     public int[] attackdamageUpgradeCosts;
     public int[] multiHitUpgradeCosts;
+    public string[] statNames;
+    public string Towername;
 }
