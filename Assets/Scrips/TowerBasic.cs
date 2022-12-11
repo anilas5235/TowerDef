@@ -1,3 +1,4 @@
+using Unity.Mathematics;
 using UnityEngine;
 
 
@@ -6,15 +7,16 @@ public class TowerBasic : MonoBehaviour
 {
     public bool placed = false;
     private bool nowPlacable = true;
-    private float attackRadius = 3f; 
+    private float attackRadius = 3f, attackDelay = 1f, timeForNextAttack; 
     private  int attackDamage = 1, multiHit = 1;
     public Vector3 upgradeLevel = Vector3.zero;
-
+    [SerializeField] private GameObject Projectile;
     private Camera cam;
-    private GameObject Target,barrel;
+    private GameObject Target,barrelPivotGameObject;
     private SpriteRenderer mainBodySpriteRenderer;
     public SpriteRenderer Indicator;
     private float colloderRadius;
+    [SerializeField] private Transform barrelTip;
 
     public bool selected = false;
     public Tower TowerData;
@@ -27,12 +29,12 @@ public class TowerBasic : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
+        timeForNextAttack = Time.time;
         cam = Camera.main;
-        Indicator = gameObject.transform.GetChild(0).GetComponent<SpriteRenderer>();
         mainBodySpriteRenderer = GetComponent<SpriteRenderer>();
         Indicator.gameObject.transform.localScale = new Vector3(attackRadius*2, attackRadius*2, 1);
         colloderRadius = GetComponent<CircleCollider2D>().radius;
-        barrel = gameObject.transform.GetChild(1).gameObject;
+        barrelPivotGameObject = gameObject.transform.GetChild(1).gameObject;
         StatsKeeper = StatsKeeper.Instance;
 
         mainBodySpriteRenderer.color = SetColor();
@@ -70,9 +72,17 @@ public class TowerBasic : MonoBehaviour
             {
                 Vector3 offset = Target.transform.position - transform.position;
                 float angle = Mathf.Atan2(offset.y, offset.x) * Mathf.Rad2Deg % 360 - 90;
-                barrel.transform.localRotation = Quaternion.Euler(0,0,angle);
-                 
-                print("currentTarget "+Target);
+                barrelPivotGameObject.transform.localRotation = Quaternion.Euler(0,0,angle);
+                if (Time.time >= timeForNextAttack)
+                {
+                    Projectile shoot = Instantiate(Projectile, barrelTip.position, quaternion.identity).GetComponent<Projectile>(); print("shoot");
+                    shoot.pierce = multiHit;
+                    shoot.damage = attackDamage;
+                    shoot.targetDirection = offset;
+                    shoot.speed = 2 + attackDamage / 2;
+                    shoot.projectileColor = SetColor();
+                    timeForNextAttack += attackDelay;
+                }
                 Debug.DrawLine(transform.position, Target.transform.position,Color.red,0.001f);
             }
         }

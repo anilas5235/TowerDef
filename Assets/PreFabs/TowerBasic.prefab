@@ -169,7 +169,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   placed: 0
   upgradeLevel: {x: 0, y: 0, z: 0}
-  Indicator: {fileID: 0}
+  Projectile: {fileID: 207460190987319773, guid: a239993ae7ed2ec408dad2f214c34f45, type: 3}
+  Indicator: {fileID: 5219271899957719761}
+  barrelTip: {fileID: 5219271900483077983}
   selected: 0
   TowerData: {fileID: 11400000, guid: 48d3bd008cf8cee4184bc67bcd910b13, type: 2}
   blockingLayer:
