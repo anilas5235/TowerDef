@@ -81,7 +81,7 @@ public class TowerBasic : MonoBehaviour
                     shoot.targetDirection = offset;
                     shoot.speed = 2 + attackDamage / 2;
                     shoot.projectileColor = SetColor();
-                    timeForNextAttack += attackDelay;
+                    timeForNextAttack = Time.time + attackDelay;
                 }
                 Debug.DrawLine(transform.position, Target.transform.position,Color.red,0.001f);
             }
