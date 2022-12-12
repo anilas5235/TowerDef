@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using Unity.Mathematics;
 using UnityEngine;
 
 public class Enemy : MonoBehaviour
@@ -12,6 +13,7 @@ public class Enemy : MonoBehaviour
     private SpriteRenderer SpriteRenderer;
     private float speed;
     public float distance =0;
+    [SerializeField] private ParticleSystem deathParticleSystem;
 
     // Start is called before the first frame update
     void Start()
@@ -58,7 +60,8 @@ public class Enemy : MonoBehaviour
     {
         hp -= Damage;StatsKeeper.Money += Damage;
         if (hp <1)
-        {  Destroy(this.gameObject); return; }
+        { ParticleSystem.MainModule par = Instantiate(deathParticleSystem, transform.position, quaternion.identity).main;
+            par.startColor = SpriteRenderer.color; Destroy(this.gameObject); return; }
         SetColorAndSpeed();
     }
 }

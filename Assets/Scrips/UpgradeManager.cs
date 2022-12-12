@@ -131,9 +131,12 @@ public class UpgradeManager : MonoBehaviour
     private void ButtonUpdate()
     {
         var green = new Color(23 / 255f, 130 / 255f, 20 / 255f);
-        stat0ButtonColor.color = StatsKeeper.Money < TowerData.attackradiusUpgradeCosts[(int)UpgradeLevel.x] ? Color.red : green;
-        stat1ButtonColor.color = StatsKeeper.Money < TowerData.attackdamageUpgradeCosts[(int)UpgradeLevel.y] ? Color.red : green;
-        stat2ButtonColor.color = StatsKeeper.Money < TowerData.multiHitUpgradeCosts[(int)UpgradeLevel.z] ? Color.red : green;
+        if (UpgradeLevel.x < TowerData.attackradiusUpgradeCosts.Length)
+        { stat0ButtonColor.color = StatsKeeper.Money < TowerData.attackradiusUpgradeCosts[(int)UpgradeLevel.x] ? Color.red : green; }
+        if(UpgradeLevel.y < TowerData.attackdamageUpgradeCosts.Length)
+        {stat1ButtonColor.color = StatsKeeper.Money < TowerData.attackdamageUpgradeCosts[(int)UpgradeLevel.y] ? Color.red : green;}    
+        if(UpgradeLevel.z <  TowerData.multiHitUpgradeCosts.Length)
+        {stat2ButtonColor.color = StatsKeeper.Money < TowerData.multiHitUpgradeCosts[(int)UpgradeLevel.z] ? Color.red : green;}
     }
 
     public void UpgradeStat(int index)

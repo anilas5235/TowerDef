@@ -75,7 +75,7 @@ public class TowerBasic : MonoBehaviour
                 barrelPivotGameObject.transform.localRotation = Quaternion.Euler(0,0,angle);
                 if (Time.time >= timeForNextAttack)
                 {
-                    Projectile shoot = Instantiate(Projectile, barrelTip.position, quaternion.identity).GetComponent<Projectile>(); print("shoot");
+                    Projectile shoot = Instantiate(Projectile, barrelTip.position, quaternion.identity).GetComponent<Projectile>();
                     shoot.pierce = multiHit;
                     shoot.damage = attackDamage;
                     shoot.targetDirection = offset;

@@ -2128,7 +2128,7 @@ BoxCollider2D:
   m_Enabled: 1
   m_Density: 1
   m_Material: {fileID: 0}
-  m_IsTrigger: 0
+  m_IsTrigger: 1
   m_UsedByEffector: 0
   m_UsedByComposite: 0
   m_Offset: {x: 0, y: 0}
@@ -3109,6 +3109,7 @@ MonoBehaviour:
   Waves:
   - {fileID: 11400000, guid: a7552d1fbb3cb3a4fb2db44f9ee047af, type: 2}
   - {fileID: 11400000, guid: dc4ed10848fbf894ca17eeeb64bb91ee, type: 2}
+  - {fileID: 11400000, guid: c29592cbfd4b9ce4494f70278f65d69e, type: 2}
   WaveIsRunning: 0
   wavesFinished: 0
 --- !u!4 &1135593184
@@ -4597,7 +4598,7 @@ BoxCollider2D:
   m_Enabled: 1
   m_Density: 1
   m_Material: {fileID: 0}
-  m_IsTrigger: 0
+  m_IsTrigger: 1
   m_UsedByEffector: 0
   m_UsedByComposite: 0
   m_Offset: {x: 0, y: 0}
@@ -5016,7 +5017,7 @@ BoxCollider2D:
   m_Enabled: 1
   m_Density: 1
   m_Material: {fileID: 0}
-  m_IsTrigger: 0
+  m_IsTrigger: 1
   m_UsedByEffector: 0
   m_UsedByComposite: 0
   m_Offset: {x: 0, y: 0}
@@ -5433,7 +5434,7 @@ BoxCollider2D:
   m_Enabled: 1
   m_Density: 1
   m_Material: {fileID: 0}
-  m_IsTrigger: 0
+  m_IsTrigger: 1
   m_UsedByEffector: 0
   m_UsedByComposite: 0
   m_Offset: {x: 0, y: 0}
@@ -5922,11 +5923,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 6147174879001106215, guid: a17c32a617f398944843525898eea79e, type: 3}
       propertyPath: m_LocalPosition.x
-      value: -0.78
+      value: -1.11
       objectReference: {fileID: 0}
     - target: {fileID: 6147174879001106215, guid: a17c32a617f398944843525898eea79e, type: 3}
       propertyPath: m_LocalPosition.y
-      value: 3.98
+      value: 8.52
       objectReference: {fileID: 0}
     - target: {fileID: 6147174879001106215, guid: a17c32a617f398944843525898eea79e, type: 3}
       propertyPath: m_LocalPosition.z

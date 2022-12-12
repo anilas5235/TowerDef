@@ -15,7 +15,7 @@ MonoBehaviour:
   placingCosts: 100
   attackradiusUpgradeCosts: 64000000af000000
   attackdamageUpgradeCosts: 960000000e010000
-  multiHitUpgradeCosts: 3200000064000000
+  multiHitUpgradeCosts: 320000006400000096000000
   statNames:
   - AttackRadius
   - AttackDamage
