@@ -1,5 +1,3 @@
-using System.Collections;
-using System.Collections.Generic;
 using Unity.Mathematics;
 using UnityEngine;
 
@@ -27,16 +25,14 @@ public class Enemy : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        transform.Translate((PathKeeper.PathPoints[nextPointInArry].transform.position - transform.position).normalized * Time.deltaTime * speed);
+        transform.Translate((PathKeeper.PathPoints[nextPointInArry].transform.position - transform.position).normalized * (Time.deltaTime * speed));
         distance += Time.deltaTime * speed;
         if (Vector3.Distance( transform.position, PathKeeper.PathPoints[nextPointInArry].transform.position) < 0.1f)
         {
             if (nextPointInArry == PathKeeper.PathPoints.Length -1)
             { StatsKeeper.hp -= hp; StatsKeeper.UpdateUI(); Destroy(this.gameObject); return;}
             nextPointInArry++;
-            //print(""+PathKeeper.PathPoints[nextPointInArry].transform.position);
         }
-       
     }
 
     private void SetColorAndSpeed()

@@ -1,3 +1,4 @@
+using Scrips;
 using UnityEngine;
 using TMPro;
 using UnityEngine.Serialization;
@@ -11,13 +12,13 @@ public class UpgradeManager : MonoBehaviour
     private GameObject TowerUiWindow, stat0, stat1, stat2;
     private TextMeshProUGUI stat0name, stat0cost,  stat1name, stat1cost, stat2name, stat2cost, Towername;//UI für Upgrade window texts
     private Image stat0ButtonColor, stat1ButtonColor, stat2ButtonColor;
-    private Tower TowerData;
+    private TowerData TowerData;
     private GameObject RadiusIndicator;
     
     private Button stat0button, stat1button, stat2button;
     private Vector3 UpgradeLevel;
     private StatsKeeper StatsKeeper;
-    private TowerBasic currentTowerScript;
+    private TowerBase currentTowerScript;
 
     private bool active, mouseoverUI;
 
@@ -61,11 +62,11 @@ public class UpgradeManager : MonoBehaviour
 
             for (int i = 0; i < cols.Length; i++)
             {
-                if (cols[i].gameObject.CompareTag("Tower") && cols[i].GetComponent<TowerBasic>().placed)
+                if (cols[i].gameObject.CompareTag("Tower") && cols[i].GetComponent<TowerBase>().placed)
                 {
-                    if (currentTowerScript?.selected == true && currentTowerScript != cols[i].GetComponent<TowerBasic>() ) { DeselectTower(); }
+                    if (currentTowerScript?.selected == true && currentTowerScript != cols[i].GetComponent<TowerBase>() ) { DeselectTower(); }
                     
-                    currentTowerScript = cols[i].GetComponent<TowerBasic>();
+                    currentTowerScript = cols[i].GetComponent<TowerBase>();
                     SelectTower();
                     
                     if (mousePosition.x > 1.5f) //place UI left or right
@@ -89,12 +90,12 @@ public class UpgradeManager : MonoBehaviour
         UpgradeLevel = currentTowerScript.upgradeLevel;
 
         //set the texts
-        Towername.text = TowerData.Towername;
+        Towername.text = TowerData.towerName;
 
-        if (UpgradeLevel.x < TowerData.attackradiusUpgradeCosts.Length)
+        if (UpgradeLevel.x < TowerData.upgradeCostsSlot0.Length)
         {
             stat0name.text = TowerData.statNames[0] + " :\n lvl " + ((int)UpgradeLevel.x + 1);
-            stat0cost.text = "Cost to Upgrade : \n" + TowerData.attackradiusUpgradeCosts[(int)UpgradeLevel.x];
+            stat0cost.text = "Cost to Upgrade : \n" + TowerData.upgradeCostsSlot0[(int)UpgradeLevel.x];
             stat0button.gameObject.SetActive( true);
         }else
         {
@@ -103,10 +104,10 @@ public class UpgradeManager : MonoBehaviour
             stat0button.gameObject.SetActive( false);
         }
 
-        if (UpgradeLevel.y < TowerData.attackdamageUpgradeCosts.Length)
+        if (UpgradeLevel.y < TowerData.upgradeCostsSlot1.Length)
         {
             stat1name.text = TowerData.statNames[1] + " : lvl " + ((int)UpgradeLevel.y + 1);
-            stat1cost.text = "Cost to Upgrade : \n" + TowerData.attackdamageUpgradeCosts[(int)UpgradeLevel.y];
+            stat1cost.text = "Cost to Upgrade : \n" + TowerData.upgradeCostsSlot1[(int)UpgradeLevel.y];
             stat1button.gameObject.SetActive(true);
         }else
         {
@@ -115,10 +116,10 @@ public class UpgradeManager : MonoBehaviour
             stat1button.gameObject.SetActive(false);
         }
 
-        if (UpgradeLevel.z < TowerData.multiHitUpgradeCosts.Length)
+        if (UpgradeLevel.z < TowerData.upgradeCostsSlot2.Length)
         {
              stat2name.text = TowerData.statNames[2]+" :\n lvl "+((int)UpgradeLevel.z +1);
-             stat2cost.text = "Cost to Upgrade : \n" + TowerData.multiHitUpgradeCosts[(int)UpgradeLevel.z] ;
+             stat2cost.text = "Cost to Upgrade : \n" + TowerData.upgradeCostsSlot2[(int)UpgradeLevel.z] ;
              stat2button.gameObject.SetActive(true);
         }else
         {
@@ -131,12 +132,12 @@ public class UpgradeManager : MonoBehaviour
     private void ButtonUpdate()
     {
         var green = new Color(23 / 255f, 130 / 255f, 20 / 255f);
-        if (UpgradeLevel.x < TowerData.attackradiusUpgradeCosts.Length)
-        { stat0ButtonColor.color = StatsKeeper.Money < TowerData.attackradiusUpgradeCosts[(int)UpgradeLevel.x] ? Color.red : green; }
-        if(UpgradeLevel.y < TowerData.attackdamageUpgradeCosts.Length)
-        {stat1ButtonColor.color = StatsKeeper.Money < TowerData.attackdamageUpgradeCosts[(int)UpgradeLevel.y] ? Color.red : green;}    
-        if(UpgradeLevel.z <  TowerData.multiHitUpgradeCosts.Length)
-        {stat2ButtonColor.color = StatsKeeper.Money < TowerData.multiHitUpgradeCosts[(int)UpgradeLevel.z] ? Color.red : green;}
+        if (UpgradeLevel.x < TowerData.upgradeCostsSlot0.Length)
+        { stat0ButtonColor.color = StatsKeeper.Money < TowerData.upgradeCostsSlot0[(int)UpgradeLevel.x] ? Color.red : green; }
+        if(UpgradeLevel.y < TowerData.upgradeCostsSlot1.Length)
+        {stat1ButtonColor.color = StatsKeeper.Money < TowerData.upgradeCostsSlot1[(int)UpgradeLevel.y] ? Color.red : green;}    
+        if(UpgradeLevel.z <  TowerData.upgradeCostsSlot2.Length)
+        {stat2ButtonColor.color = StatsKeeper.Money < TowerData.upgradeCostsSlot2[(int)UpgradeLevel.z] ? Color.red : green;}
     }
 
     public void UpgradeStat(int index)
@@ -144,9 +145,9 @@ public class UpgradeManager : MonoBehaviour
         int cost =0;
         switch (index)
         {
-            case 0: cost = TowerData.attackradiusUpgradeCosts[(int)UpgradeLevel.x]; break;
-            case 1: cost = TowerData.attackdamageUpgradeCosts[(int)UpgradeLevel.y]; break;
-            case 2: cost = TowerData.multiHitUpgradeCosts[(int)UpgradeLevel.z]; break;
+            case 0: cost = TowerData.upgradeCostsSlot0[(int)UpgradeLevel.x]; break;
+            case 1: cost = TowerData.upgradeCostsSlot1[(int)UpgradeLevel.y]; break;
+            case 2: cost = TowerData.upgradeCostsSlot2[(int)UpgradeLevel.z]; break;
             default: print(" For this Upgradeindex "+index+ " is not defined a function"); return;
                 
         }
