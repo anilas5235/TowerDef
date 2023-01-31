@@ -13,9 +13,9 @@ MonoBehaviour:
   m_Name: CanonTowerData
   m_EditorClassIdentifier: 
   placingCosts: 100
-  upgradeCostsSlot0: 64000000
-  upgradeCostsSlot1: 64000000
-  upgradeCostsSlot2: 64000000
+  upgradeCostsSlot0: 6400000096000000e1000000
+  upgradeCostsSlot1: 64000000aa000000ff000000
+  upgradeCostsSlot2: 6400000082000000c8000000
   statNames:
   - AttackRadius
   - AttackDamage

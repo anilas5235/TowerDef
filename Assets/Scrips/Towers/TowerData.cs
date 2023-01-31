@@ -1,7 +1,6 @@
 using UnityEngine;
-using UnityEngine.Serialization;
 
-namespace Scrips
+namespace Scrips.Towers
 {
     [CreateAssetMenu]
     public class TowerData : ScriptableObject

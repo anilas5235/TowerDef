@@ -1,9 +1,9 @@
+using Scrips.Background;
 using Unity.Mathematics;
 using UnityEngine;
 
 public class Enemy : MonoBehaviour
 {
-   
     private PathKeeper PathKeeper;
     private StatsKeeper StatsKeeper;
     private int nextPointInArry = 0;
@@ -54,10 +54,20 @@ public class Enemy : MonoBehaviour
 
     public void TakeDamage(int Damage)
     {
-        hp -= Damage;StatsKeeper.Money += Damage;
-        if (hp <1)
-        { ParticleSystem.MainModule par = Instantiate(deathParticleSystem, transform.position, quaternion.identity).main;
-            par.startColor = SpriteRenderer.color; Destroy(this.gameObject); return; }
+        hp -= Damage;
+
+        if (hp < 1)
+        {
+            ParticleSystem.MainModule particlesMain = Instantiate(deathParticleSystem, transform.position, quaternion.identity).main;
+            particlesMain.startColor = SpriteRenderer.color;
+            StatsKeeper.Money += Damage + hp;
+            Destroy(this.gameObject);
+            return;
+        }
+        else
+        {
+            StatsKeeper.Money += Damage;
+        }
         SetColorAndSpeed();
     }
 }

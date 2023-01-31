@@ -2,21 +2,24 @@ using TMPro;
 using Unity.Mathematics;
 using UnityEngine;
 
-public class Shop : MonoBehaviour
+namespace Scrips.Background
 {
-    private int _currentSpeedMode;
-    [SerializeField] private TextMeshProUGUI _speedButtonText;
-    public void BuyTower(GameObject Tower)
+    public class Shop : MonoBehaviour
     {
-        Instantiate(Tower, Vector3.zero, quaternion.identity);
-    }
+        private int _currentSpeedMode;
+        [SerializeField] private TextMeshProUGUI speedButtonText;
+        public void BuyTower(GameObject tower)
+        {
+            Instantiate(tower, Vector3.zero, quaternion.identity);
+        }
 
-    public void SpeedUp()
-    {
-        _currentSpeedMode++;
-        if (_currentSpeedMode > 3)
-        { _currentSpeedMode = 0; }
-        Time.timeScale = _currentSpeedMode + 1;
-        _speedButtonText.text = "Speed: " + Time.timeScale;
+        public void SpeedUp()
+        {
+            _currentSpeedMode++;
+            if (_currentSpeedMode > 3)
+            { _currentSpeedMode = 0; }
+            Time.timeScale = _currentSpeedMode + 1;
+            speedButtonText.text = "Speed: " + Time.timeScale;
+        }
     }
 }

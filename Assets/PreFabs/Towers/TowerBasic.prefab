@@ -145,23 +145,23 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: bab30f3605e3451fbfd41cb67180b25a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  placed: 0
   upgradeLevel: {x: 0, y: 0, z: 0}
-  projectile: {fileID: 207460190987319773, guid: a239993ae7ed2ec408dad2f214c34f45, type: 3}
-  Indicator: {fileID: 5219271899957719761}
-  _attackRadius: 3
-  barrelTip: {fileID: 5219271900483077983}
+  placed: 0
   selected: 0
-  TowerData: {fileID: 11400000, guid: 48d3bd008cf8cee4184bc67bcd910b13, type: 2}
+  indicator: {fileID: 5219271899957719761}
+  towerData: {fileID: 11400000, guid: 48d3bd008cf8cee4184bc67bcd910b13, type: 2}
+  projectile: {fileID: 207460190987319773, guid: a239993ae7ed2ec408dad2f214c34f45, type: 3}
+  barrelTip: {fileID: 5219271900483077983}
   blockingLayer:
     serializedVersion: 2
     m_Bits: 64
   towerLayer:
     serializedVersion: 2
     m_Bits: 256
-  EnemysLayer:
+  enemyLayer:
     serializedVersion: 2
     m_Bits: 128
+  attackRadius: 3
 --- !u!1 &5219271899957719763
 GameObject:
   m_ObjectHideFlags: 0

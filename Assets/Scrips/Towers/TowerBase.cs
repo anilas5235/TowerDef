@@ -1,70 +1,80 @@
+using Scrips.Background;
 using UnityEngine;
 
-namespace Scrips
+namespace Scrips.Towers
 {
     public abstract class TowerBase : MonoBehaviour
     {
-        public bool placed = false;
-        private bool nowPlacable = true;
         public Vector3 upgradeLevel = Vector3.zero;
-        [SerializeField] protected GameObject projectile;
-        private Camera cam;
-        protected GameObject Target,barrelPivotGameObject;
-        protected SpriteRenderer mainBodySpriteRenderer;
-        public SpriteRenderer Indicator;
-        private float colloderRadius;
-        [SerializeField] protected float _attackRadius = 3f;
-        [SerializeField] protected Transform barrelTip;
-
+        public bool placed = false;
         public bool selected = false;
-        public TowerData TowerData;
-
-        protected StatsKeeper statsKeeper;
-
+        public SpriteRenderer indicator; 
+        public TowerData towerData;
+        
+        private Camera _camera;
+        private float _colliderRadius;
+        private bool _nowPlacable = true;
+        
+        protected GameObject Target,BarrelPivotGameObject;
+        protected SpriteRenderer MainBodySpriteRenderer;
+        protected StatsKeeper StatsKeeper;
+        
+        [SerializeField] protected GameObject projectile;
+        [SerializeField] protected Transform barrelTip;
         [SerializeField] protected LayerMask blockingLayer, towerLayer;
-        [SerializeField] protected LayerMask EnemysLayer;
-        // Start is called before the first frame update
+        [SerializeField] protected LayerMask enemyLayer;
+        [SerializeField] protected float attackRadius = 3f;
+        
         protected virtual void Start()
         {
-            cam = Camera.main;
-            mainBodySpriteRenderer = GetComponent<SpriteRenderer>();
-            colloderRadius = GetComponent<CircleCollider2D>().radius;
-            barrelPivotGameObject = gameObject.transform.GetChild(1).gameObject;
-            statsKeeper = StatsKeeper.Instance;
+            _camera = Camera.main;
+            MainBodySpriteRenderer = GetComponent<SpriteRenderer>();
+            _colliderRadius = GetComponent<CircleCollider2D>().radius;
+            BarrelPivotGameObject = gameObject.transform.GetChild(1).gameObject;
+            StatsKeeper = StatsKeeper.Instance;
         }
 
-        // Update is called once per frame
         void Update()
         {
             if (!placed)
             {
-                nowPlacable = Physics2D.OverlapCircleAll(transform.position, colloderRadius, blockingLayer + towerLayer).Length <= 1 && statsKeeper.Money >= TowerData.placingCosts;
-                Vector3 mousePosition = cam.ScreenToWorldPoint(Input.mousePosition);
+                _nowPlacable = Physics2D.OverlapCircleAll(transform.position, _colliderRadius, blockingLayer + towerLayer).Length <= 1
+                               && StatsKeeper.Money >= towerData.placingCosts;
+               
+                Vector3 mousePosition = _camera.ScreenToWorldPoint(Input.mousePosition);
                 mousePosition.z = 0;
                 transform.position = mousePosition;
-                Indicator.color = nowPlacable ? new Color(1,1,1,0.2f) : new Color(1,0,0,0.2f);
-                if (Input.GetMouseButtonDown(0)&& nowPlacable) { placed = true; Indicator.enabled = false; statsKeeper.Money -= TowerData.placingCosts; statsKeeper.UpdateUI(); }
+                
+                indicator.color = _nowPlacable ? new Color(1,1,1,0.2f) : new Color(1,0,0,0.2f);
+                if (Input.GetMouseButtonDown(0) && _nowPlacable)
+                {
+                    placed = true;
+                    indicator.enabled = false;
+                    StatsKeeper.Money -= towerData.placingCosts;
+                    StatsKeeper.UpdateUI();
+                }
                 else if(Input.GetMouseButtonDown(1)) { Destroy(gameObject); }
             }
             else
             {
-                if (Target == null || Vector3.Distance(transform.position,Target.transform.position) > _attackRadius )
+                if (Target == null || Vector3.Distance(transform.position,Target.transform.position) > attackRadius )
                 {
-                    Collider2D[] possibleTargets = Physics2D.OverlapCircleAll(transform.position, _attackRadius, EnemysLayer);
+                    Collider2D[] possibleTargets = Physics2D.OverlapCircleAll(transform.position, attackRadius, enemyLayer);
                     if (possibleTargets.Length < 1) { Target = null; return; }
                 
                     float greatestdistance =0; int index = 0;
                     for (int i = 0; i < possibleTargets.Length; i++)
                     {
                         float currentDistance = possibleTargets[i].gameObject.GetComponent<Enemy>().distance;
-                        if (currentDistance > greatestdistance) { greatestdistance = currentDistance; index = i; }
+                        if (currentDistance > greatestdistance)
+                        {
+                            greatestdistance = currentDistance;
+                            index = i;
+                        }
                     }
                     Target =  possibleTargets[index].gameObject;
                 }
-                else
-                {
-                   Attack();
-                }
+                else { Attack(); }
             }
         }
         public abstract void UpgradeTower(Vector3 upgrade);

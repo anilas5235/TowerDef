@@ -1,17 +1,17 @@
-using System;
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
-public class PathKeeper : MonoBehaviour
+namespace Scrips.Background
 {
-    public static PathKeeper Instance;
-    public GameObject[] PathPoints;
-    private void Awake()
+    public class PathKeeper : MonoBehaviour
     {
-        if (Instance == null) { Instance = this; }
-        else { Destroy(this); }
+        public static PathKeeper Instance;
+        public GameObject[] PathPoints;
+        private void Awake()
+        {
+            if (Instance == null) { Instance = this; }
+            else { Destroy(this); }
     
-        PathPoints = GameObject.FindGameObjectsWithTag("PathPoint");
+            PathPoints = GameObject.FindGameObjectsWithTag("PathPoint");
+        }
     }
 }

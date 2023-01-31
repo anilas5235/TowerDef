@@ -2715,7 +2715,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 590dd8bec1267b9478b37ba24ab633fe, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _speedButtonText: {fileID: 5842959}
+  speedButtonText: {fileID: 5842959}
 --- !u!1001 &996163272
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -3236,18 +3236,24 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1a077777c420db140a1874aa395ecbf2, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  Enemys:
+  waveIsRunning: 0
+  wavesFinished: 0
+  enemies:
   - {fileID: 2489806855999879601, guid: 2e7099a383ac6124c9cbc9ebae9f33f9, type: 3}
   - {fileID: 7091442183785571531, guid: bdf0a968267058044afc28fa19566845, type: 3}
   - {fileID: 1786014554006802494, guid: 5069cafd513b1db40ad6367896e1b94d, type: 3}
   - {fileID: 5058131313133564564, guid: 15eaa52851b9c00459238d153103a2e6, type: 3}
-  Spawner: {fileID: 7583623007909701663, guid: 4c97b10c17ed21643b8bbd90d549cf6c, type: 3}
-  Waves:
+  - {fileID: 6693130182386895948, guid: a65d78f9b418191438cd61a37cfa4161, type: 3}
+  - {fileID: 1257540300137006047, guid: e23aa304b9c74ee46843c2b660be9c4d, type: 3}
+  spawner: {fileID: 7583623007909701663, guid: 4c97b10c17ed21643b8bbd90d549cf6c, type: 3}
+  waves:
   - {fileID: 11400000, guid: a7552d1fbb3cb3a4fb2db44f9ee047af, type: 2}
   - {fileID: 11400000, guid: dc4ed10848fbf894ca17eeeb64bb91ee, type: 2}
   - {fileID: 11400000, guid: c29592cbfd4b9ce4494f70278f65d69e, type: 2}
-  WaveIsRunning: 0
-  wavesFinished: 0
+  - {fileID: 11400000, guid: 2bae0cfbdf9beec46b4494c0b8a80413, type: 2}
+  - {fileID: 11400000, guid: 3e5cae11efe7eec42beaf6c91f8fd4fd, type: 2}
+  - {fileID: 11400000, guid: 7123ec69f62f81947b79e3fb9cd08352, type: 2}
+  waveStartButton: {fileID: 202391168}
 --- !u!4 &1135593184
 Transform:
   m_ObjectHideFlags: 0

@@ -1,6 +1,4 @@
-using System;
-using System.Collections;
-using System.Collections.Generic;
+using Scrips.Background;
 using UnityEngine;
 
 public class Projectile : MonoBehaviour
@@ -12,7 +10,6 @@ public class Projectile : MonoBehaviour
     
     [SerializeField] private SpriteRenderer mySpriteRenderer;
 
-    // Update is called once per frame
     void Update()
     {
         transform.Translate(targetDirection * (speed * Time.deltaTime));

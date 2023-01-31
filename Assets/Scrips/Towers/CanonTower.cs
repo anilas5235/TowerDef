@@ -1,7 +1,7 @@
-using UnityEngine;
 using Unity.Mathematics;
+using UnityEngine;
 
-namespace Scrips
+namespace Scrips.Towers
 {
     public class CanonTower : TowerBase
     {
@@ -11,7 +11,7 @@ namespace Scrips
         protected override void Start()
         {
             base.Start();
-            Indicator.gameObject.transform.localScale = new Vector3(_attackRadius*2, _attackRadius*2, 1);
+            indicator.gameObject.transform.localScale = new Vector3(attackRadius*2, attackRadius*2, 1);
             _timeForNextAttack = Time.time;
             VisualChange();
         }
@@ -32,7 +32,7 @@ namespace Scrips
             
                 default: print("Color for "+ _attackDamage+ " attackdamage is not defined"); break;
             }
-            mainBodySpriteRenderer.color = currentColor;
+            MainBodySpriteRenderer.color = currentColor;
 
             barrelTip.localScale = new Vector3(0.1f + (_multiHit  / 10f), barrelTip.localScale.y, barrelTip.localScale.z);
         }
@@ -40,19 +40,19 @@ namespace Scrips
         public override void UpgradeTower(Vector3 upgrade)
         {
             upgradeLevel += upgrade;
-            _attackRadius += upgrade.x / 2;
+            attackRadius += upgrade.x / 2;
             _attackDamage += (int) upgrade.y;
             _multiHit += (int) upgrade.z;
 
-            VisualChange(); statsKeeper.UpdateUI();
-            Indicator.gameObject.transform.localScale = new Vector3(_attackRadius*2, _attackRadius*2, 1);
+            VisualChange(); StatsKeeper.UpdateUI();
+            indicator.gameObject.transform.localScale = new Vector3(attackRadius*2, attackRadius*2, 1);
         }
 
         protected override void Attack()
         {
             Vector3 targetDirection = Target.transform.position - transform.position;
             float angle = Mathf.Atan2(targetDirection.y, targetDirection.x) * Mathf.Rad2Deg % 360 - 90;
-            barrelPivotGameObject.transform.localRotation = Quaternion.Euler(0,0,angle);
+            BarrelPivotGameObject.transform.localRotation = Quaternion.Euler(0,0,angle);
             if (Time.time >= _timeForNextAttack)
             {
                 Projectile shoot = Instantiate(projectile, barrelTip.position, quaternion.identity).GetComponent<Projectile>();
@@ -60,7 +60,7 @@ namespace Scrips
                 shoot.damage = _attackDamage;
                 shoot.targetDirection = targetDirection;
                 shoot.speed = 5;
-                shoot.projectileColor = mainBodySpriteRenderer.color;
+                shoot.projectileColor = MainBodySpriteRenderer.color;
                 shoot.AppearanceUpdate();
                 _timeForNextAttack = Time.time + _attackDelay;
             }
