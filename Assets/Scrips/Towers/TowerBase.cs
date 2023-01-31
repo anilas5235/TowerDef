@@ -1,4 +1,3 @@
-using Unity.Mathematics;
 using UnityEngine;
 
 namespace Scrips
@@ -8,22 +7,22 @@ namespace Scrips
         public bool placed = false;
         private bool nowPlacable = true;
         public Vector3 upgradeLevel = Vector3.zero;
-        [SerializeField] private GameObject Projectile;
+        [SerializeField] protected GameObject projectile;
         private Camera cam;
-        private GameObject Target,barrelPivotGameObject;
+        protected GameObject Target,barrelPivotGameObject;
         protected SpriteRenderer mainBodySpriteRenderer;
         public SpriteRenderer Indicator;
         private float colloderRadius;
-        [SerializeField] private Transform barrelTip;
+        [SerializeField] protected float _attackRadius = 3f;
+        [SerializeField] protected Transform barrelTip;
 
         public bool selected = false;
         public TowerData TowerData;
 
         protected StatsKeeper statsKeeper;
 
-        [SerializeField] private LayerMask blockingLayer, towerLayer;
-
-        [SerializeField] private LayerMask EnemysLayer;
+        [SerializeField] protected LayerMask blockingLayer, towerLayer;
+        [SerializeField] protected LayerMask EnemysLayer;
         // Start is called before the first frame update
         protected virtual void Start()
         {
@@ -49,39 +48,26 @@ namespace Scrips
             }
             else
             {
-                if (Target == null || Vector3.Distance(transform.position,Target.transform.position) > attackRadius )
+                if (Target == null || Vector3.Distance(transform.position,Target.transform.position) > _attackRadius )
                 {
-                    Collider2D[] possibleTargets = Physics2D.OverlapCircleAll(transform.position, attackRadius, EnemysLayer);
+                    Collider2D[] possibleTargets = Physics2D.OverlapCircleAll(transform.position, _attackRadius, EnemysLayer);
                     if (possibleTargets.Length < 1) { Target = null; return; }
                 
-                    float highestdistance =0; int index = 0;
+                    float greatestdistance =0; int index = 0;
                     for (int i = 0; i < possibleTargets.Length; i++)
                     {
                         float currentDistance = possibleTargets[i].gameObject.GetComponent<Enemy>().distance;
-                        if (currentDistance > highestdistance) { highestdistance = currentDistance; index = i; }
+                        if (currentDistance > greatestdistance) { greatestdistance = currentDistance; index = i; }
                     }
                     Target =  possibleTargets[index].gameObject;
                 }
                 else
                 {
-                    Vector3 offset = Target.transform.position - transform.position;
-                    float angle = Mathf.Atan2(offset.y, offset.x) * Mathf.Rad2Deg % 360 - 90;
-                    barrelPivotGameObject.transform.localRotation = Quaternion.Euler(0,0,angle);
-                    if (Time.time >= timeForNextAttack)
-                    {
-                        Projectile shoot = Instantiate(Projectile, barrelTip.position, quaternion.identity).GetComponent<Projectile>();
-                        shoot.pierce = multiHit;
-                        shoot.damage = attackDamage;
-                        shoot.targetDirection = offset;
-                        shoot.speed = 2 + attackDamage / 2;
-                        shoot.projectileColor = SetColor();
-                        timeForNextAttack = Time.time + attackDelay;
-                    }
-                    Debug.DrawLine(transform.position, Target.transform.position,Color.red,0.001f);
+                   Attack();
                 }
             }
         }
-    
-        
+        public abstract void UpgradeTower(Vector3 upgrade);
+        protected abstract void Attack();
     }
 }

@@ -42,8 +42,7 @@ GameObject:
   - component: {fileID: 5219271899140306282}
   - component: {fileID: 5219271899140306293}
   - component: {fileID: 5219271899140306292}
-  - component: {fileID: 5219271899140306295}
-  - component: {fileID: 5219271899140306283}
+  - component: {fileID: 2280263493732917963}
   m_Layer: 8
   m_Name: TowerBasic
   m_TagString: Tower
@@ -134,28 +133,7 @@ CircleCollider2D:
   m_Offset: {x: 0, y: 0}
   serializedVersion: 2
   m_Radius: 0.4
---- !u!50 &5219271899140306295
-Rigidbody2D:
-  serializedVersion: 4
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 5219271899140306294}
-  m_BodyType: 0
-  m_Simulated: 1
-  m_UseFullKinematicContacts: 0
-  m_UseAutoMass: 0
-  m_Mass: 1
-  m_LinearDrag: 0
-  m_AngularDrag: 0.05
-  m_GravityScale: 0
-  m_Material: {fileID: 0}
-  m_Interpolate: 0
-  m_SleepingMode: 1
-  m_CollisionDetection: 0
-  m_Constraints: 0
---- !u!114 &5219271899140306283
+--- !u!114 &2280263493732917963
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -164,13 +142,14 @@ MonoBehaviour:
   m_GameObject: {fileID: 5219271899140306294}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 62da781c1e5ce524f9e6100eaba2d021, type: 3}
+  m_Script: {fileID: 11500000, guid: bab30f3605e3451fbfd41cb67180b25a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   placed: 0
   upgradeLevel: {x: 0, y: 0, z: 0}
-  Projectile: {fileID: 207460190987319773, guid: a239993ae7ed2ec408dad2f214c34f45, type: 3}
+  projectile: {fileID: 207460190987319773, guid: a239993ae7ed2ec408dad2f214c34f45, type: 3}
   Indicator: {fileID: 5219271899957719761}
+  _attackRadius: 3
   barrelTip: {fileID: 5219271900483077983}
   selected: 0
   TowerData: {fileID: 11400000, guid: 48d3bd008cf8cee4184bc67bcd910b13, type: 2}

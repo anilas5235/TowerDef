@@ -10,14 +10,14 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: d7ca83c19207e0146820aaf9d17339af, type: 3}
-  m_Name: BasicTower
+  m_Name: CanonTowerData
   m_EditorClassIdentifier: 
   placingCosts: 100
-  attackradiusUpgradeCosts: 64000000af000000
-  attackdamageUpgradeCosts: 960000000e010000
-  multiHitUpgradeCosts: 320000006400000096000000
+  upgradeCostsSlot0: 64000000
+  upgradeCostsSlot1: 64000000
+  upgradeCostsSlot2: 64000000
   statNames:
   - AttackRadius
   - AttackDamage
   - MultiHit
-  Towername: BasicTower
+  towerName: Canon
