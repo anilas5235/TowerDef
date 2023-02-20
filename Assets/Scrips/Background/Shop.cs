@@ -1,3 +1,4 @@
+using System;
 using TMPro;
 using Unity.Mathematics;
 using UnityEngine;
@@ -6,11 +7,29 @@ namespace Scrips.Background
 {
     public class Shop : MonoBehaviour
     {
-        private int _currentSpeedMode;
+        public static Shop Instance;
         [SerializeField] private TextMeshProUGUI speedButtonText;
+        
+        private int _currentSpeedMode;
+        private GameObject _currentlyHandledTower;
+
+        private void Awake()
+        {
+            if (!Instance)
+            { Instance = this; }
+            else
+            { Destroy(this); }
+        }
+
         public void BuyTower(GameObject tower)
         {
-            Instantiate(tower, Vector3.zero, quaternion.identity);
+            if (_currentlyHandledTower) { return; }
+           _currentlyHandledTower = Instantiate(tower, Vector3.zero, quaternion.identity);
+        }
+
+        public void TowerHandled()
+        {
+            _currentlyHandledTower = null;
         }
 
         public void SpeedUp()

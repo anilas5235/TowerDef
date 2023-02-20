@@ -3,25 +3,18 @@ using UnityEngine;
 
 namespace Scrips.Towers
 {
-    public class CanonTower : TowerBase
+    public class MiniGunTower : TowerBase
     {
         [SerializeField] protected GameObject projectile;
         
-        private float _attackDelay = 1, _timeForNextAttack; 
-        private  int _attackDamage = 1, _multiHit = 2;
+        private float _timeForNextAttack;
+        private int _attackDamage = 1, _multiHit = 1, _attackDelay = 2; //_timeForNextAttack = Time.time + 1/_attackDelay;
 
         protected override void Start()
         {
             _timeForNextAttack = Time.time;
-            attackRadius = 2.5f;
+            attackRadius = 3.5f;
             base.Start();
-        }
-
-        protected override void VisualChange()
-        {
-            MainBodySpriteRenderer.color = ColorSequence(_attackDamage);
-
-            barrelTip.localScale = new Vector3(0.1f + (_multiHit  / 10f), barrelTip.localScale.y, barrelTip.localScale.z);
         }
 
         public override void UpgradeTower(Vector3 upgrade)
@@ -29,7 +22,7 @@ namespace Scrips.Towers
             upgradeLevel += upgrade;
             attackRadius += upgrade.x / 2;
             _attackDamage += (int) upgrade.y;
-            _multiHit += (int) upgrade.z;
+            _attackDelay += (int) upgrade.z;
 
             VisualChange(); StatsKeeper.UpdateUI();
             indicator.gameObject.transform.localScale = new Vector3(attackRadius*2, attackRadius*2, 1);
@@ -47,10 +40,15 @@ namespace Scrips.Towers
                 shoot.damage = _attackDamage;
                 shoot.targetDirection = targetDirection;
                 shoot.speed = 5;
-                shoot.projectileColor = MainBodySpriteRenderer.color;
+                shoot.projectileColor = ColorSequence(_attackDamage);
                 shoot.AppearanceUpdate();
-                _timeForNextAttack = Time.time + _attackDelay;
+                _timeForNextAttack = Time.time + 1f/_attackDelay;
             }
+        }
+
+        protected override void VisualChange()
+        {
+            MainBodySpriteRenderer.color = ColorSequence(_attackDelay-1);
         }
     }
 }

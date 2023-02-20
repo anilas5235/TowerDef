@@ -18,13 +18,13 @@ namespace Scrips.Towers
         protected GameObject Target,BarrelPivotGameObject;
         protected SpriteRenderer MainBodySpriteRenderer;
         protected StatsKeeper StatsKeeper;
-        
-        [SerializeField] protected GameObject projectile;
+        protected Shop Shop;
+        protected float attackRadius;
+
         [SerializeField] protected Transform barrelTip;
         [SerializeField] protected LayerMask blockingLayer, towerLayer;
         [SerializeField] protected LayerMask enemyLayer;
-        [SerializeField] protected float attackRadius = 3f;
-        
+
         protected virtual void Start()
         {
             _camera = Camera.main;
@@ -32,6 +32,9 @@ namespace Scrips.Towers
             _colliderRadius = GetComponent<CircleCollider2D>().radius;
             BarrelPivotGameObject = gameObject.transform.GetChild(1).gameObject;
             StatsKeeper = StatsKeeper.Instance;
+            Shop = Background.Shop.Instance;
+            indicator.gameObject.transform.localScale = new Vector3(attackRadius*2, attackRadius*2, 1);
+            VisualChange();
         }
 
         void Update()
@@ -49,6 +52,7 @@ namespace Scrips.Towers
                 if (Input.GetMouseButtonDown(0) && _nowPlacable)
                 {
                     placed = true;
+                    Shop.TowerHandled();
                     indicator.enabled = false;
                     StatsKeeper.Money -= towerData.placingCosts;
                     StatsKeeper.UpdateUI();
@@ -79,5 +83,26 @@ namespace Scrips.Towers
         }
         public abstract void UpgradeTower(Vector3 upgrade);
         protected abstract void Attack();
+
+        protected abstract void VisualChange();
+
+        protected Color ColorSequence(int index)
+        {
+            Color currentColor = Color.red;
+            switch (index)
+            {
+                case 1: currentColor = Color.red;  break;
+                case 2: currentColor = Color.blue; ; break;
+                case 3: currentColor = Color.green;  break;
+                case 4: currentColor = Color.yellow;  break;
+                case 5: currentColor = Color.cyan;  break;
+                case 6: currentColor = Color.grey;  break;
+                case 7: currentColor = Color.black;  break;
+                case 8: currentColor = Color.white;  break;
+            
+                default: print("Color for "+ index + " attackdamage is not defined"); break;
+            }
+            return currentColor;
+        }
     }
 }
