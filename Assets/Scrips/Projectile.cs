@@ -20,7 +20,6 @@ public class Projectile : MonoBehaviour
         if (col.gameObject.CompareTag("Enemy"))
         {
             col.gameObject.GetComponent<Enemy>().TakeDamage(damage);
-            StatsKeeper.Instance.Money += damage; StatsKeeper.Instance.UpdateUI();
             pierce--;
            AppearanceUpdate();
         }

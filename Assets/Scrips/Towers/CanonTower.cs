@@ -7,12 +7,11 @@ namespace Scrips.Towers
     {
         [SerializeField] protected GameObject projectile;
         
-        private float _attackDelay = 1, _timeForNextAttack; 
+        private float _attackDelay = 1; 
         private  int _attackDamage = 1, _multiHit = 2;
 
         protected override void Start()
         {
-            _timeForNextAttack = Time.time;
             attackRadius = 2.5f;
             base.Start();
         }
@@ -27,7 +26,7 @@ namespace Scrips.Towers
         public override void UpgradeTower(Vector3 upgrade)
         {
             upgradeLevel += upgrade;
-            attackRadius += upgrade.x / 2;
+            attackRadius += upgrade.x / 3;
             _attackDamage += (int) upgrade.y;
             _multiHit += (int) upgrade.z;
 
@@ -40,7 +39,7 @@ namespace Scrips.Towers
             Vector3 targetDirection = Target.transform.position - transform.position;
             float angle = Mathf.Atan2(targetDirection.y, targetDirection.x) * Mathf.Rad2Deg % 360 - 90;
             BarrelPivotGameObject.transform.localRotation = Quaternion.Euler(0,0,angle);
-            if (Time.time >= _timeForNextAttack)
+            if (Time.time >= timeForNextAttack)
             {
                 Projectile shoot = Instantiate(projectile, barrelTip.position, quaternion.identity).GetComponent<Projectile>();
                 shoot.pierce = _multiHit;
@@ -49,7 +48,7 @@ namespace Scrips.Towers
                 shoot.speed = 5;
                 shoot.projectileColor = MainBodySpriteRenderer.color;
                 shoot.AppearanceUpdate();
-                _timeForNextAttack = Time.time + _attackDelay;
+                timeForNextAttack = Time.time + _attackDelay;
             }
         }
     }

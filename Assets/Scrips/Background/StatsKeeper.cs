@@ -7,7 +7,7 @@ namespace Scrips.Background
     {
         public static StatsKeeper Instance;
     
-        public int hp = 100, Money =100;
+        public int hp = 100, Money =600;
         private TextMeshProUGUI HPUI,MoneyUI;
 
 

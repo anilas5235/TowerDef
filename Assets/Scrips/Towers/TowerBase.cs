@@ -19,7 +19,7 @@ namespace Scrips.Towers
         protected SpriteRenderer MainBodySpriteRenderer;
         protected StatsKeeper StatsKeeper;
         protected Shop Shop;
-        protected float attackRadius;
+        protected float attackRadius,timeForNextAttack;
 
         [SerializeField] protected Transform barrelTip;
         [SerializeField] protected LayerMask blockingLayer, towerLayer;
@@ -33,6 +33,7 @@ namespace Scrips.Towers
             BarrelPivotGameObject = gameObject.transform.GetChild(1).gameObject;
             StatsKeeper = StatsKeeper.Instance;
             Shop = Background.Shop.Instance;
+            timeForNextAttack = Time.time;
             indicator.gameObject.transform.localScale = new Vector3(attackRadius*2, attackRadius*2, 1);
             VisualChange();
         }
@@ -57,7 +58,7 @@ namespace Scrips.Towers
                     StatsKeeper.Money -= towerData.placingCosts;
                     StatsKeeper.UpdateUI();
                 }
-                else if(Input.GetMouseButtonDown(1)) { Destroy(gameObject); }
+                else if(Input.GetMouseButtonDown(1)) { Destroy(gameObject);Shop.TowerHandled(); }
             }
             else
             {

@@ -55,12 +55,12 @@ public class Enemy : MonoBehaviour
     public void TakeDamage(int Damage)
     {
         hp -= Damage;
-
         if (hp < 1)
         {
             ParticleSystem.MainModule particlesMain = Instantiate(deathParticleSystem, transform.position, quaternion.identity).main;
             particlesMain.startColor = SpriteRenderer.color;
             StatsKeeper.Money += Damage + hp;
+            StatsKeeper.UpdateUI();
             Destroy(this.gameObject);
             return;
         }
