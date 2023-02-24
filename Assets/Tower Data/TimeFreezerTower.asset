@@ -10,14 +10,14 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: d7ca83c19207e0146820aaf9d17339af, type: 3}
-  m_Name: MiniGunTowerData
+  m_Name: TimeFreezerTower
   m_EditorClassIdentifier: 
-  placingCosts: 1000
-  upgradeCostsSlot0: 960000002c0100006c02000084030000
-  upgradeCostsSlot1: c8000000720100003002000016030000
-  upgradeCostsSlot2: 2c010000f4010000bc02000084030000
+  placingCosts: 400
+  upgradeCostsSlot0: 01000000010000000100000001000000
+  upgradeCostsSlot1: 01000000010000000100000001000000
+  upgradeCostsSlot2: 01000000010000000100000001000000
   statNames:
   - AttackRadius
-  - AttackDamage
+  - StopDuration
   - AttackSpeed
-  towerName: Mini Gun
+  towerName: Time Freezer

@@ -5,7 +5,8 @@ namespace Scrips.Towers
 {
     public class SniperTower : TowerBase
     {
-        private int _attackDamage = 3, _multiHit = 2, _attackDelay = 3;
+        private int _attackDamage = 3, _multiHit = 2;
+        private float _attackDelay = 3;
         
         protected override void Start()
         {
@@ -15,9 +16,9 @@ namespace Scrips.Towers
         public override void UpgradeTower(Vector3 upgrade)
         {
             upgradeLevel += upgrade;
-            _multiHit += (int) upgrade.x;
-            _attackDamage += (int) upgrade.y*2;
-            _attackDelay -= (int) upgrade.z/2;
+            _multiHit += 1* (int) upgrade.x;
+            _attackDamage += 2*(int) upgrade.y;
+            _attackDelay -= 1f/2 * upgrade.z;
 
             VisualChange(); StatsKeeper.UpdateUI();
         }

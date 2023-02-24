@@ -6,14 +6,14 @@ namespace Scrips.Towers
     public abstract class TowerBase : MonoBehaviour
     {
         public Vector3 upgradeLevel = Vector3.zero;
-        public bool placed = false;
-        public bool selected = false;
+        public bool placed = false, selected = false;
         public SpriteRenderer indicator; 
         public TowerData towerData;
+        public bool needsTargetAtAll = true;
         
         private Camera _camera;
         private float _colliderRadius;
-        private bool _nowPlacable = true;
+        private bool _nowPlaceable = true;
         
         protected GameObject Target,BarrelPivotGameObject;
         protected SpriteRenderer MainBodySpriteRenderer;
@@ -21,7 +21,6 @@ namespace Scrips.Towers
         protected Shop Shop;
         protected float attackRadius,timeForNextAttack;
 
-        [SerializeField] protected Transform barrelTip;
         [SerializeField] protected LayerMask blockingLayer, towerLayer;
         [SerializeField] protected LayerMask enemyLayer;
 
@@ -42,15 +41,15 @@ namespace Scrips.Towers
         {
             if (!placed)
             {
-                _nowPlacable = Physics2D.OverlapCircleAll(transform.position, _colliderRadius, blockingLayer + towerLayer).Length <= 1
+                _nowPlaceable = Physics2D.OverlapCircleAll(transform.position, _colliderRadius, blockingLayer + towerLayer).Length <= 1
                                && StatsKeeper.Money >= towerData.placingCosts;
                
                 Vector3 mousePosition = _camera.ScreenToWorldPoint(Input.mousePosition);
                 mousePosition.z = 0;
                 transform.position = mousePosition;
                 
-                indicator.color = _nowPlacable ? new Color(1,1,1,0.2f) : new Color(1,0,0,0.2f);
-                if (Input.GetMouseButtonDown(0) && _nowPlacable)
+                indicator.color = _nowPlaceable ? new Color(1,1,1,0.2f) : new Color(1,0,0,0.2f);
+                if (Input.GetMouseButtonDown(0) && _nowPlaceable)
                 {
                     placed = true;
                     Shop.TowerHandled();
@@ -62,6 +61,7 @@ namespace Scrips.Towers
             }
             else
             {
+                if(!needsTargetAtAll){ Attack(); return;}
                 if (Target == null || Vector3.Distance(transform.position,Target.transform.position) > attackRadius )
                 {
                     Collider2D[] possibleTargets = Physics2D.OverlapCircleAll(transform.position, attackRadius, enemyLayer);

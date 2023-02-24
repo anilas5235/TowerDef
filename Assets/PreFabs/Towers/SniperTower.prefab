@@ -150,7 +150,7 @@ MonoBehaviour:
   selected: 0
   indicator: {fileID: 5219271899957719761}
   towerData: {fileID: 11400000, guid: 3e2da64594b869f46a1b0c37257cfcfc, type: 2}
-  barrelTip: {fileID: 5219271900483077983}
+  needsTargetAtAll: 1
   blockingLayer:
     serializedVersion: 2
     m_Bits: 64
@@ -160,7 +160,6 @@ MonoBehaviour:
   enemyLayer:
     serializedVersion: 2
     m_Bits: 128
-  projectile: {fileID: 207460190987319773, guid: a239993ae7ed2ec408dad2f214c34f45, type: 3}
 --- !u!1 &5219271899957719763
 GameObject:
   m_ObjectHideFlags: 0

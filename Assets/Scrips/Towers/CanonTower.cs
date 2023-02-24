@@ -6,6 +6,7 @@ namespace Scrips.Towers
     public class CanonTower : TowerBase
     {
         [SerializeField] protected GameObject projectile;
+        [SerializeField] protected Transform barrelTip;
         
         private float _attackDelay = 1; 
         private  int _attackDamage = 1, _multiHit = 2;
@@ -26,9 +27,9 @@ namespace Scrips.Towers
         public override void UpgradeTower(Vector3 upgrade)
         {
             upgradeLevel += upgrade;
-            attackRadius += upgrade.x / 3;
-            _attackDamage += (int) upgrade.y;
-            _multiHit += (int) upgrade.z;
+            attackRadius += 1f /3 * upgrade.x;
+            _attackDamage +=  1 * (int)upgrade.y;
+            _multiHit += 1 * (int)upgrade.z;
 
             VisualChange(); StatsKeeper.UpdateUI();
             indicator.gameObject.transform.localScale = new Vector3(attackRadius*2, attackRadius*2, 1);

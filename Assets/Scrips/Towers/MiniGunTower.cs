@@ -1,27 +1,28 @@
-using System;
 using Unity.Mathematics;
 using UnityEngine;
+using Random = UnityEngine.Random;
 
 namespace Scrips.Towers
 {
     public class MiniGunTower : TowerBase
     {
         [SerializeField] protected GameObject projectile;
+        [SerializeField] protected Transform[] barrelTips;
 
-        private int _attackDamage = 1, _multiHit = 1, _attackDelay = 2; //_timeForNextAttack = Time.time + 1/_attackDelay;
+        private int _attackDamage = 1, _multiHit = 1, _attackDelay = 4; //_timeForNextAttack = Time.time + 1/_attackDelay;
 
         protected override void Start()
         {
-            attackRadius = 3.5f;
+            attackRadius = 3f;
             base.Start();
         }
 
         public override void UpgradeTower(Vector3 upgrade)
         {
             upgradeLevel += upgrade;
-            attackRadius += upgrade.x / 3;
-            _attackDamage += (int) upgrade.y;
-            _attackDelay += (int) upgrade.z;
+            attackRadius += 1f/4 * upgrade.x ;
+            _attackDamage += 1 * (int) upgrade.y;
+            _attackDelay += 1 * (int) upgrade.z;
 
             VisualChange(); StatsKeeper.UpdateUI();
             indicator.gameObject.transform.localScale = new Vector3(attackRadius*2, attackRadius*2, 1);
@@ -34,7 +35,7 @@ namespace Scrips.Towers
             BarrelPivotGameObject.transform.localRotation = Quaternion.Euler(0,0,angle);
             if (Time.time >= timeForNextAttack)
             {
-                Projectile shoot = Instantiate(projectile, barrelTip.position, quaternion.identity).GetComponent<Projectile>();
+                Projectile shoot = Instantiate(projectile, barrelTips[Random.Range(0,2)].position, quaternion.identity).GetComponent<Projectile>();
                 shoot.pierce = _multiHit;
                 shoot.damage = _attackDamage;
                 shoot.targetDirection = targetDirection;

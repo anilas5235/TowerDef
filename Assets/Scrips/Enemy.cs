@@ -1,37 +1,45 @@
+using System.Collections;
 using Scrips.Background;
 using Unity.Mathematics;
 using UnityEngine;
 
 public class Enemy : MonoBehaviour
 {
-    private PathKeeper PathKeeper;
-    private StatsKeeper StatsKeeper;
-    private int nextPointInArry = 0;
+    private PathKeeper _pathKeeper;
+    private StatsKeeper _statsKeeper;
+    private SpriteRenderer _spriteRenderer;
+    private Coroutine _currentStopEnemy;
+    private int _nextPointInArry = 0;
+    private float _speed;
+    private bool _stop;
+    private Vector3 _dirctionDriftOf;
+    
     public int hp = 1;
-    private SpriteRenderer SpriteRenderer;
-    private float speed;
     public float distance =0;
+    
     [SerializeField] private ParticleSystem deathParticleSystem;
 
     // Start is called before the first frame update
-    void Start()
+    private void Start()
     {
-        PathKeeper = PathKeeper.Instance;
-        StatsKeeper = StatsKeeper.Instance;
-        SpriteRenderer = GetComponent<SpriteRenderer>();
+        _pathKeeper = PathKeeper.Instance;
+        _statsKeeper = StatsKeeper.Instance;
+        _spriteRenderer = GetComponent<SpriteRenderer>();
         SetColorAndSpeed();
     }
 
     // Update is called once per frame
-    void Update()
+    private void Update()
     {
-        transform.Translate((PathKeeper.PathPoints[nextPointInArry].transform.position - transform.position).normalized * (Time.deltaTime * speed));
-        distance += Time.deltaTime * speed;
-        if (Vector3.Distance( transform.position, PathKeeper.PathPoints[nextPointInArry].transform.position) < 0.1f)
+        if (_stop) {return; }
+        transform.Translate(((_pathKeeper.PathPoints[_nextPointInArry].transform.position - transform.position).normalized +_dirctionDriftOf) * (Time.deltaTime * _speed));
+        distance += Time.deltaTime * _speed;
+        if (Vector3.Distance( transform.position, _pathKeeper.PathPoints[_nextPointInArry].transform.position) < 0.1f)
         {
-            if (nextPointInArry == PathKeeper.PathPoints.Length -1)
-            { StatsKeeper.hp -= hp; StatsKeeper.UpdateUI(); Destroy(this.gameObject); return;}
-            nextPointInArry++;
+            if (_nextPointInArry == _pathKeeper.PathPoints.Length -1)
+            { _statsKeeper.hp -= hp; _statsKeeper.UpdateUI(); Destroy(this.gameObject); return;}
+            _nextPointInArry++;
+            _dirctionDriftOf = Vector3.zero;
         }
     }
 
@@ -39,14 +47,14 @@ public class Enemy : MonoBehaviour
     {
         switch (hp)
         {
-            case 1: SpriteRenderer.color = Color.red; speed = 1; break;
-            case 2: SpriteRenderer.color = Color.blue; speed = 1.5f; break;
-            case 3: SpriteRenderer.color = Color.green; speed = 2f; break;
-            case 4: SpriteRenderer.color = Color.yellow; speed = 2.5f; break;
-            case 5: SpriteRenderer.color = Color.cyan; speed = 3f; break;
-            case 6: SpriteRenderer.color = Color.grey; speed = 3.5f; break;
-            case 7: SpriteRenderer.color = Color.black; speed = 4f; break;
-            case 8: SpriteRenderer.color = Color.white; speed = 4.5f; break;
+            case 1: _spriteRenderer.color = Color.red; _speed = 1; break;
+            case 2: _spriteRenderer.color = Color.blue; _speed = 1.5f; break;
+            case 3: _spriteRenderer.color = Color.green; _speed = 2f; break;
+            case 4: _spriteRenderer.color = Color.yellow; _speed = 2.5f; break;
+            case 5: _spriteRenderer.color = Color.cyan; _speed = 3f; break;
+            case 6: _spriteRenderer.color = Color.grey; _speed = 3.5f; break;
+            case 7: _spriteRenderer.color = Color.black; _speed = 4f; break;
+            case 8: _spriteRenderer.color = Color.white; _speed = 4.5f; break;
             
             default: print("Color for "+hp+ " hp is not defined"); break;
         }
@@ -58,16 +66,45 @@ public class Enemy : MonoBehaviour
         if (hp < 1)
         {
             ParticleSystem.MainModule particlesMain = Instantiate(deathParticleSystem, transform.position, quaternion.identity).main;
-            particlesMain.startColor = SpriteRenderer.color;
-            StatsKeeper.Money += Damage + hp;
-            StatsKeeper.UpdateUI();
+            particlesMain.startColor = _spriteRenderer.color;
+            _statsKeeper.Money += Damage + hp;
+            _statsKeeper.UpdateUI();
             Destroy(this.gameObject);
             return;
         }
         else
         {
-            StatsKeeper.Money += Damage;
+            _statsKeeper.Money += Damage;
         }
         SetColorAndSpeed();
+    }
+
+    public void TriggerStopEnemy(float sec)
+    {
+        if (_currentStopEnemy != null)
+        {
+            StopCoroutine(_currentStopEnemy);
+        }
+        _currentStopEnemy = StartCoroutine(StopEnemy(sec));
+    }
+
+    private IEnumerator StopEnemy(float sec)
+    {
+        _stop = true;
+        yield return new WaitForSeconds(sec);
+        _stop = false;
+    }
+
+    public void ThrowBack(int pointsOnPath, Vector3 drift)
+    {
+        _nextPointInArry -= pointsOnPath;
+        _dirctionDriftOf = drift;
+        StartCoroutine(DriftTime());
+    }
+    
+    private IEnumerator DriftTime()
+    {
+        yield return new WaitForSeconds(2f);
+        _dirctionDriftOf = Vector3.zero;
     }
 }
