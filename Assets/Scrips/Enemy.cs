@@ -32,7 +32,9 @@ public class Enemy : MonoBehaviour
     private void Update()
     {
         if (_stop) {return; }
-        transform.Translate(((_pathKeeper.PathPoints[_nextPointInArry].transform.position - transform.position).normalized +_dirctionDriftOf) * (Time.deltaTime * _speed));
+        transform.Translate((
+            (_pathKeeper.PathPoints[_nextPointInArry].transform.position - transform.position).normalized +_dirctionDriftOf) *
+                            (Time.deltaTime * _speed));
         distance += Time.deltaTime * _speed;
         if (Vector3.Distance( transform.position, _pathKeeper.PathPoints[_nextPointInArry].transform.position) < 0.1f)
         {
@@ -65,7 +67,8 @@ public class Enemy : MonoBehaviour
         hp -= Damage;
         if (hp < 1)
         {
-            ParticleSystem.MainModule particlesMain = Instantiate(deathParticleSystem, transform.position, quaternion.identity).main;
+            ParticleSystem.MainModule particlesMain = Instantiate(deathParticleSystem, transform.position,
+                quaternion.identity).main;
             particlesMain.startColor = _spriteRenderer.color;
             _statsKeeper.Money += Damage + hp;
             _statsKeeper.UpdateUI();
