@@ -8,14 +8,14 @@ namespace Scrips.Towers
         [SerializeField] private PolygonCollider2D pushArea;
 
         private Vector2[] _pointsForPushArea = new Vector2[9];
-        private ContactFilter2D filter;
-        private float _angleForPushArea = 90,_attackDelay = 5f;
+        private ContactFilter2D _filter2D;
+        private float _angleForPushArea = 60,_attackDelay = 5f;
         private int _throwBackStrength = 2;
         protected override void Start()
         {
-            filter.NoFilter();
-            filter.SetLayerMask(enemyLayer);
-            filter.SetDepth(-50,50);
+            _filter2D.NoFilter();
+            _filter2D.SetLayerMask(enemyLayer);
+            _filter2D.SetDepth(-50,50);
             attackRadius = 2f;
             CalculatePointsForPushArea();
             pushArea.enabled = false;
@@ -24,7 +24,13 @@ namespace Scrips.Towers
 
         public override void UpgradeTower(Vector3 upgrade)
         {
-            
+            upgradeLevel += upgrade;
+            _angleForPushArea += 15f * upgrade.x;
+            _throwBackStrength +=  1 * (int)upgrade.y;
+            _attackDelay -= 0.7f * (int)upgrade.z;
+
+            VisualChange(); StatsKeeper.UpdateUI(); CalculatePointsForPushArea();
+            indicator.gameObject.transform.localScale = new Vector3(attackRadius*2, attackRadius*2, 1);
         }
 
         protected override void Attack()
@@ -37,12 +43,12 @@ namespace Scrips.Towers
             if (Time.time >= timeForNextAttack)
             {
                 List<Collider2D> targets = new List<Collider2D>();
-                pushArea.OverlapCollider(filter, targets);
+                pushArea.OverlapCollider(_filter2D, targets);
 
                 foreach (Collider2D target in targets)
                 {
                     target.GetComponent<Enemy>().ThrowBack(_throwBackStrength,
-                        (target.transform.position - transform.position).normalized * _throwBackStrength);
+                        (target.transform.position - transform.position).normalized * (1 + 0.2f*_throwBackStrength));
                 }
                 
                 timeForNextAttack = Time.time + _attackDelay;
@@ -51,7 +57,7 @@ namespace Scrips.Towers
 
         protected override void VisualChange()
         {
-            
+            MainBodySpriteRenderer.color = ColorSequence(_throwBackStrength - 1);
         }
 
         private void CalculatePointsForPushArea()

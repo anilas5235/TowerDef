@@ -25,7 +25,7 @@ namespace Scrips.Towers
 
         protected override void Attack()
         {
-            if (Time.time >= timeForNextAttack)
+            if (Time.time >= timeForNextAttack && Physics2D.OverlapCircle(transform.position, attackRadius, enemyLayer))
             {
                 Collider2D[] targets = Physics2D.OverlapCircleAll(transform.position, attackRadius, enemyLayer);
                 foreach (Collider2D target in targets)
