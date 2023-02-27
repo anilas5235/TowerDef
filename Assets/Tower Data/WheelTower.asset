@@ -17,7 +17,7 @@ MonoBehaviour:
   upgradeCostsSlot1: 01000000010000000100000001000000
   upgradeCostsSlot2: 01000000010000000100000001000000
   statNames:
-  - AttackRadius
-  - PushStrength
   - AttackSpeed
-  towerName: Bellow
+  - AttackDamage
+  - Barrels
+  towerName: Wheel Shoot

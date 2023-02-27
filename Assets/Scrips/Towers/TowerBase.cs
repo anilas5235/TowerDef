@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using Scrips.Background;
 using UnityEngine;
 
@@ -6,15 +7,16 @@ namespace Scrips.Towers
     public abstract class TowerBase : MonoBehaviour
     {
         public Vector3 upgradeLevel = Vector3.zero;
-        public bool placed = false, selected = false;
+        public bool placed, selected ;
         public SpriteRenderer indicator; 
         public TowerData towerData;
         public bool needsTargetAtAll = true;
         
-        private Camera _camera;
-        private float _colliderRadius;
         private bool _nowPlaceable = true;
+        private Collider2D ownCollider;
+        private ContactFilter2D _placeableFilter;
         
+        protected Camera _camera;
         protected GameObject Target,BarrelPivotGameObject;
         protected SpriteRenderer MainBodySpriteRenderer;
         protected StatsKeeper StatsKeeper;
@@ -26,9 +28,11 @@ namespace Scrips.Towers
 
         protected virtual void Start()
         {
+            _placeableFilter.NoFilter(); _placeableFilter.SetLayerMask(blockingLayer+towerLayer);
+            _placeableFilter.SetDepth(-50,50);
             _camera = Camera.main;
             MainBodySpriteRenderer = GetComponent<SpriteRenderer>();
-            _colliderRadius = GetComponent<CircleCollider2D>().radius;
+            ownCollider = GetComponent<Collider2D>();
             BarrelPivotGameObject = gameObject.transform.GetChild(1).gameObject;
             StatsKeeper = StatsKeeper.Instance;
             Shop = Background.Shop.Instance;
@@ -41,8 +45,9 @@ namespace Scrips.Towers
         {
             if (!placed)
             {
-                _nowPlaceable = Physics2D.OverlapCircleAll(transform.position, _colliderRadius, blockingLayer + towerLayer).Length <= 1
-                               && StatsKeeper.Money >= towerData.placingCosts;
+                List<Collider2D> cols = new List<Collider2D>();
+                ownCollider.OverlapCollider(_placeableFilter, cols);               
+                _nowPlaceable = cols.Count <1 && StatsKeeper.Money >= towerData.placingCosts;
                
                 Vector3 mousePosition = _camera.ScreenToWorldPoint(Input.mousePosition);
                 mousePosition.z = 0;
