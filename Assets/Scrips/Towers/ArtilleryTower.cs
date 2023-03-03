@@ -1,3 +1,4 @@
+using System.Collections;
 using Unity.Mathematics;
 using UnityEngine;
 
@@ -8,8 +9,7 @@ namespace Scrips.Towers
         [SerializeField] private GameObject[] barrels;
         [SerializeField] private GameObject explosion; 
 
-        public bool changingTargetPosition;
-        
+        private bool _changingTargetPosition;
         private int _attackDamage = 1,  _barrelNumber = 1;
         private float _attackDelay = 6;
         private Vector3 _oldBombTargetPosition;
@@ -21,7 +21,7 @@ namespace Scrips.Towers
         }
         private void LateUpdate()
         {
-            if (changingTargetPosition)
+            if (_changingTargetPosition)
             {
                 Vector3 mousePosition = _camera.ScreenToWorldPoint(Input.mousePosition);
                 mousePosition.z = 0;
@@ -29,11 +29,12 @@ namespace Scrips.Towers
                 indicator.enabled = true;
                 if (Input.GetMouseButtonDown(0))
                 {
-                    changingTargetPosition = false; _oldBombTargetPosition = indicator.transform.position;
+                    _changingTargetPosition = false; _oldBombTargetPosition = indicator.transform.position;
+                    indicator.enabled = false;
                 }
                 else if (Input.GetMouseButtonDown(1))
                 {
-                    changingTargetPosition = false;
+                    _changingTargetPosition = false;
                     indicator.enabled = false;
                     indicator.transform.position = _oldBombTargetPosition;
                 }
@@ -76,6 +77,18 @@ namespace Scrips.Towers
             {
                 barrels[i].SetActive(i <= _barrelNumber -1);
             }
+        }
+
+        private IEnumerator DelayChangingTargetPosition()
+        {
+            yield return new WaitForEndOfFrame();
+            _changingTargetPosition = true;
+        }
+
+        public void ChangingTargetPosition()
+        {
+            StartCoroutine(DelayChangingTargetPosition());
+            _oldBombTargetPosition = indicator.transform.position;
         }
     }
 }

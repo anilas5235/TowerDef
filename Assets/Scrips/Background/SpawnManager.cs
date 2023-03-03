@@ -1,3 +1,4 @@
+using System.Collections;
 using Unity.Mathematics;
 using UnityEngine;
 using Button = UnityEngine.UI.Button;
@@ -7,8 +8,7 @@ namespace Scrips.Background
     public class SpawnManager : MonoBehaviour
     {
         public static SpawnManager Instance;
-        public bool waveIsRunning = false;
-        public bool wavesFinished = false;
+        public bool waveIsRunning ;
         
         private int _currentWave = -1;
         
@@ -25,18 +25,19 @@ namespace Scrips.Background
         private void Start()
         {
             if (waves.Length < 1)
-            { print("no Waves defined"); wavesFinished = true; }
+            { print("no Waves defined"); }
         }
 
         private void Update()
         {
-            if(wavesFinished ){return;}
-        
-            if(_currentWave >= waves.Length-1)
+
+            if(_currentWave >= waves.Length-1 || waveIsRunning)
             {
-                print("waves finished");
-                wavesFinished = true;
                 waveStartButton.interactable = false;
+            }
+            else
+            {
+                waveStartButton.interactable = true;
             }
             if(Input.GetButton("Jump")&& !waveIsRunning)
             { StartWave(); }
@@ -46,28 +47,29 @@ namespace Scrips.Background
         {
             for (int i = 0; i < waves[_currentWave].SpawnAmountOfEnemys.Length; i++)
             {
+                if(waves[_currentWave].SpawnAmountOfEnemys[i] <1){continue;}
                 EnemySpawner spawnerRef = Instantiate(spawner, transform.position, quaternion.identity).GetComponent<EnemySpawner>();
                 spawnerRef.Enemy = enemies[i];
                 spawnerRef.AmountToSpawn = waves[_currentWave].SpawnAmountOfEnemys[i];
                 spawnerRef.SpawnDelay =  waves[_currentWave].SpawnDelay[i];
                 spawnerRef.nextTimeToSpawn = Time.time +  waves[_currentWave].StartSpawnIn[i];
                 spawnerRef.SpawnManager = this;
-                if(waves[_currentWave].SpawnAmountOfEnemys[i] <1){Destroy(spawnerRef.gameObject); return;}
             }
         }
 
         public void InvokeWaveCheck()
         {
-            Invoke(nameof(IsWaveFinished),0.2f);
+            StartCoroutine(nameof(IsWaveFinished));
         }
-        private void IsWaveFinished()
+        private IEnumerator IsWaveFinished()
         {
-            if (FindObjectOfType<EnemySpawner>() == null) { print("Wave is finished"); waveIsRunning = false; }
+            yield return new WaitForEndOfFrame();
+            if (FindObjectOfType<EnemySpawner>() == null) { waveIsRunning = false; }
         }
 
         public void StartWave()
         {
-            if(wavesFinished || waveIsRunning ){return;}
+            if(waveIsRunning ){return;}
             _currentWave++; SetUpSpawners(); waveIsRunning = true;
         }
     }

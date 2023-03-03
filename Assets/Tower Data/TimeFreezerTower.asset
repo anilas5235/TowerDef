@@ -21,3 +21,4 @@ MonoBehaviour:
   - StopDuration
   - AttackSpeed
   towerName: Time Freezer
+  id: 4

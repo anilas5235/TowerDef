@@ -8,7 +8,7 @@ namespace Scrips.Towers
         [SerializeField] private GameObject[] barrelControllers;
         [SerializeField] private GameObject projectile;
         
-        private GameObject[] barrels = new GameObject[10];
+        private GameObject[] _barrels = new GameObject[10];
         private int _numberOfBarrels = 6, _attackDamage = 1, _multiHit = 2;
         private float _attackDelay = 3;
 
@@ -17,11 +17,11 @@ namespace Scrips.Towers
         // Start is called before the first frame update
         protected override void Start()
         {
-            attackRadius = 2f;
+            attackRadius = 1.5f;
             SetUpBarrelsForNewAngle();
             for (int i = 0; i < barrelControllers.Length; i++)
             {
-                barrels[i] = barrelControllers[i].transform.GetChild(0).gameObject;
+                _barrels[i] = barrelControllers[i].transform.GetChild(0).gameObject;
             }
             base.Start();
         }
@@ -43,10 +43,10 @@ namespace Scrips.Towers
             {
                 for (int i = 0; i < _numberOfBarrels; i++)
                 {
-                    Projectile shoot = Instantiate(projectile, barrels[i].transform.position, quaternion.identity).GetComponent<Projectile>();
+                    Projectile shoot = Instantiate(projectile, _barrels[i].transform.position, quaternion.identity).GetComponent<Projectile>();
                     shoot.pierce = _multiHit;
                     shoot.damage = _attackDamage;
-                    shoot.targetDirection = (barrels[i].transform.position-transform.position).normalized;
+                    shoot.targetDirection = (_barrels[i].transform.position-transform.position).normalized;
                     shoot.speed = 10;
                     shoot.projectileColor = ColorSequence(_attackDamage);
                     shoot.lifeTime = Time.time + (0.7f * attackRadius) / shoot.speed;

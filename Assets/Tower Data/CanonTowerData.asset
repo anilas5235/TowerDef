@@ -21,3 +21,4 @@ MonoBehaviour:
   - AttackDamage
   - MultiHit
   towerName: Canon
+  id: 1

@@ -41,7 +41,7 @@ namespace Scrips.Towers
             VisualChange();
         }
 
-        void Update()
+        protected virtual void Update()
         {
             if (!placed)
             {
@@ -92,7 +92,7 @@ namespace Scrips.Towers
 
         protected abstract void VisualChange();
 
-        protected Color ColorSequence(int index)
+        protected static Color ColorSequence(int index)
         {
             Color currentColor = Color.red;
             switch (index)

@@ -21,3 +21,4 @@ MonoBehaviour:
   - AttackDamage
   - AttackSpeed
   towerName: Artillery
+  id: 7

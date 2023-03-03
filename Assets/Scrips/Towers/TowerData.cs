@@ -11,5 +11,6 @@ namespace Scrips.Towers
         public int[] upgradeCostsSlot2;
         public string[] statNames;
         public string towerName;
+        public int id;
     }
 }

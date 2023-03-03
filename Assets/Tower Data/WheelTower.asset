@@ -21,3 +21,4 @@ MonoBehaviour:
   - AttackDamage
   - Barrels
   towerName: Wheel Shoot
+  id: 6

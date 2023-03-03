@@ -21,3 +21,4 @@ MonoBehaviour:
   - AttackDamage
   - AttackSpeed
   towerName: Sniper
+  id: 3
