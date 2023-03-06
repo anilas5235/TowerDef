@@ -27,7 +27,7 @@ namespace Scrips
                 pierce--;
                 AppearanceUpdate();
             }
-            else if(col.gameObject.CompareTag("DestoryProjectile")) { pierce -= pierce; }
+            else if(col.gameObject.CompareTag("DestoryProjectile") || col.gameObject.CompareTag("Tower")) { pierce -= pierce; }
         
             if(pierce < 1){Destroy(gameObject);}
         }
