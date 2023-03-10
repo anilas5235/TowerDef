@@ -6,6 +6,7 @@ namespace Scrips.Towers
     public class TimeFreezerTower : TowerBase
     {
         [SerializeField] private Color[] upgradeColors = new Color[5];
+        
         private float _stopDuration = 2f,_attackDelay = 6f;
         protected override void Start()
         {
@@ -19,7 +20,7 @@ namespace Scrips.Towers
             _stopDuration += 0.2f * upgrade.y;
             _attackDelay -= 0.4f * upgrade.z;
 
-            VisualChange(); StatsKeeper.UpdateUI();
+            VisualChange();
             indicator.gameObject.transform.localScale = new Vector3(attackRadius*2, attackRadius*2, 1);
         }
 

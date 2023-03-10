@@ -12,9 +12,6 @@ namespace Scrips.Towers
         private int _numberOfBarrels = 6, _attackDamage = 1, _multiHit = 2;
         private float _attackDelay = 3;
 
-        
-
-        // Start is called before the first frame update
         protected override void Start()
         {
             attackRadius = 1.5f;
@@ -33,7 +30,7 @@ namespace Scrips.Towers
             _attackDamage +=  1 * (int)upgrade.y;
             _numberOfBarrels += 1 * (int)upgrade.z;
 
-            VisualChange(); StatsKeeper.UpdateUI(); SetUpBarrelsForNewAngle();
+            VisualChange(); SetUpBarrelsForNewAngle();
             indicator.gameObject.transform.localScale = new Vector3(attackRadius*2, attackRadius*2, 1);
         }
 

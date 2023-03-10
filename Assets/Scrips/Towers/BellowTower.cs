@@ -29,7 +29,7 @@ namespace Scrips.Towers
             _throwBackStrength +=  1 * (int)upgrade.y;
             _attackDelay -= 0.7f * (int)upgrade.z;
 
-            VisualChange(); StatsKeeper.UpdateUI(); CalculatePointsForPushArea();
+            VisualChange(); CalculatePointsForPushArea();
             indicator.gameObject.transform.localScale = new Vector3(attackRadius*2, attackRadius*2, 1);
         }
 

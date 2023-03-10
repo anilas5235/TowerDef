@@ -48,7 +48,7 @@ namespace Scrips.Towers
             _attackDamage += 1 * (int) upgrade.y;
             _attackDelay -= 0.3f * (int) upgrade.z;
 
-            VisualChange(); StatsKeeper.UpdateUI(); ToggleBarrels();
+            VisualChange(); ToggleBarrels();
             indicator.gameObject.transform.localScale = new Vector3(attackRadius*2, attackRadius*2, 1);
         }
 

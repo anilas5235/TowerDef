@@ -1,4 +1,3 @@
-using Unity.Mathematics;
 using UnityEngine;
 
 namespace Scrips.Towers
@@ -20,7 +19,7 @@ namespace Scrips.Towers
             _attackDamage += 2*(int) upgrade.y;
             _attackDelay -= 1f/2 * upgrade.z;
 
-            VisualChange(); StatsKeeper.UpdateUI();
+            VisualChange();
         }
 
         protected override void Attack() 

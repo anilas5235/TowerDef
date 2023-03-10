@@ -31,7 +31,7 @@ namespace Scrips.Towers
             _attackDamage +=  1 * (int)upgrade.y;
             _multiHit += 1 * (int)upgrade.z;
 
-            VisualChange(); StatsKeeper.UpdateUI();
+            VisualChange();
             indicator.gameObject.transform.localScale = new Vector3(attackRadius*2, attackRadius*2, 1);
         }
 

@@ -25,7 +25,6 @@ namespace Scrips.Background
         private StatsKeeper _statsKeeper;
         private TowerBase _currentTowerScript;
         private Vector3 _upgradeLevel;
-
         private bool _active, _mouseoverUI;
 
         private void Start()
@@ -72,46 +71,34 @@ namespace Scrips.Background
 
         private void SetUiWindowText()
         {
+            int i = 0;
+            void SetTextForStat( bool furtherUpgradable, int upgradeLevelOfState, int[] costForNextUpgrades)
+            {
+                if (furtherUpgradable)
+                {
+                    statNames[i].text = _towerData.statNames[i] + " :\n lvl " + (upgradeLevelOfState + 1);
+                    statCosts[i].text = "Cost to Upgrade : \n" + costForNextUpgrades[upgradeLevelOfState];
+                    statButtons[i].gameObject.SetActive( true);
+                }else
+                {
+                    statNames[i].text = _towerData.statNames[i] + " :\n lvl Max";
+                    statCosts[i].text = "";
+                    statButtons[i].gameObject.SetActive( false);
+                }
+                i++;
+            }
             _upgradeLevel = _currentTowerScript.upgradeLevel;
 
             //set the texts
             towerName.text = _towerData.towerName;
+            
+            SetTextForStat(_upgradeLevel.x < _towerData.upgradeCostsSlot0.Length,(int)_upgradeLevel.x,_towerData.upgradeCostsSlot0);
+            
+            SetTextForStat(_upgradeLevel.y < _towerData.upgradeCostsSlot1.Length,(int)_upgradeLevel.y,_towerData.upgradeCostsSlot1);
+            
+            SetTextForStat(_upgradeLevel.z < _towerData.upgradeCostsSlot2.Length,(int)_upgradeLevel.z,_towerData.upgradeCostsSlot2);
 
-            if (_upgradeLevel.x < _towerData.upgradeCostsSlot0.Length)
-            {
-                statNames[0].text = _towerData.statNames[0] + " :\n lvl " + ((int)_upgradeLevel.x + 1);
-                statCosts[0].text = "Cost to Upgrade : \n" + _towerData.upgradeCostsSlot0[(int)_upgradeLevel.x];
-                statButtons[0].gameObject.SetActive( true);
-            }else
-            {
-                statNames[0].text = _towerData.statNames[0] + " :\n lvl Max";
-                statCosts[0].text = "";
-                statButtons[0].gameObject.SetActive( false);
-            }
-
-            if (_upgradeLevel.y < _towerData.upgradeCostsSlot1.Length)
-            {
-                statNames[1].text = _towerData.statNames[1] + " : lvl " + ((int)_upgradeLevel.y + 1);
-                statCosts[1].text = "Cost to Upgrade : \n" + _towerData.upgradeCostsSlot1[(int)_upgradeLevel.y];
-                statButtons[1].gameObject.SetActive(true);
-            }else
-            {
-                statNames[1].text = _towerData.statNames[1] + " :\n lvl Max";
-                statCosts[1].text = "";
-                statButtons[1].gameObject.SetActive(false);
-            }
-
-            if (_upgradeLevel.z < _towerData.upgradeCostsSlot2.Length)
-            {
-                statNames[2].text = _towerData.statNames[2]+" :\n lvl "+((int)_upgradeLevel.z +1);
-                statCosts[2].text = "Cost to Upgrade : \n" + _towerData.upgradeCostsSlot2[(int)_upgradeLevel.z] ;
-                statButtons[2].gameObject.SetActive(true);
-            }else
-            {
-                statNames[2].text= _towerData.statNames[2]+ " :\n lvl Max";
-                statCosts[2].text = "";
-                statButtons[2].gameObject.SetActive(false);
-            }
+            
             switch (_towerData.id)
             {
                 case 7: extraButton.gameObject.SetActive(true);
@@ -125,7 +112,7 @@ namespace Scrips.Background
         {
             var green = new Color(23 / 255f, 130 / 255f, 20 / 255f);
             if (_upgradeLevel.x < _towerData.upgradeCostsSlot0.Length)
-            { statButtonColors[0].color = _statsKeeper.Money < _towerData.upgradeCostsSlot0[(int)_upgradeLevel.x] ? Color.red : green; }
+            { statButtonColors[0].color = _statsKeeper.Money < _towerData.upgradeCostsSlot0[(int)_upgradeLevel.x] ? Color.red : green;}
             if(_upgradeLevel.y < _towerData.upgradeCostsSlot1.Length)
             {statButtonColors[1].color = _statsKeeper.Money < _towerData.upgradeCostsSlot1[(int)_upgradeLevel.y] ? Color.red : green;}    
             if(_upgradeLevel.z <  _towerData.upgradeCostsSlot2.Length)
@@ -137,9 +124,12 @@ namespace Scrips.Background
             int cost =0;
             switch (index)
             {
-                case 0: cost = _towerData.upgradeCostsSlot0[(int)_upgradeLevel.x]; break;
-                case 1: cost = _towerData.upgradeCostsSlot1[(int)_upgradeLevel.y]; break;
-                case 2: cost = _towerData.upgradeCostsSlot2[(int)_upgradeLevel.z]; break;
+                case 0: if (_upgradeLevel.x > _towerData.upgradeCostsSlot0.Length) {return; }
+                    cost = _towerData.upgradeCostsSlot0[(int)_upgradeLevel.x]; break;
+                case 1: if (_upgradeLevel.y > _towerData.upgradeCostsSlot1.Length) {return; }
+                    cost = _towerData.upgradeCostsSlot1[(int)_upgradeLevel.y]; break;
+                case 2: if (_upgradeLevel.z > _towerData.upgradeCostsSlot2.Length) {return; }
+                    cost = _towerData.upgradeCostsSlot2[(int)_upgradeLevel.z]; break;
                 default: print(" For this Upgrade index "+index+ " is not defined a function"); 
                     return;
             }
@@ -171,12 +161,10 @@ namespace Scrips.Background
             towerUiWindow.SetActive(true);
             _active = true;
             SetUiWindowText();
-            _currentTowerScript.selected = true;
         }
 
         private void DeselectTower()
         {
-            _currentTowerScript.selected = false;
             _currentTowerScript.indicator.enabled = false;
             towerUiWindow.SetActive(false);
             _active = false;

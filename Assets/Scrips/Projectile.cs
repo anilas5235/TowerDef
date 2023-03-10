@@ -4,11 +4,10 @@ namespace Scrips
 {
     public class Projectile : MonoBehaviour
     {
-        public float speed, currentScale;
         public Vector3 targetDirection;
-        public int damage, pierce;
         public Color projectileColor;
-        public float lifeTime;
+        public float speed, currentScale, lifeTime;
+        public int damage, pierce;
     
         [SerializeField] private SpriteRenderer mySpriteRenderer;
 

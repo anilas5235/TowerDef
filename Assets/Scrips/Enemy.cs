@@ -11,17 +11,16 @@ namespace Scrips
         private StatsKeeper _statsKeeper;
         private SpriteRenderer _spriteRenderer;
         private Coroutine _currentStopEnemy;
+        private Vector3 _directionDriftOf;
         private int _nextPointInArry = 0;
         private float _speed;
         private bool _stop;
-        private Vector3 _directionDriftOf;
     
         public int hp = 1;
         public float distance =0;
     
         [SerializeField] private ParticleSystem deathParticleSystem;
 
-        // Start is called before the first frame update
         private void Start()
         {
             _pathKeeper = PathKeeper.Instance;
@@ -29,8 +28,6 @@ namespace Scrips
             _spriteRenderer = GetComponent<SpriteRenderer>();
             SetColorAndSpeed();
         }
-
-        // Update is called once per frame
         private void Update()
         {
             if (_stop) {return; }
@@ -45,7 +42,7 @@ namespace Scrips
             if (Vector3.Distance( transform.position, _pathKeeper.PathPoints[_nextPointInArry].transform.position) < 0.1f)
             {
                 if (_nextPointInArry == _pathKeeper.PathPoints.Length -1)
-                { _statsKeeper.hp -= hp; _statsKeeper.UpdateUI(); Destroy(this.gameObject); return;}
+                { _statsKeeper.Hp -= hp; Destroy(this.gameObject); return;}
                 _nextPointInArry++;
                 _directionDriftOf = Vector3.zero;
             }
@@ -77,7 +74,6 @@ namespace Scrips
                     quaternion.identity).main;
                 particlesMain.startColor = _spriteRenderer.color;
                 _statsKeeper.Money += Damage + hp;
-                _statsKeeper.UpdateUI();
                 Destroy(this.gameObject);
                 return;
             }

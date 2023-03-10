@@ -7,7 +7,7 @@ namespace Scrips.Towers
     public abstract class TowerBase : MonoBehaviour
     {
         public Vector3 upgradeLevel = Vector3.zero;
-        public bool placed, selected ;
+        public bool placed;
         public SpriteRenderer indicator; 
         public TowerData towerData;
         public bool needsTargetAtAll = true;
@@ -60,7 +60,6 @@ namespace Scrips.Towers
                     Shop.TowerHandled();
                     indicator.enabled = false;
                     StatsKeeper.Money -= towerData.placingCosts;
-                    StatsKeeper.UpdateUI();
                 }
                 else if(Input.GetMouseButtonDown(1)) { Destroy(gameObject);Shop.TowerHandled(); }
             }
