@@ -1,36 +1,5 @@
 %YAML 1.1
 %TAG !u! tag:unity3d.com,2011:
---- !u!1 &5219271898913094735
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 5219271898913094732}
-  m_Layer: 6
-  m_Name: BarrelPivot
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!4 &5219271898913094732
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 5219271898913094735}
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_Children:
-  - {fileID: 5219271900483077983}
-  m_Father: {fileID: 5219271899140306282}
-  m_RootOrder: 1
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &5219271899140306294
 GameObject:
   m_ObjectHideFlags: 0
@@ -41,10 +10,10 @@ GameObject:
   m_Component:
   - component: {fileID: 5219271899140306282}
   - component: {fileID: 5219271899140306293}
-  - component: {fileID: 5219271899140306292}
-  - component: {fileID: 1453977650388221382}
+  - component: {fileID: 8250562900121641156}
+  - component: {fileID: 6645119090830104044}
   m_Layer: 8
-  m_Name: SniperTower
+  m_Name: VolcanoTower
   m_TagString: Tower
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -59,10 +28,10 @@ Transform:
   m_GameObject: {fileID: 5219271899140306294}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_LocalScale: {x: 1.2, y: 1.2, z: 1}
   m_Children:
   - {fileID: 5219271899957719760}
-  - {fileID: 5219271898913094732}
+  - {fileID: 4191757943663103851}
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -105,9 +74,9 @@ SpriteRenderer:
   m_LightmapParameters: {fileID: 0}
   m_SortingLayerID: 0
   m_SortingLayer: 0
-  m_SortingOrder: 1
+  m_SortingOrder: 2
   m_Sprite: {fileID: -2413806693520163455, guid: ebe73ca9363db456bacf42c025bb4847, type: 3}
-  m_Color: {r: 1, g: 0, b: 0, a: 1}
+  m_Color: {r: 0.14150941, g: 0.11681201, b: 0.11681201, a: 1}
   m_FlipX: 0
   m_FlipY: 0
   m_DrawMode: 0
@@ -117,7 +86,7 @@ SpriteRenderer:
   m_WasSpriteAssigned: 1
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
---- !u!58 &5219271899140306292
+--- !u!58 &8250562900121641156
 CircleCollider2D:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -132,8 +101,8 @@ CircleCollider2D:
   m_UsedByComposite: 0
   m_Offset: {x: 0, y: 0}
   serializedVersion: 2
-  m_Radius: 0.4
---- !u!114 &1453977650388221382
+  m_Radius: 0.5
+--- !u!114 &6645119090830104044
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -142,23 +111,13 @@ MonoBehaviour:
   m_GameObject: {fileID: 5219271899140306294}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 260af85ecb57e4a4ca2df618e11df184, type: 3}
+  m_Script: {fileID: 11500000, guid: d0d55fd49e1cb934d8816caef64efd1a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  upgradeLevel: {x: 0, y: 0, z: 0}
-  placed: 0
-  indicator: {fileID: 5219271899957719761}
-  towerData: {fileID: 11400000, guid: 3e2da64594b869f46a1b0c37257cfcfc, type: 2}
-  needsTargetAtAll: 1
-  blockingLayer:
+  lavaShoot: {fileID: 3143086475193520447, guid: 322ded2696747584bb649fc3d6284595, type: 3}
+  pathLayer:
     serializedVersion: 2
-    m_Bits: 64
-  towerLayer:
-    serializedVersion: 2
-    m_Bits: 256
-  enemyLayer:
-    serializedVersion: 2
-    m_Bits: 128
+    m_Bits: 8
 --- !u!1 &5219271899957719763
 GameObject:
   m_ObjectHideFlags: 0
@@ -241,7 +200,7 @@ SpriteRenderer:
   m_WasSpriteAssigned: 1
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
---- !u!1 &5219271900483077982
+--- !u!1 &6890504385769321005
 GameObject:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -249,36 +208,36 @@ GameObject:
   m_PrefabAsset: {fileID: 0}
   serializedVersion: 6
   m_Component:
-  - component: {fileID: 5219271900483077983}
-  - component: {fileID: 5219271900483077980}
-  m_Layer: 6
-  m_Name: barrel
+  - component: {fileID: 4191757943663103851}
+  - component: {fileID: 3467875597142236680}
+  m_Layer: 0
+  m_Name: Circle
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
---- !u!4 &5219271900483077983
+--- !u!4 &4191757943663103851
 Transform:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 5219271900483077982}
+  m_GameObject: {fileID: 6890504385769321005}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0, y: 0.5, z: 0}
-  m_LocalScale: {x: 0.25, y: 1.19, z: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 0.5, y: 0.5, z: 1}
   m_Children: []
-  m_Father: {fileID: 5219271898913094732}
-  m_RootOrder: 0
+  m_Father: {fileID: 5219271899140306282}
+  m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!212 &5219271900483077980
+--- !u!212 &3467875597142236680
 SpriteRenderer:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 5219271900483077982}
+  m_GameObject: {fileID: 6890504385769321005}
   m_Enabled: 1
   m_CastShadows: 0
   m_ReceiveShadows: 0
@@ -311,9 +270,9 @@ SpriteRenderer:
   m_LightmapParameters: {fileID: 0}
   m_SortingLayerID: 0
   m_SortingLayer: 0
-  m_SortingOrder: 0
-  m_Sprite: {fileID: 7482667652216324306, guid: 48e93eef0688c4a259cb0eddcd8661f7, type: 3}
-  m_Color: {r: 0, g: 0, b: 0, a: 1}
+  m_SortingOrder: 3
+  m_Sprite: {fileID: -2413806693520163455, guid: ebe73ca9363db456bacf42c025bb4847, type: 3}
+  m_Color: {r: 1, g: 0.57853, b: 0, a: 1}
   m_FlipX: 0
   m_FlipY: 0
   m_DrawMode: 0

@@ -407,7 +407,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   upgradeLevel: {x: 0, y: 0, z: 0}
   placed: 0
-  selected: 0
   indicator: {fileID: 5219271899957719761}
   towerData: {fileID: 11400000, guid: 152bbb7902593a742a78bf3bfa3fc5fa, type: 2}
   needsTargetAtAll: 0
@@ -427,7 +426,6 @@ MonoBehaviour:
   - {fileID: 1166415933102926602}
   - {fileID: 6880018583847769179}
   explosion: {fileID: 6479616313048097091, guid: f6b473fcb9cab304db199420a1cc9231, type: 3}
-  changingTargetPosition: 0
 --- !u!1 &5219271899957719763
 GameObject:
   m_ObjectHideFlags: 0

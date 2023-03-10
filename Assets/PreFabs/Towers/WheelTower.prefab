@@ -1081,7 +1081,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   upgradeLevel: {x: 0, y: 0, z: 0}
   placed: 0
-  selected: 0
   indicator: {fileID: 5219271899957719761}
   towerData: {fileID: 11400000, guid: b50e4e6126959f749aa1d42efda2ec68, type: 2}
   needsTargetAtAll: 0
