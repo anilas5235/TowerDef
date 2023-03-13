@@ -1,3 +1,4 @@
+using Scrips.Background;
 using Unity.Mathematics;
 using UnityEngine;
 
@@ -5,7 +6,6 @@ namespace Scrips.Towers
 {
     public class CanonTower : TowerBase
     {
-        [SerializeField] protected GameObject projectile;
         [SerializeField] protected Transform barrelTip;
         
         private float _attackDelay = 1; 
@@ -42,7 +42,8 @@ namespace Scrips.Towers
             BarrelPivotGameObject.transform.localRotation = Quaternion.Euler(0,0,angle);
             if (Time.time >= timeForNextAttack)
             {
-                Projectile shoot = Instantiate(projectile, barrelTip.position, quaternion.identity).GetComponent<Projectile>();
+                Projectile shoot = ProjectilePooling.Instance.GetStandardProjectileFromPool().GetComponent<Projectile>();
+                shoot.gameObject.transform.position = barrelTip.position;
                 shoot.pierce = _multiHit;
                 shoot.damage = _attackDamage;
                 shoot.targetDirection = targetDirection;

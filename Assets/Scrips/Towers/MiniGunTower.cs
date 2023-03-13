@@ -1,3 +1,4 @@
+using Scrips.Background;
 using Unity.Mathematics;
 using UnityEngine;
 using Random = UnityEngine.Random;
@@ -6,7 +7,6 @@ namespace Scrips.Towers
 {
     public class MiniGunTower : TowerBase
     {
-        [SerializeField] protected GameObject projectile;
         [SerializeField] protected Transform[] barrelTips;
 
         private int _attackDamage = 1, _multiHit = 1, _attackDelay = 4; //_timeForNextAttack = Time.time + 1/_attackDelay;
@@ -35,7 +35,8 @@ namespace Scrips.Towers
             BarrelPivotGameObject.transform.localRotation = Quaternion.Euler(0,0,angle);
             if (Time.time >= timeForNextAttack)
             {
-                Projectile shoot = Instantiate(projectile, barrelTips[Random.Range(0,2)].position, quaternion.identity).GetComponent<Projectile>();
+                Projectile shoot = ProjectilePooling.Instance.GetStandardProjectileFromPool().GetComponent<Projectile>();
+                shoot.gameObject.transform.position = barrelTips[Random.Range(0,2)].position;
                 shoot.pierce = _multiHit;
                 shoot.damage = _attackDamage;
                 shoot.targetDirection = targetDirection;

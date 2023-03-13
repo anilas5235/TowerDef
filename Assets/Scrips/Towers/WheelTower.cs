@@ -1,3 +1,4 @@
+using Scrips.Background;
 using Unity.Mathematics;
 using UnityEngine;
 
@@ -40,7 +41,8 @@ namespace Scrips.Towers
             {
                 for (int i = 0; i < _numberOfBarrels; i++)
                 {
-                    Projectile shoot = Instantiate(projectile, _barrels[i].transform.position, quaternion.identity).GetComponent<Projectile>();
+                    Projectile shoot = ProjectilePooling.Instance.GetStandardProjectileFromPool().GetComponent<Projectile>();
+                    shoot.gameObject.transform.position = _barrels[i].transform.position;
                     shoot.pierce = _multiHit;
                     shoot.damage = _attackDamage;
                     shoot.targetDirection = (_barrels[i].transform.position-transform.position).normalized;

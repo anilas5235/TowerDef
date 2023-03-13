@@ -11,8 +11,7 @@ GameObject:
   - component: {fileID: 207460190987319775}
   - component: {fileID: 207460190987319774}
   - component: {fileID: 7016165597201072104}
-  - component: {fileID: -182834234765967229}
-  - component: {fileID: 5988536421454378010}
+  - component: {fileID: 2321624347953638153}
   m_Layer: 0
   m_Name: Projectil
   m_TagString: Untagged
@@ -97,35 +96,18 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 72e620e88a4800047ad2ac880bacd5cf, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  targetDirection: {x: 0, y: 0, z: 0}
+  projectileColor: {r: 0, g: 0, b: 0, a: 1}
   speed: 0
   currentScale: 0
-  targetDirection: {x: 0, y: 0, z: 0}
+  lifeTime: 0
   damage: 0
   pierce: 0
-  projectileColor: {r: 0, g: 0, b: 0, a: 1}
   mySpriteRenderer: {fileID: 207460190987319774}
---- !u!50 &-182834234765967229
-Rigidbody2D:
-  serializedVersion: 4
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 207460190987319773}
-  m_BodyType: 0
-  m_Simulated: 1
-  m_UseFullKinematicContacts: 0
-  m_UseAutoMass: 0
-  m_Mass: 1
-  m_LinearDrag: 0
-  m_AngularDrag: 0.05
-  m_GravityScale: 0
-  m_Material: {fileID: 0}
-  m_Interpolate: 0
-  m_SleepingMode: 1
-  m_CollisionDetection: 1
-  m_Constraints: 0
---- !u!58 &5988536421454378010
+  Enemy:
+    serializedVersion: 2
+    m_Bits: 128
+--- !u!58 &2321624347953638153
 CircleCollider2D:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -140,4 +122,4 @@ CircleCollider2D:
   m_UsedByComposite: 0
   m_Offset: {x: 0, y: 0}
   serializedVersion: 2
-  m_Radius: 0.5
+  m_Radius: 0.49999997

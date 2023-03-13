@@ -1,3 +1,4 @@
+using Scrips.Background;
 using UnityEngine;
 
 namespace Scrips
@@ -10,32 +11,51 @@ namespace Scrips
         public int damage, pierce;
     
         [SerializeField] private SpriteRenderer mySpriteRenderer;
-
+        [SerializeField] private LayerMask Enemy;
+        private Collider2D[] cols = new Collider2D[50];
         void Update()
         {
             transform.Translate(targetDirection * (speed * Time.deltaTime));
             if (Time.time > lifeTime && lifeTime > 0)
-            { Destroy(gameObject); }
+            { ProjectilePooling.Instance.AddStandardProjectileToPool(gameObject); }
         }
 
-        private void OnTriggerEnter2D(Collider2D col)
+        private void FixedUpdate()
         {
-            if (col.gameObject.CompareTag("Enemy"))
-            {
-                col.gameObject.GetComponent<Enemy>().TakeDamage(damage);
-                pierce--;
-                AppearanceUpdate();
-            }
-            else if(col.gameObject.CompareTag("DestoryProjectile") || col.gameObject.CompareTag("Tower")) { pierce -= pierce; }
-        
-            if(pierce < 1){Destroy(gameObject);}
-        }
+            Physics2D.OverlapCircleNonAlloc(transform.position, transform.localScale.x/2f, cols, Enemy);
+            
 
+            foreach (Collider2D col in cols)
+            {
+                if (col == null)
+                { return; }
+                if (col.gameObject.CompareTag("Enemy"))
+                {
+                    col.gameObject.GetComponent<Enemy>().TakeDamage(damage);
+                    pierce--;
+                    AppearanceUpdate();
+                }
+                else if (col.gameObject.CompareTag("DestoryProjectile"))
+                {
+                    pierce -= pierce;
+                }
+
+                if (pierce < 1)
+                {
+                    ProjectilePooling.Instance.AddStandardProjectileToPool(gameObject);
+                }
+            }
+        }
         public void AppearanceUpdate()
         {
             currentScale = 0.1f + pierce / 10f;
             transform.localScale = new Vector3(currentScale, currentScale,1);
             mySpriteRenderer.color = projectileColor;
+        }
+
+        private void OnBecameInvisible()
+        {
+            ProjectilePooling.Instance.AddStandardProjectileToPool(gameObject);
         }
     }
 }

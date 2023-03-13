@@ -1,4 +1,3 @@
-using System;
 using System.Collections.Generic;
 using System.Linq;
 using Unity.Mathematics;
@@ -26,37 +25,41 @@ namespace Scrips.Towers
         private void ThrowLavaShoot()
         {
             List<Collider2D> possiblePathSegments = Physics2D.OverlapCircleAll(transform.position, range, pathLayer).ToList();
-
             Vector3 targetPosition = Vector3.zero;
             bool done = false;
-            int count = 0;
+            
+
+            Vector3 GetAPointInBoxCollider(int indexInList)
+            {
+                BoxCollider2D col = (BoxCollider2D) possiblePathSegments[indexInList];
+                Vector2 offset = new Vector2( col.size.x/2 * Random.Range(-0.9f, 0.9f), col.size.y/2 * Random.Range(-1f, 1f));
+                Vector3 point = col.transform.TransformPoint(offset);
+                return point;
+            }
 
             do
             {
-                count++;
+                int count = 0;
                 int rd = Random.Range(0, possiblePathSegments.Count);
-                BoxCollider2D col = (BoxCollider2D) possiblePathSegments[rd];
-                Vector2 offset = new Vector2( col.size.x/2 * Random.Range(-0.9f, 0.9f), col.size.y/2 * Random.Range(-0.9f, 0.9f));
-                print("potentail local Position " +offset + col.transform.parent.gameObject.name);
-                targetPosition = col.transform.TransformPoint(offset);
-                print("potentail world Position " +targetPosition);
-
-                if (Vector2.Distance(targetPosition,transform.position) > range)
+                
+                do
                 {
-                    //possiblePathSegments.Remove(possiblePathSegments[rd]);
-                }
-                else
-                {
-                    done = true;
-                }
-
-                if (count > 50)
-                {
-                    return;
-                }
+                    count++;
+                    targetPosition = GetAPointInBoxCollider(rd);
+                    if (Vector2.Distance(targetPosition, transform.position) < range)
+                    {
+                        done = true;
+                    }else if (count > 3)
+                    {
+                        possiblePathSegments.Remove(possiblePathSegments[rd]);
+                        break;
+                    }
+                    
+                } while (!done);
 
             } while ( !done);
 
+            
             Instantiate(lavaShoot, targetPosition, quaternion.identity);
         }
     }
