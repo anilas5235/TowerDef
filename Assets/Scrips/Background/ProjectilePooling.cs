@@ -10,6 +10,7 @@ namespace Scrips.Background
         
         [SerializeField] private GameObject _standardProjectile;
         private List<GameObject> _standardProjectilePool;
+        [SerializeField] private int _totalStandardProjectileCount;
         void Start()
         {
             if (!Instance)
@@ -21,10 +22,14 @@ namespace Scrips.Background
 
         public void AddStandardProjectileToPool(GameObject projectile)
         {
+            if (_standardProjectilePool.Contains(projectile))
+            {
+                return;
+            }
             projectile.transform.SetParent(transform);
-            projectile.SetActive(false);
             _standardProjectilePool.Add(projectile);
             UpdateName();
+            projectile.SetActive(false);
         }
 
         public GameObject GetStandardProjectileFromPool()
@@ -33,14 +38,17 @@ namespace Scrips.Background
             if (_standardProjectilePool.Count < 1)
             {
                 returnProjectile = Instantiate(_standardProjectile, transform.position, Quaternion.identity);
+                returnProjectile.gameObject.name = $"StandardProjectile({_totalStandardProjectileCount})";
+                _totalStandardProjectileCount++;
             }
             else
             {
                 returnProjectile = _standardProjectilePool.First();
                 returnProjectile.SetActive(true);
                 _standardProjectilePool.Remove(returnProjectile);
+                returnProjectile.transform.SetParent(null);
             }
-            returnProjectile.transform.SetParent(null);
+            
             UpdateName();
             return returnProjectile;
         }

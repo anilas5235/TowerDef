@@ -1,4 +1,3 @@
-using System;
 using TMPro;
 using UnityEngine;
 
@@ -8,7 +7,7 @@ namespace Scrips.Background
     {
         public static StatsKeeper Instance;
     
-        private int hp = 100, money =600;
+        private int hp = 100, money =60000;
         private TextMeshProUGUI HPUI,MoneyUI;
 
         public int Money

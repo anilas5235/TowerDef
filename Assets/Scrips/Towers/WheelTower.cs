@@ -1,5 +1,4 @@
 using Scrips.Background;
-using Unity.Mathematics;
 using UnityEngine;
 
 namespace Scrips.Towers
@@ -7,8 +6,7 @@ namespace Scrips.Towers
     public class WheelTower : TowerBase
     {
         [SerializeField] private GameObject[] barrelControllers;
-        [SerializeField] private GameObject projectile;
-        
+
         private GameObject[] _barrels = new GameObject[10];
         private int _numberOfBarrels = 6, _attackDamage = 1, _multiHit = 2;
         private float _attackDelay = 3;

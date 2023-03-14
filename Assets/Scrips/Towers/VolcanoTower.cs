@@ -6,25 +6,41 @@ using Random = UnityEngine.Random;
 
 namespace Scrips.Towers
 {
-    public class VolcanoTower : MonoBehaviour
+    public class VolcanoTower : TowerBase
     {
-        private float range = 2f;
-
         [SerializeField] private GameObject lavaShoot;
         [SerializeField] private LayerMask pathLayer;
+        
+        private float _attackDelay = 3;
 
-        private void Start()
+        protected override void Start()
         {
-            for (int i = 0; i < 1000; i++)
+            attackRadius = 2f;
+            base.Start();
+        }
+
+        public override void UpgradeTower(Vector3 upgrade)
+        {
+            throw new System.NotImplementedException();
+        }
+
+        protected override void Attack()
+        {
+            if (Time.time >= timeForNextAttack && Physics2D.OverlapCircle(transform.position, attackRadius, enemyLayer))
             {
-               ThrowLavaShoot(); 
+                ThrowLavaShoot();
+                timeForNextAttack = Time.time + _attackDelay;
             }
-            
+        }
+
+        protected override void VisualChange()
+        {
+            throw new System.NotImplementedException();
         }
 
         private void ThrowLavaShoot()
         {
-            List<Collider2D> possiblePathSegments = Physics2D.OverlapCircleAll(transform.position, range, pathLayer).ToList();
+            List<Collider2D> possiblePathSegments = Physics2D.OverlapCircleAll(transform.position, attackRadius, pathLayer).ToList();
             Vector3 targetPosition = Vector3.zero;
             bool done = false;
             
@@ -46,7 +62,7 @@ namespace Scrips.Towers
                 {
                     count++;
                     targetPosition = GetAPointInBoxCollider(rd);
-                    if (Vector2.Distance(targetPosition, transform.position) < range)
+                    if (Vector2.Distance(targetPosition, transform.position) < attackRadius)
                     {
                         done = true;
                     }else if (count > 3)
