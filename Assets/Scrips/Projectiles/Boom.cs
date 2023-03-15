@@ -1,6 +1,6 @@
 using UnityEngine;
 
-namespace Scrips
+namespace Scrips.Projectiles
 {
     public class Boom : MonoBehaviour
     {

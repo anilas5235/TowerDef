@@ -1,4 +1,5 @@
 using Scrips.Background;
+using Scrips.Projectiles;
 using UnityEngine;
 
 namespace Scrips.Towers
@@ -8,11 +9,13 @@ namespace Scrips.Towers
         [SerializeField] private GameObject[] barrelControllers;
 
         private GameObject[] _barrels = new GameObject[10];
+        private StandardProjectilePool Pool;
         private int _numberOfBarrels = 6, _attackDamage = 1, _multiHit = 2;
         private float _attackDelay = 3;
 
         protected override void Start()
         {
+            Pool = StandardProjectilePool.Instance;
             attackRadius = 1.5f;
             SetUpBarrelsForNewAngle();
             for (int i = 0; i < barrelControllers.Length; i++)
@@ -39,7 +42,7 @@ namespace Scrips.Towers
             {
                 for (int i = 0; i < _numberOfBarrels; i++)
                 {
-                    Projectile shoot = ProjectilePooling.Instance.GetStandardProjectileFromPool().GetComponent<Projectile>();
+                    Projectile shoot = Pool.GetObjectFromPool().GetComponent<Projectile>();
                     shoot.gameObject.transform.position = _barrels[i].transform.position;
                     shoot.pierce = _multiHit;
                     shoot.damage = _attackDamage;

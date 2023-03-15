@@ -41,8 +41,14 @@ namespace Scrips
             distance += Time.deltaTime * _speed;
             if (Vector3.Distance( transform.position, _pathKeeper.PathPoints[_nextPointInArry].transform.position) < 0.1f)
             {
-                if (_nextPointInArry == _pathKeeper.PathPoints.Length -1)
-                { _statsKeeper.Hp -= hp; Destroy(this.gameObject); return;}
+                if (_nextPointInArry == _pathKeeper.PathPoints.Length - 1)
+                {
+                    _statsKeeper.Hp -= hp;
+                    SpawnManager.Instance.InvokeWaveCheck();
+                    Destroy(this.gameObject);
+                    return;
+                }
+
                 _nextPointInArry++;
                 _directionDriftOf = Vector3.zero;
             }
@@ -74,6 +80,7 @@ namespace Scrips
                     quaternion.identity).main;
                 particlesMain.startColor = _spriteRenderer.color;
                 _statsKeeper.Money += Damage + hp;
+                SpawnManager.Instance.InvokeWaveCheck();
                 Destroy(this.gameObject);
                 return;
             }

@@ -64,7 +64,7 @@ namespace Scrips.Background
         private IEnumerator IsWaveFinished()
         {
             yield return new WaitForEndOfFrame();
-            if (FindObjectOfType<EnemySpawner>() == null) { waveIsRunning = false; }
+            if (FindObjectOfType<Enemy>() == null && FindObjectOfType<EnemySpawner>() == null) { waveIsRunning = false; }
         }
 
         public void StartWave()

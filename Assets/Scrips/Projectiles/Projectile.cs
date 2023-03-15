@@ -1,10 +1,12 @@
 using Scrips.Background;
 using UnityEngine;
 
-namespace Scrips
+namespace Scrips.Projectiles
 {
     public class Projectile : MonoBehaviour
     {
+        public StandardProjectilePool pool;
+            
         public Vector3 targetDirection;
         public Color projectileColor;
         public float speed, currentScale, lifeTime;
@@ -19,7 +21,7 @@ namespace Scrips
             if (Time.time > lifeTime && lifeTime > 0)
             {
                 ResetProjectileValues();
-                ProjectilePooling.Instance.AddStandardProjectileToPool(gameObject);
+                pool.AddObjectToPool(gameObject);
             }
         }
 
@@ -45,7 +47,7 @@ namespace Scrips
                 if (pierce < 1)
                 {
                     ResetProjectileValues();
-                    ProjectilePooling.Instance.AddStandardProjectileToPool(gameObject);
+                    pool.AddObjectToPool(gameObject);
                 }
             }
         }
@@ -59,7 +61,7 @@ namespace Scrips
         private void OnBecameInvisible()
         {
             ResetProjectileValues();
-            ProjectilePooling.Instance.AddStandardProjectileToPool(gameObject);
+            pool.AddObjectToPool(gameObject);
         }
 
         public void ResetProjectileValues()

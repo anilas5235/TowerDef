@@ -1,5 +1,7 @@
 using System.Collections.Generic;
 using System.Linq;
+using Scrips.Background;
+using Scrips.Projectiles;
 using Unity.Mathematics;
 using UnityEngine;
 using Random = UnityEngine.Random;
@@ -8,20 +10,29 @@ namespace Scrips.Towers
 {
     public class VolcanoTower : TowerBase
     {
-        [SerializeField] private GameObject lavaShoot;
         [SerializeField] private LayerMask pathLayer;
-        
-        private float _attackDelay = 3;
+        [SerializeField] private Color[] Colors = new Color[5];
+        [SerializeField] private SpriteRenderer lavaTop;
+        private LavaShootPool Pool;
+        private float _attackDelay = 4;
+        private int _damageLodePerShoot = 5;
 
         protected override void Start()
         {
+            Pool = LavaShootPool.Instance;
             attackRadius = 2f;
             base.Start();
         }
 
         public override void UpgradeTower(Vector3 upgrade)
         {
-            throw new System.NotImplementedException();
+            upgradeLevel += upgrade;
+            attackRadius += 0.15f * upgrade.x;
+            _damageLodePerShoot += 5 * (int) upgrade.y;
+            _attackDelay -= 0.4f * upgrade.z;
+
+            VisualChange();
+            indicator.gameObject.transform.localScale = new Vector3(attackRadius*2, attackRadius*2, 1);
         }
 
         protected override void Attack()
@@ -35,7 +46,7 @@ namespace Scrips.Towers
 
         protected override void VisualChange()
         {
-            throw new System.NotImplementedException();
+            lavaTop.color = Colors[(int)upgradeLevel.y];
         }
 
         private void ThrowLavaShoot()
@@ -75,8 +86,11 @@ namespace Scrips.Towers
 
             } while ( !done);
 
-            
-            Instantiate(lavaShoot, targetPosition, quaternion.identity);
+            LavaShoot shoot = Pool.GetObjectFromPool().GetComponent<LavaShoot>();
+            shoot.gameObject.transform.position = targetPosition;
+            shoot.storedDamage = _damageLodePerShoot;
+            shoot.AppearanceUpdate();
+            shoot.Colors = Colors;
         }
     }
 }

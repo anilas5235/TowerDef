@@ -1,4 +1,5 @@
 using Scrips.Background;
+using Scrips.Projectiles;
 using UnityEngine;
 using Random = UnityEngine.Random;
 
@@ -8,10 +9,12 @@ namespace Scrips.Towers
     {
         [SerializeField] protected Transform[] barrelTips;
 
+        private StandardProjectilePool Pool;
         private int _attackDamage = 1, _multiHit = 1, _attackDelay = 4; //_timeForNextAttack = Time.time + 1/_attackDelay;
 
         protected override void Start()
         {
+            Pool = StandardProjectilePool.Instance;
             attackRadius = 3f;
             base.Start();
         }
@@ -34,7 +37,7 @@ namespace Scrips.Towers
             BarrelPivotGameObject.transform.localRotation = Quaternion.Euler(0,0,angle);
             if (Time.time >= timeForNextAttack)
             {
-                Projectile shoot = ProjectilePooling.Instance.GetStandardProjectileFromPool().GetComponent<Projectile>();
+                Projectile shoot = Pool.GetObjectFromPool().GetComponent<Projectile>();
                 shoot.gameObject.transform.position = barrelTips[Random.Range(0,2)].position;
                 shoot.pierce = _multiHit;
                 shoot.damage = _attackDamage;
