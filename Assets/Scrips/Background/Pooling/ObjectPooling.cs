@@ -14,16 +14,17 @@ namespace Scrips.Background.Pooling
             _objectPool = new List<GameObject>() ;
         }
 
-        public void AddObjectToPool(GameObject projectile)
+        public void AddObjectToPool(GameObject objectToPool)
         {
-            if (_objectPool.Contains(projectile))
+            if (_objectPool.Contains(objectToPool))
             {
                 return;
             }
-            projectile.transform.SetParent(transform);
-            _objectPool.Add(projectile);
+            objectToPool.transform.SetParent(transform);
+            _objectPool.Add(objectToPool);
             UpdateName();
-            projectile.SetActive(false);
+            objectToPool.transform.position = transform.position;
+            objectToPool.SetActive(false);
         }
 
         public GameObject GetObjectFromPool()

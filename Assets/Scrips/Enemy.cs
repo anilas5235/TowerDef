@@ -127,6 +127,8 @@ namespace Scrips
         {
             hp = 1;
             distance = 0;
+            _nextPointInArry = 0;
+            _speed = 0;
         }
     }
 }

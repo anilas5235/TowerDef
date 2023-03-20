@@ -730,7 +730,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 66011183}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalPosition: {x: -13.79, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 571640237}
@@ -4488,12 +4488,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   waveIsRunning: 0
   waves:
-  - {fileID: 0}
-  - {fileID: 11400000, guid: dc4ed10848fbf894ca17eeeb64bb91ee, type: 2}
-  - {fileID: 11400000, guid: c29592cbfd4b9ce4494f70278f65d69e, type: 2}
-  - {fileID: 11400000, guid: 2bae0cfbdf9beec46b4494c0b8a80413, type: 2}
-  - {fileID: 11400000, guid: 3e5cae11efe7eec42beaf6c91f8fd4fd, type: 2}
-  - {fileID: 11400000, guid: 7123ec69f62f81947b79e3fb9cd08352, type: 2}
+  - {fileID: 11400000, guid: 3ba234f55eeccbc4ab47b65f06581d66, type: 2}
   waveStartButton: {fileID: 202391168}
 --- !u!4 &1135593184
 Transform:
@@ -5465,7 +5460,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1453913185}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalPosition: {x: -12.9, y: 3.15, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 571640237}

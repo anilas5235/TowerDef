@@ -46,7 +46,7 @@ namespace Scrips.Background
         private IEnumerator Spawn()
         {
             _doneSpawning = false;
-            if (currentStep <= currentWaveData.Length)
+            if (currentStep >= currentWaveData.Length)
             {
                 _doneSpawning = true;
             }
@@ -81,8 +81,15 @@ namespace Scrips.Background
 
         public void StartWave()
         {
-            if(waveIsRunning ){return;}
-            _currentWave++; currentWaveData = waves[_currentWave].SpawnData; StartCoroutine( Spawn()); waveIsRunning = true;
+            if (waveIsRunning)
+            {
+                return;
+            }
+
+            _currentWave++;
+            currentWaveData = waves[_currentWave].SpawnData;
+            StartCoroutine(Spawn());
+            waveIsRunning = true;
         }
     }
 }

@@ -12,3 +12,24 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d23efbb0a549849478d93fdf08525da3, type: 3}
   m_Name: Wave0
   m_EditorClassIdentifier: 
+  SpawnData:
+  - hp: 01000000
+    additionalWaitUntilNextWavePoint: 0
+  - hp: 01000000
+    additionalWaitUntilNextWavePoint: 0
+  - hp: 01000000
+    additionalWaitUntilNextWavePoint: 0
+  - hp: 01000000
+    additionalWaitUntilNextWavePoint: 0
+  - hp: 01000000
+    additionalWaitUntilNextWavePoint: 0
+  - hp: 01000000
+    additionalWaitUntilNextWavePoint: 0
+  - hp: 01000000
+    additionalWaitUntilNextWavePoint: 0
+  - hp: 01000000
+    additionalWaitUntilNextWavePoint: 0
+  - hp: 01000000
+    additionalWaitUntilNextWavePoint: 0
+  - hp: 01000000
+    additionalWaitUntilNextWavePoint: 0
