@@ -705,6 +705,50 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 33203611}
   m_CullTransparentMesh: 1
+--- !u!1 &66011183
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 66011184}
+  - component: {fileID: 66011185}
+  m_Layer: 0
+  m_Name: NormalEnemyPool
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &66011184
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 66011183}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 571640237}
+  m_RootOrder: 6
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &66011185
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 66011183}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 921c5db8c8402204eae4fb2586edd780, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  objectToPool: {fileID: 2489806855999879601, guid: 2e7099a383ac6124c9cbc9ebae9f33f9, type: 3}
 --- !u!1 &67491102
 GameObject:
   m_ObjectHideFlags: 0
@@ -2484,6 +2528,7 @@ Transform:
   - {fileID: 1899910774}
   - {fileID: 1453913186}
   - {fileID: 1060545470}
+  - {fileID: 66011184}
   m_Father: {fileID: 0}
   m_RootOrder: 4
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -4442,16 +4487,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   waveIsRunning: 0
-  enemies:
-  - {fileID: 2489806855999879601, guid: 2e7099a383ac6124c9cbc9ebae9f33f9, type: 3}
-  - {fileID: 7091442183785571531, guid: bdf0a968267058044afc28fa19566845, type: 3}
-  - {fileID: 1786014554006802494, guid: 5069cafd513b1db40ad6367896e1b94d, type: 3}
-  - {fileID: 5058131313133564564, guid: 15eaa52851b9c00459238d153103a2e6, type: 3}
-  - {fileID: 6693130182386895948, guid: a65d78f9b418191438cd61a37cfa4161, type: 3}
-  - {fileID: 1257540300137006047, guid: e23aa304b9c74ee46843c2b660be9c4d, type: 3}
-  spawner: {fileID: 7583623007909701663, guid: 4c97b10c17ed21643b8bbd90d549cf6c, type: 3}
   waves:
-  - {fileID: 11400000, guid: a7552d1fbb3cb3a4fb2db44f9ee047af, type: 2}
+  - {fileID: 0}
   - {fileID: 11400000, guid: dc4ed10848fbf894ca17eeeb64bb91ee, type: 2}
   - {fileID: 11400000, guid: c29592cbfd4b9ce4494f70278f65d69e, type: 2}
   - {fileID: 11400000, guid: 2bae0cfbdf9beec46b4494c0b8a80413, type: 2}

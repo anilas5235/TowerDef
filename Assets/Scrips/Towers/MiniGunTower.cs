@@ -1,4 +1,5 @@
 using Scrips.Background;
+using Scrips.Background.Pooling;
 using Scrips.Projectiles;
 using UnityEngine;
 using Random = UnityEngine.Random;
@@ -43,7 +44,6 @@ namespace Scrips.Towers
                 shoot.damage = _attackDamage;
                 shoot.targetDirection = targetDirection;
                 shoot.speed = 10;
-                shoot.projectileColor = ColorSequence(_attackDamage);
                 shoot.AppearanceUpdate();
                 timeForNextAttack = Time.time + 1f/_attackDelay;
             }

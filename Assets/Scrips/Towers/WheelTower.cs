@@ -1,4 +1,5 @@
 using Scrips.Background;
+using Scrips.Background.Pooling;
 using Scrips.Projectiles;
 using UnityEngine;
 
@@ -47,8 +48,7 @@ namespace Scrips.Towers
                     shoot.pierce = _multiHit;
                     shoot.damage = _attackDamage;
                     shoot.targetDirection = (_barrels[i].transform.position-transform.position).normalized;
-                    shoot.speed = 10;
-                    shoot.projectileColor = ColorSequence(_attackDamage);
+                    shoot.speed = 5;
                     shoot.lifeTime = Time.time + (0.7f * attackRadius) / shoot.speed;
                     shoot.AppearanceUpdate();
                 }

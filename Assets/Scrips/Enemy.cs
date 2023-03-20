@@ -1,5 +1,7 @@
+using System;
 using System.Collections;
 using Scrips.Background;
+using Scrips.Background.Pooling;
 using Unity.Mathematics;
 using UnityEngine;
 
@@ -9,25 +11,30 @@ namespace Scrips
     {
         private PathKeeper _pathKeeper;
         private StatsKeeper _statsKeeper;
-        private SpriteRenderer _spriteRenderer;
         private Coroutine _currentStopEnemy;
         private Vector3 _directionDriftOf;
         private int _nextPointInArry = 0;
         private float _speed;
         private bool _stop;
-    
+
+        private static StandardEnemyPool Pool;
+        
         public int hp = 1;
-        public float distance =0;
-    
+        public float distance;
+        
         [SerializeField] private ParticleSystem deathParticleSystem;
+        [SerializeField] private SpriteRenderer _spriteRenderer;
 
         private void Start()
         {
+            if (Pool == null)
+            {
+                Pool = StandardEnemyPool.Instance;
+            }
             _pathKeeper = PathKeeper.Instance;
             _statsKeeper = StatsKeeper.Instance;
-            _spriteRenderer = GetComponent<SpriteRenderer>();
-            SetColorAndSpeed();
         }
+
         private void Update()
         {
             if (_stop) {return; }
@@ -45,7 +52,8 @@ namespace Scrips
                 {
                     _statsKeeper.Hp -= hp;
                     SpawnManager.Instance.InvokeWaveCheck();
-                    Destroy(this.gameObject);
+                    
+                    Pool.AddObjectToPool(gameObject);
                     return;
                 }
 
@@ -54,39 +62,32 @@ namespace Scrips
             }
         }
 
-        private void SetColorAndSpeed()
+        public void SetColorAndSpeed()
         {
-            switch (hp)
+            if (hp > 0)
             {
-                case 1: _spriteRenderer.color = Color.red; _speed = 1; break;
-                case 2: _spriteRenderer.color = Color.blue; _speed = 1.5f; break;
-                case 3: _spriteRenderer.color = Color.green; _speed = 2f; break;
-                case 4: _spriteRenderer.color = Color.yellow; _speed = 2.5f; break;
-                case 5: _spriteRenderer.color = Color.cyan; _speed = 3f; break;
-                case 6: _spriteRenderer.color = Color.grey; _speed = 3.5f; break;
-                case 7: _spriteRenderer.color = Color.black; _speed = 4f; break;
-                case 8: _spriteRenderer.color = Color.white; _speed = 4.5f; break;
-            
-                default: print("Color for "+hp+ " hp is not defined"); break;
+                _spriteRenderer.color = ColorKeeper.StandardColors(hp - 1);
             }
+            _speed = 1 + (hp - 1) * 0.5f;
         }
 
-        public void TakeDamage(int Damage)
+        public void TakeDamage(int damage)
         {
-            hp -= Damage;
+            hp -= damage;
             if (hp < 1)
             {
                 ParticleSystem.MainModule particlesMain = Instantiate(deathParticleSystem, transform.position,
                     quaternion.identity).main;
                 particlesMain.startColor = _spriteRenderer.color;
-                _statsKeeper.Money += Damage + hp;
+                _statsKeeper.Money += damage + hp;
                 SpawnManager.Instance.InvokeWaveCheck();
-                Destroy(this.gameObject);
+                RestVariables();
+                Pool.AddObjectToPool(gameObject);
                 return;
             }
             else
             {
-                _statsKeeper.Money += Damage;
+                _statsKeeper.Money += damage;
             }
             SetColorAndSpeed();
         }
@@ -120,6 +121,12 @@ namespace Scrips
         {
             yield return new WaitForSeconds(2f);
             _directionDriftOf = Vector3.zero;
+        }
+
+        private void RestVariables()
+        {
+            hp = 1;
+            distance = 0;
         }
     }
 }

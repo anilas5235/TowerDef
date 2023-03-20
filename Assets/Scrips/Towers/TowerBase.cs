@@ -93,21 +93,7 @@ namespace Scrips.Towers
 
         protected static Color ColorSequence(int index)
         {
-            Color currentColor = Color.red;
-            switch (index)
-            {
-                case 1: currentColor = Color.red;  break;
-                case 2: currentColor = Color.blue; ; break;
-                case 3: currentColor = Color.green;  break;
-                case 4: currentColor = Color.yellow;  break;
-                case 5: currentColor = Color.cyan;  break;
-                case 6: currentColor = Color.grey;  break;
-                case 7: currentColor = Color.black;  break;
-                case 8: currentColor = Color.white;  break;
-            
-                default: print("Color for "+ index + " attackdamage is not defined"); break;
-            }
-            return currentColor;
+            return ColorKeeper.StandardColors(index-1);
         }
     }
 }

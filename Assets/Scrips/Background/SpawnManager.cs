@@ -1,4 +1,5 @@
 using System.Collections;
+using Scrips.Background.Pooling;
 using Unity.Mathematics;
 using UnityEngine;
 using Button = UnityEngine.UI.Button;
@@ -11,9 +12,10 @@ namespace Scrips.Background
         public bool waveIsRunning ;
         
         private int _currentWave = -1;
+        private bool _doneSpawning = true;
+        private int currentStep = 0;
+        private WavePoint[] currentWaveData;
         
-        [SerializeField] private GameObject[] enemies;
-        [SerializeField] private GameObject spawner;
         [SerializeField] private Wave[] waves;
         [SerializeField] private Button waveStartButton;
         private void Awake()
@@ -39,21 +41,31 @@ namespace Scrips.Background
             {
                 waveStartButton.interactable = true;
             }
-            if(Input.GetButton("Jump")&& !waveIsRunning)
-            { StartWave(); }
         }
 
-        private void SetUpSpawners()
+        private IEnumerator Spawn()
         {
-            for (int i = 0; i < waves[_currentWave].SpawnAmountOfEnemys.Length; i++)
+            _doneSpawning = false;
+            if (currentStep <= currentWaveData.Length)
             {
-                if(waves[_currentWave].SpawnAmountOfEnemys[i] <1){continue;}
-                EnemySpawner spawnerRef = Instantiate(spawner, transform.position, quaternion.identity).GetComponent<EnemySpawner>();
-                spawnerRef.Enemy = enemies[i];
-                spawnerRef.AmountToSpawn = waves[_currentWave].SpawnAmountOfEnemys[i];
-                spawnerRef.SpawnDelay =  waves[_currentWave].SpawnDelay[i];
-                spawnerRef.nextTimeToSpawn = Time.time +  waves[_currentWave].StartSpawnIn[i];
-                spawnerRef.SpawnManager = this;
+                _doneSpawning = true;
+            }
+            else
+            {
+                foreach (var i in currentWaveData[currentStep].hp)
+                {
+                    if (i > 0 && i < 10)
+                    {
+                        Enemy E = StandardEnemyPool.Instance.GetObjectFromPool().GetComponent<Enemy>();
+                        E.gameObject.transform.position = transform.position;
+                        E.hp = i;
+                        E.SetColorAndSpeed();
+                    }
+                }
+
+                yield return new WaitForSeconds(1f + currentWaveData[currentStep].additionalWaitUntilNextWavePoint);
+                currentStep++;
+                StartCoroutine(Spawn());
             }
         }
 
@@ -64,13 +76,13 @@ namespace Scrips.Background
         private IEnumerator IsWaveFinished()
         {
             yield return new WaitForEndOfFrame();
-            if (FindObjectOfType<Enemy>() == null && FindObjectOfType<EnemySpawner>() == null) { waveIsRunning = false; }
+            if (FindObjectOfType<Enemy>() == null && _doneSpawning) { waveIsRunning = false; }
         }
 
         public void StartWave()
         {
             if(waveIsRunning ){return;}
-            _currentWave++; SetUpSpawners(); waveIsRunning = true;
+            _currentWave++; currentWaveData = waves[_currentWave].SpawnData; StartCoroutine( Spawn()); waveIsRunning = true;
         }
     }
 }

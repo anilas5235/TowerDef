@@ -1,5 +1,6 @@
 using System;
 using Scrips.Background;
+using Scrips.Background.Pooling;
 using UnityEngine;
 
 namespace Scrips.Projectiles
@@ -7,7 +8,7 @@ namespace Scrips.Projectiles
     public class LavaShoot : MonoBehaviour
     {
         public int storedDamage;
-        public LavaShootPool pool;
+        private static LavaShootPool Pool;
         
         [SerializeField] private SpriteRenderer mySpriteRenderer;
         [SerializeField] private LayerMask Enemy;
@@ -16,13 +17,19 @@ namespace Scrips.Projectiles
         private Collider2D[] cols = new Collider2D[10];
         private float _detectRadius = 0.3f;
 
-
+        private void Start()
+        {
+            if (Pool == null)
+            {
+                Pool = LavaShootPool.Instance;
+            }
+        }
         private void FixedUpdate()
         {
             if (SpawnManager.Instance.waveIsRunning == false)
             {
                 ResetProjectileValues();
-                pool.AddObjectToPool(gameObject);
+                Pool.AddObjectToPool(gameObject);
                 return;
             }
             
@@ -41,7 +48,7 @@ namespace Scrips.Projectiles
                     if (storedDamage < 1)
                     {
                         ResetProjectileValues();
-                        pool.AddObjectToPool(gameObject);
+                        Pool.AddObjectToPool(gameObject);
                     }
                     AppearanceUpdate();
                 }
@@ -62,7 +69,7 @@ namespace Scrips.Projectiles
         private void OnBecameInvisible()
         {
             ResetProjectileValues();
-            pool.AddObjectToPool(gameObject);
+            Pool.AddObjectToPool(gameObject);
         }
 
         public void ResetProjectileValues()

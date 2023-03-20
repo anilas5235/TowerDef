@@ -99,6 +99,7 @@ MonoBehaviour:
   hp: 1
   distance: 0
   deathParticleSystem: {fileID: 6147174879001106214, guid: a17c32a617f398944843525898eea79e, type: 3}
+  _spriteRenderer: {fileID: 2489806855999879603}
 --- !u!58 &1981881481921620540
 CircleCollider2D:
   m_ObjectHideFlags: 0

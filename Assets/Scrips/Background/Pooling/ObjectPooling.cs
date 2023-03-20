@@ -2,13 +2,13 @@ using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 
-namespace Scrips.Background
+namespace Scrips.Background.Pooling
 {
     public abstract class ObjectPooling : MonoBehaviour
     {
         [SerializeField] protected GameObject objectToPool;
-        protected List<GameObject> _objectPool;
-        protected int _totalObjectCount;
+        private List<GameObject> _objectPool;
+        private int _totalObjectCount;
         protected virtual void Start()
         {
             _objectPool = new List<GameObject>() ;
@@ -33,7 +33,6 @@ namespace Scrips.Background
             {
                 returnProjectile = Instantiate(objectToPool, transform.position, Quaternion.identity);
                 returnProjectile.gameObject.name = $"{objectToPool.name}({_totalObjectCount})";
-                SetPoolingReference(returnProjectile);
                 _totalObjectCount++;
             }
             else
@@ -48,8 +47,9 @@ namespace Scrips.Background
             return returnProjectile;
         }
 
-        protected abstract void UpdateName();
-
-        protected abstract void SetPoolingReference(GameObject objectRef);
+        private void UpdateName()
+        {
+            gameObject.name = $"{objectToPool.name}Pool({transform.childCount})";
+        }
     }
 }

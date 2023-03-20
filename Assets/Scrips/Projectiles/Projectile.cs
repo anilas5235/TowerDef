@@ -1,27 +1,36 @@
 using Scrips.Background;
+using Scrips.Background.Pooling;
 using UnityEngine;
 
 namespace Scrips.Projectiles
 {
     public class Projectile : MonoBehaviour
     {
-        public StandardProjectilePool pool;
+        private static StandardProjectilePool Pool;
             
         public Vector3 targetDirection;
-        public Color projectileColor;
         public float speed, currentScale, lifeTime;
         public int damage, pierce;
     
         [SerializeField] private SpriteRenderer mySpriteRenderer;
         [SerializeField] private LayerMask Enemy;
         private Collider2D[] cols = new Collider2D[50];
+
+        private void Start()
+        {
+            if (Pool == null)
+            {
+                Pool = StandardProjectilePool.Instance;
+            }
+        }
+
         void Update()
         {
             transform.Translate(targetDirection * (speed * Time.deltaTime));
             if (Time.time > lifeTime && lifeTime > 0)
             {
                 ResetProjectileValues();
-                pool.AddObjectToPool(gameObject);
+                Pool.AddObjectToPool(gameObject);
             }
         }
 
@@ -47,7 +56,7 @@ namespace Scrips.Projectiles
                 if (pierce < 1)
                 {
                     ResetProjectileValues();
-                    pool.AddObjectToPool(gameObject);
+                    Pool.AddObjectToPool(gameObject);
                 }
             }
         }
@@ -55,19 +64,18 @@ namespace Scrips.Projectiles
         {
             currentScale = 0.1f + pierce / 10f;
             transform.localScale = new Vector3(currentScale, currentScale,1);
-            mySpriteRenderer.color = projectileColor;
+            mySpriteRenderer.color = ColorKeeper.StandardColors(damage-1);
         }
 
         private void OnBecameInvisible()
         {
             ResetProjectileValues();
-            pool.AddObjectToPool(gameObject);
+            Pool.AddObjectToPool(gameObject);
         }
 
         public void ResetProjectileValues()
         {
             targetDirection = Vector3.zero;
-            projectileColor = Color.white;
             speed = 0;
             currentScale = 0;
             lifeTime = 0;
