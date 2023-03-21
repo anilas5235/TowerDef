@@ -1,4 +1,3 @@
-using System;
 using System.Collections;
 using Scrips.Background;
 using Scrips.Background.Pooling;
@@ -11,7 +10,7 @@ namespace Scrips
     {
         private PathKeeper _pathKeeper;
         private StatsKeeper _statsKeeper;
-        private Coroutine _currentStopEnemy;
+        private Coroutine _currentStopEnemy, _currentDrift;
         private Vector3 _directionDriftOf;
         private int _nextPointInArry = 0;
         private float _speed;
@@ -110,17 +109,19 @@ namespace Scrips
 
         public void ThrowBack(int pointsOnPath, Vector3 drift)
         {
+            if (_currentDrift != null) return;
             _nextPointInArry -= pointsOnPath;
             if (_nextPointInArry < 1)
             { _nextPointInArry = 0; }
             _directionDriftOf = drift;
-            StartCoroutine(DriftTime());
+            _currentDrift = StartCoroutine(DriftTime());
         }
     
         private IEnumerator DriftTime()
         {
             yield return new WaitForSeconds(2f);
             _directionDriftOf = Vector3.zero;
+            _currentDrift = null;
         }
 
         private void RestVariables()
@@ -129,6 +130,18 @@ namespace Scrips
             distance = 0;
             _nextPointInArry = 0;
             _speed = 0;
+            if (_currentStopEnemy != null)
+            {
+                StopCoroutine(_currentStopEnemy);
+                _currentStopEnemy = null;
+            }
+            _stop = false;
+            if (_currentDrift != null)
+            {
+                StopCoroutine(_currentDrift);
+                _currentDrift = null;
+            }
+            _directionDriftOf = Vector3.zero;
         }
     }
 }

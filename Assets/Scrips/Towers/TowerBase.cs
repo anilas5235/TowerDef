@@ -65,6 +65,7 @@ namespace Scrips.Towers
             }
             else
             {
+                if (Target != null) { if(!Target.activeInHierarchy) Target = null; }
                 if(!needsTargetAtAll){ Attack(); return;}
                 if (Target == null || Vector3.Distance(transform.position,Target.transform.position) > attackRadius )
                 {
@@ -74,6 +75,7 @@ namespace Scrips.Towers
                     float greatestdistance =0; int index = 0;
                     for (int i = 0; i < possibleTargets.Length; i++)
                     {
+                        if(!possibleTargets[i].gameObject.activeInHierarchy){continue;}
                         float currentDistance = possibleTargets[i].gameObject.GetComponent<Enemy>().distance;
                         if (currentDistance > greatestdistance)
                         {
