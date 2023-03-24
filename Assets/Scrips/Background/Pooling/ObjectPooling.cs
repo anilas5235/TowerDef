@@ -20,10 +20,10 @@ namespace Scrips.Background.Pooling
             {
                 return;
             }
+            objectToPool.transform.position = transform.position;
             objectToPool.transform.SetParent(transform);
             _objectPool.Add(objectToPool);
             UpdateName();
-            objectToPool.transform.position = transform.position;
             objectToPool.SetActive(false);
         }
 
@@ -39,9 +39,9 @@ namespace Scrips.Background.Pooling
             else
             {
                 returnProjectile = _objectPool.First();
-                returnProjectile.SetActive(true);
                 _objectPool.Remove(returnProjectile);
                 returnProjectile.transform.SetParent(null);
+                returnProjectile.SetActive(true);
             }
             
             UpdateName();

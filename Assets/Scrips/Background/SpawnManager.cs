@@ -57,6 +57,7 @@ namespace Scrips.Background
                     if (i > 0 && i < 10)
                     {
                         Enemy E = StandardEnemyPool.Instance.GetObjectFromPool().GetComponent<Enemy>();
+                        E.RestVariables();
                         E.gameObject.transform.position = transform.position;
                         E.hp = i;
                         E.SetColorAndSpeed();

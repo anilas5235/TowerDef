@@ -28,7 +28,6 @@ namespace Scrips.Projectiles
         {
             if (SpawnManager.Instance.waveIsRunning == false)
             {
-                ResetProjectileValues();
                 Pool.AddObjectToPool(gameObject);
                 return;
             }
@@ -47,8 +46,8 @@ namespace Scrips.Projectiles
                     storedDamage -= enemyhp;
                     if (storedDamage < 1)
                     {
-                        ResetProjectileValues();
                         Pool.AddObjectToPool(gameObject);
+                        return;
                     }
                     AppearanceUpdate();
                 }
@@ -64,17 +63,6 @@ namespace Scrips.Projectiles
             else if (storedDamage > 5) { newColor = Colors[1]; }
             else  { newColor = Colors[0]; }
             mySpriteRenderer.color = newColor;
-        }
-
-        private void OnBecameInvisible()
-        {
-            ResetProjectileValues();
-            Pool.AddObjectToPool(gameObject);
-        }
-
-        public void ResetProjectileValues()
-        {
-            storedDamage = 0;
         }
     }
 }

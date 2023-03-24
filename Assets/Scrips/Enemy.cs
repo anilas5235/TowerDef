@@ -124,7 +124,7 @@ namespace Scrips
             _currentDrift = null;
         }
 
-        private void RestVariables()
+        public void RestVariables()
         {
             hp = 1;
             distance = 0;

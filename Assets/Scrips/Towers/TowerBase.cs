@@ -66,6 +66,8 @@ namespace Scrips.Towers
             else
             {
                 if (Target != null) { if(!Target.activeInHierarchy) Target = null; }
+
+                if (SpawnManager.Instance.waveIsRunning == false) return;
                 if(!needsTargetAtAll){ Attack(); return;}
                 if (Target == null || Vector3.Distance(transform.position,Target.transform.position) > attackRadius )
                 {

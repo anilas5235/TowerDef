@@ -16,7 +16,7 @@ namespace Scrips.Towers
         [SerializeField] private SpriteRenderer lavaTop;
         private LavaShootPool Pool;
         private float _attackDelay = 4;
-        private int _damageLodePerShoot = 5;
+        private int _damageLoadPerShoot = 5;
 
         protected override void Start()
         {
@@ -29,7 +29,7 @@ namespace Scrips.Towers
         {
             upgradeLevel += upgrade;
             attackRadius += 0.15f * upgrade.x;
-            _damageLodePerShoot += 5 * (int) upgrade.y;
+            _damageLoadPerShoot += 5 * (int) upgrade.y;
             _attackDelay -= 0.4f * upgrade.z;
 
             VisualChange();
@@ -38,7 +38,7 @@ namespace Scrips.Towers
 
         protected override void Attack()
         {
-            if (Time.time >= timeForNextAttack && Physics2D.OverlapCircle(transform.position, attackRadius, enemyLayer))
+            if (Time.time >= timeForNextAttack)
             {
                 ThrowLavaShoot();
                 timeForNextAttack = Time.time + _attackDelay;
@@ -89,9 +89,9 @@ namespace Scrips.Towers
 
             LavaShoot shoot = Pool.GetObjectFromPool().GetComponent<LavaShoot>();
             shoot.gameObject.transform.position = targetPosition;
-            shoot.storedDamage = _damageLodePerShoot;
-            shoot.AppearanceUpdate();
+            shoot.storedDamage = _damageLoadPerShoot;
             shoot.Colors = Colors;
+            shoot.AppearanceUpdate();
         }
     }
 }

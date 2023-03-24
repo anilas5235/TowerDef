@@ -31,6 +31,7 @@ namespace Scrips.Projectiles
             {
                 ResetProjectileValues();
                 Pool.AddObjectToPool(gameObject);
+                return;
             }
         }
 
@@ -57,6 +58,7 @@ namespace Scrips.Projectiles
                 {
                     ResetProjectileValues();
                     Pool.AddObjectToPool(gameObject);
+                    return;
                 }
             }
         }
@@ -66,13 +68,7 @@ namespace Scrips.Projectiles
             transform.localScale = new Vector3(currentScale, currentScale,1);
             mySpriteRenderer.color = ColorKeeper.StandardColors(damage-1);
         }
-
-        private void OnBecameInvisible()
-        {
-            ResetProjectileValues();
-            Pool.AddObjectToPool(gameObject);
-        }
-
+        
         public void ResetProjectileValues()
         {
             targetDirection = Vector3.zero;
@@ -80,7 +76,7 @@ namespace Scrips.Projectiles
             currentScale = 0;
             lifeTime = 0;
             damage = 0;
-            pierce = 0;
+            pierce = 1;
         }
     }
 }
