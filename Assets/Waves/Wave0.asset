@@ -13,23 +13,33 @@ MonoBehaviour:
   m_Name: Wave0
   m_EditorClassIdentifier: 
   SpawnData:
-  - hp: 01000000
+  - name: 
+    hp: 01000000
     additionalWaitUntilNextWavePoint: 0
-  - hp: 01000000
+  - name: 
+    hp: 01000000
     additionalWaitUntilNextWavePoint: 0
-  - hp: 01000000
+  - name: 
+    hp: 01000000
     additionalWaitUntilNextWavePoint: 0
-  - hp: 01000000
+  - name: 
+    hp: 01000000
     additionalWaitUntilNextWavePoint: 0
-  - hp: 01000000
+  - name: 
+    hp: 01000000
     additionalWaitUntilNextWavePoint: 0
-  - hp: 01000000
+  - name: 
+    hp: 01000000
     additionalWaitUntilNextWavePoint: 0
-  - hp: 01000000
+  - name: 
+    hp: 01000000
     additionalWaitUntilNextWavePoint: 0
-  - hp: 01000000
+  - name: 
+    hp: 01000000
     additionalWaitUntilNextWavePoint: 0
-  - hp: 01000000
+  - name: 
+    hp: 01000000
     additionalWaitUntilNextWavePoint: 0
-  - hp: 01000000
+  - name: 
+    hp: 01000000
     additionalWaitUntilNextWavePoint: 0

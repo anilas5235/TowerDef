@@ -1,6 +1,6 @@
 using UnityEngine;
 
-namespace Scrips.Background
+namespace Scrips.Background.WaveManaging
 {
    [CreateAssetMenu]
    public class Wave : ScriptableObject

@@ -1,3 +1,5 @@
+using Unity.Mathematics;
+
 namespace Scrips.Background.Pooling
 {
     public class StandardProjectilePool : ObjectPooling
@@ -16,6 +18,11 @@ namespace Scrips.Background.Pooling
             }
 
             base.Start();
+
+            for (int i = 0; i < 10; i++)
+            {
+                AddObjectToPool(Instantiate(objectToPool,transform.position,quaternion.identity));
+            }
         }
     }
 }

@@ -37,7 +37,7 @@ namespace Scrips.Background
             _currentSpeedMode++;
             if (_currentSpeedMode > 3)
             { _currentSpeedMode = 0; }
-            Time.timeScale = _currentSpeedMode + 1;
+            Time.timeScale = _currentSpeedMode + 0.2f;
             speedButtonText.text = "Speed: " + Time.timeScale;
         }
     }

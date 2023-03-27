@@ -46,6 +46,7 @@ namespace Scrips.Towers
                 shoot.targetDirection = targetDirection;
                 shoot.speed = 8;
                 shoot.AppearanceUpdate();
+                shoot.pooled = false;
                 timeForNextAttack = Time.time + 1f/_attackDelay;
             }
         }

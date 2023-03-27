@@ -44,6 +44,7 @@ namespace Scrips.Towers
                 for (int i = 0; i < _numberOfBarrels; i++)
                 {
                     Projectile shoot = Pool.GetObjectFromPool().GetComponent<Projectile>();
+                    shoot.ResetProjectileValues();
                     shoot.gameObject.transform.position = _barrels[i].transform.position;
                     shoot.pierce = _multiHit;
                     shoot.damage = _attackDamage;
@@ -51,6 +52,7 @@ namespace Scrips.Towers
                     shoot.speed = 5;
                     shoot.lifeTime = Time.time + (0.7f * attackRadius) / shoot.speed;
                     shoot.AppearanceUpdate();
+                    shoot.pooled = false;
                 }
                 timeForNextAttack = Time.time + _attackDelay;
             }

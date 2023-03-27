@@ -1,5 +1,6 @@
 using System.Collections;
 using Scrips.Background.Pooling;
+using Scrips.Background.WaveManaging;
 using Unity.Mathematics;
 using UnityEngine;
 using Button = UnityEngine.UI.Button;
@@ -61,6 +62,7 @@ namespace Scrips.Background
                         E.gameObject.transform.position = transform.position;
                         E.hp = i;
                         E.SetColorAndSpeed();
+                        E.pooled = false;
                     }
                 }
 

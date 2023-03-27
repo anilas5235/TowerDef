@@ -92,6 +92,7 @@ namespace Scrips.Towers
             shoot.storedDamage = _damageLoadPerShoot;
             shoot.Colors = Colors;
             shoot.AppearanceUpdate();
+            shoot.pooled = false;
         }
     }
 }

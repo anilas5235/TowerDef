@@ -97,16 +97,19 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   targetDirection: {x: 0, y: 0, z: 0}
-  projectileColor: {r: 0, g: 0, b: 0, a: 1}
   speed: 0
   currentScale: 0
   lifeTime: 0
   damage: 0
   pierce: 0
+  pooled: 0
   mySpriteRenderer: {fileID: 207460190987319774}
   Enemy:
     serializedVersion: 2
     m_Bits: 128
+  Blocking:
+    serializedVersion: 2
+    m_Bits: 64
 --- !u!58 &2321624347953638153
 CircleCollider2D:
   m_ObjectHideFlags: 0

@@ -1,3 +1,4 @@
+using System;
 using Scrips.Background;
 using Scrips.Background.Pooling;
 using UnityEngine;
@@ -11,10 +12,11 @@ namespace Scrips.Projectiles
         public Vector3 targetDirection;
         public float speed, currentScale, lifeTime;
         public int damage, pierce;
+        public bool pooled;
     
         [SerializeField] private SpriteRenderer mySpriteRenderer;
-        [SerializeField] private LayerMask Enemy;
-        private Collider2D[] cols = new Collider2D[50];
+        [SerializeField] private LayerMask Enemy, Blocking;
+        private Collider2D[] cols;
 
         private void Start()
         {
@@ -26,10 +28,12 @@ namespace Scrips.Projectiles
 
         void Update()
         {
+            if (pooled ) return;
             transform.Translate(targetDirection * (speed * Time.deltaTime));
             if (Time.time > lifeTime && lifeTime > 0)
             {
                 ResetProjectileValues();
+                pooled = true;
                 Pool.AddObjectToPool(gameObject);
                 return;
             }
@@ -37,7 +41,11 @@ namespace Scrips.Projectiles
 
         private void FixedUpdate()
         {
-            Physics2D.OverlapCircleNonAlloc(transform.position, transform.localScale.x/2f, cols, Enemy);
+            if (pooled ) return;
+
+            cols = new Collider2D[50];
+            
+            Physics2D.OverlapCircleNonAlloc(transform.position, transform.localScale.x/2f, cols, Enemy + Blocking);
 
             foreach (Collider2D col in cols)
             {
@@ -57,6 +65,7 @@ namespace Scrips.Projectiles
                 if (pierce < 1)
                 {
                     ResetProjectileValues();
+                    pooled = true;
                     Pool.AddObjectToPool(gameObject);
                     return;
                 }
@@ -71,6 +80,7 @@ namespace Scrips.Projectiles
         
         public void ResetProjectileValues()
         {
+            cols = new Collider2D[50];
             targetDirection = Vector3.zero;
             speed = 0;
             currentScale = 0;

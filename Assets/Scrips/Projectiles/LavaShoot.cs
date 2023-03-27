@@ -8,12 +8,13 @@ namespace Scrips.Projectiles
     public class LavaShoot : MonoBehaviour
     {
         public int storedDamage;
-        private static LavaShootPool Pool;
+        public bool pooled;
         
         [SerializeField] private SpriteRenderer mySpriteRenderer;
         [SerializeField] private LayerMask Enemy;
         public Color[] Colors = new Color[5];
         
+        private static LavaShootPool Pool;
         private Collider2D[] cols = new Collider2D[10];
         private float _detectRadius = 0.3f;
 
@@ -26,8 +27,11 @@ namespace Scrips.Projectiles
         }
         private void FixedUpdate()
         {
+            if (pooled)return;
+            
             if (SpawnManager.Instance.waveIsRunning == false)
             {
+                pooled = true;
                 Pool.AddObjectToPool(gameObject);
                 return;
             }
@@ -46,6 +50,7 @@ namespace Scrips.Projectiles
                     storedDamage -= enemyhp;
                     if (storedDamage < 1)
                     {
+                        pooled = true;
                         Pool.AddObjectToPool(gameObject);
                         return;
                     }

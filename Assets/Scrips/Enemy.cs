@@ -20,6 +20,7 @@ namespace Scrips
         
         public int hp = 1;
         public float distance;
+        public bool pooled;
         
         [SerializeField] private ParticleSystem deathParticleSystem;
         [SerializeField] private SpriteRenderer _spriteRenderer;
@@ -36,7 +37,7 @@ namespace Scrips
 
         private void Update()
         {
-            if (_stop) {return; }
+            if (_stop || pooled) {return; }
 
             if (_directionDriftOf.magnitude > 0.1f)
             {
@@ -51,7 +52,7 @@ namespace Scrips
                 {
                     _statsKeeper.Hp -= hp;
                     SpawnManager.Instance.InvokeWaveCheck();
-                    
+                    pooled = true;
                     Pool.AddObjectToPool(gameObject);
                     return;
                 }
@@ -72,6 +73,7 @@ namespace Scrips
 
         public void TakeDamage(int damage)
         {
+            if (damage < 1 || hp < 1) { return; }
             hp -= damage;
             if (hp < 1)
             {
@@ -80,7 +82,7 @@ namespace Scrips
                 particlesMain.startColor = _spriteRenderer.color;
                 _statsKeeper.Money += damage + hp;
                 SpawnManager.Instance.InvokeWaveCheck();
-                RestVariables();
+                pooled = true;
                 Pool.AddObjectToPool(gameObject);
                 return;
             }

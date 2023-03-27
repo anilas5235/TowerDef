@@ -47,12 +47,14 @@ namespace Scrips.Towers
             if (Time.time >= timeForNextAttack)
             {
                 Projectile shoot = Pool.GetObjectFromPool().GetComponent<Projectile>();
+                shoot.ResetProjectileValues();
                 shoot.gameObject.transform.position = barrelTip.position;
                 shoot.pierce = _multiHit;
                 shoot.damage = _attackDamage;
                 shoot.targetDirection = targetDirection;
                 shoot.speed = 5;
                 shoot.AppearanceUpdate();
+                shoot.pooled = false;
                 timeForNextAttack = Time.time + _attackDelay;
             }
         }
