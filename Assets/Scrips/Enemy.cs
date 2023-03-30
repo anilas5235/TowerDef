@@ -1,6 +1,7 @@
 using System.Collections;
 using Scrips.Background;
 using Scrips.Background.Pooling;
+using Scrips.Background.WaveManaging;
 using Unity.Mathematics;
 using UnityEngine;
 
@@ -51,9 +52,7 @@ namespace Scrips
                 if (_nextPointInArry == _pathKeeper.PathPoints.Length - 1)
                 {
                     _statsKeeper.Hp -= hp;
-                    SpawnManager.Instance.InvokeWaveCheck();
-                    pooled = true;
-                    Pool.AddObjectToPool(gameObject);
+                    Death();
                     return;
                 }
 
@@ -81,9 +80,7 @@ namespace Scrips
                     quaternion.identity).main;
                 particlesMain.startColor = _spriteRenderer.color;
                 _statsKeeper.Money += damage + hp;
-                SpawnManager.Instance.InvokeWaveCheck();
-                pooled = true;
-                Pool.AddObjectToPool(gameObject);
+                Death();
                 return;
             }
             else
@@ -144,6 +141,13 @@ namespace Scrips
                 _currentDrift = null;
             }
             _directionDriftOf = Vector3.zero;
+        }
+
+        private void Death()
+        {
+            pooled = true;
+            SpawnManager.Instance.activeEnemys.Remove(this.gameObject);
+            Pool.AddObjectToPool(gameObject);
         }
     }
 }

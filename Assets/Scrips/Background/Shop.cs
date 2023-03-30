@@ -1,4 +1,3 @@
-using System;
 using TMPro;
 using Unity.Mathematics;
 using UnityEngine;
@@ -37,7 +36,7 @@ namespace Scrips.Background
             _currentSpeedMode++;
             if (_currentSpeedMode > 3)
             { _currentSpeedMode = 0; }
-            Time.timeScale = _currentSpeedMode + 0.2f;
+            Time.timeScale = _currentSpeedMode + 1f;
             speedButtonText.text = "Speed: " + Time.timeScale;
         }
     }

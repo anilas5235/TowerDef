@@ -2728,6 +2728,50 @@ Transform:
   m_CorrespondingSourceObject: {fileID: 2017588005852851319, guid: a49296ad06a61564f9f10a7efa1e0813, type: 3}
   m_PrefabInstance: {fileID: 645648416}
   m_PrefabAsset: {fileID: 0}
+--- !u!1 &653095927
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 653095929}
+  - component: {fileID: 653095928}
+  m_Layer: 0
+  m_Name: GameObject
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &653095928
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 653095927}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a3c622bf4ca2d8844a61bf4ebf262917, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  targetWave: {fileID: 11400000, guid: 4b624677918121f4bb1d7b980a02eb5a, type: 2}
+--- !u!4 &653095929
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 653095927}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_RootOrder: 5
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &697393863
 GameObject:
   m_ObjectHideFlags: 0
@@ -4486,10 +4530,16 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1a077777c420db140a1874aa395ecbf2, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  activeEnemys: []
   waveIsRunning: 0
   waves:
   - {fileID: 11400000, guid: 3ba234f55eeccbc4ab47b65f06581d66, type: 2}
+  - {fileID: 11400000, guid: 646200c8b5eedd942a8c39b1ac535eab, type: 2}
+  - {fileID: 11400000, guid: 4b624677918121f4bb1d7b980a02eb5a, type: 2}
   waveStartButton: {fileID: 202391168}
+  enemy:
+    serializedVersion: 2
+    m_Bits: 128
 --- !u!4 &1135593184
 Transform:
   m_ObjectHideFlags: 0
