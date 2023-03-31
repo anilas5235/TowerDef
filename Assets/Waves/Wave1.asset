@@ -12,4 +12,64 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d23efbb0a549849478d93fdf08525da3, type: 3}
   m_Name: Wave1
   m_EditorClassIdentifier: 
-  SpawnData: []
+  SpawnData:
+  - name: Step0
+    hp: 01000000
+    additionalWaitUntilNextWavePoint: 0
+  - name: Step1
+    hp: 02000000
+    additionalWaitUntilNextWavePoint: 0
+  - name: Step2
+    hp: 01000000
+    additionalWaitUntilNextWavePoint: 0
+  - name: Step3
+    hp: 02000000
+    additionalWaitUntilNextWavePoint: 0
+  - name: Step4
+    hp: 01000000
+    additionalWaitUntilNextWavePoint: 0
+  - name: Step5
+    hp: 02000000
+    additionalWaitUntilNextWavePoint: 0
+  - name: Step6
+    hp: 01000000
+    additionalWaitUntilNextWavePoint: 0
+  - name: Step7
+    hp: 02000000
+    additionalWaitUntilNextWavePoint: 0
+  - name: Step8
+    hp: 01000000
+    additionalWaitUntilNextWavePoint: 0
+  - name: Step9
+    hp: 02000000
+    additionalWaitUntilNextWavePoint: 0
+  - name: Step10
+    hp: 01000000
+    additionalWaitUntilNextWavePoint: 0
+  - name: Step11
+    hp: 02000000
+    additionalWaitUntilNextWavePoint: 0
+  - name: Step12
+    hp: 01000000
+    additionalWaitUntilNextWavePoint: 0
+  - name: Step13
+    hp: 02000000
+    additionalWaitUntilNextWavePoint: 0
+  - name: Step14
+    hp: 01000000
+    additionalWaitUntilNextWavePoint: 0
+  - name: Step15
+    hp: 02000000
+    additionalWaitUntilNextWavePoint: 0
+  - name: Step16
+    hp: 01000000
+    additionalWaitUntilNextWavePoint: 0
+  - name: Step17
+    hp: 02000000
+    additionalWaitUntilNextWavePoint: 0
+  - name: Step18
+    hp: 01000000
+    additionalWaitUntilNextWavePoint: 0
+  - name: Step19
+    hp: 02000000
+    additionalWaitUntilNextWavePoint: 0

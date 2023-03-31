@@ -20,7 +20,6 @@ namespace Scrips.Background.WaveManaging
 
         [SerializeField] private Wave[] waves;
         [SerializeField] private Button waveStartButton;
-        [SerializeField] private LayerMask enemy;
         private void Awake()
         {
             if (Instance == null) { Instance = this; }

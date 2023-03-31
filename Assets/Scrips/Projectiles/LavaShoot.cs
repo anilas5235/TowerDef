@@ -36,7 +36,8 @@ namespace Scrips.Projectiles
                 Pool.AddObjectToPool(gameObject);
                 return;
             }
-            
+
+            cols = new Collider2D[10];
             Physics2D.OverlapCircleNonAlloc(transform.position, _detectRadius, cols, Enemy);
 
             foreach (Collider2D col in cols)

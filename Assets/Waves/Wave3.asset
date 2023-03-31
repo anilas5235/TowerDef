@@ -10,7 +10,7 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: d23efbb0a549849478d93fdf08525da3, type: 3}
-  m_Name: Wave2
+  m_Name: Wave3
   m_EditorClassIdentifier: 
   SpawnData:
   - name: Step0
@@ -20,25 +20,25 @@ MonoBehaviour:
     hp: 0200000003000000
     additionalWaitUntilNextWavePoint: 0
   - name: Step2
-    hp: 0100000002000000
+    hp: 0100000004000000
     additionalWaitUntilNextWavePoint: 0
   - name: Step3
-    hp: 0200000001000000
+    hp: 0200000003000000
     additionalWaitUntilNextWavePoint: 0
   - name: Step4
     hp: 0100000002000000
     additionalWaitUntilNextWavePoint: 0
   - name: Step5
-    hp: 0200000003000000
+    hp: 0200000001000000
     additionalWaitUntilNextWavePoint: 0
   - name: Step6
     hp: 0100000002000000
     additionalWaitUntilNextWavePoint: 0
   - name: Step7
-    hp: 0200000001000000
+    hp: 0200000003000000
     additionalWaitUntilNextWavePoint: 0
   - name: Step8
-    hp: 0100000002000000
+    hp: 0100000004000000
     additionalWaitUntilNextWavePoint: 0
   - name: Step9
     hp: 0200000003000000
@@ -56,20 +56,50 @@ MonoBehaviour:
     hp: 0200000003000000
     additionalWaitUntilNextWavePoint: 0
   - name: Step14
-    hp: 0100000002000000
+    hp: 0100000004000000
     additionalWaitUntilNextWavePoint: 0
   - name: Step15
-    hp: 0200000001000000
+    hp: 0200000003000000
     additionalWaitUntilNextWavePoint: 0
   - name: Step16
     hp: 0100000002000000
     additionalWaitUntilNextWavePoint: 0
   - name: Step17
-    hp: 0200000003000000
+    hp: 0200000001000000
     additionalWaitUntilNextWavePoint: 0
   - name: Step18
     hp: 0100000002000000
     additionalWaitUntilNextWavePoint: 0
   - name: Step19
+    hp: 0200000003000000
+    additionalWaitUntilNextWavePoint: 0
+  - name: Step20
+    hp: 0100000004000000
+    additionalWaitUntilNextWavePoint: 0
+  - name: Step21
+    hp: 0200000003000000
+    additionalWaitUntilNextWavePoint: 0
+  - name: Step22
+    hp: 0100000002000000
+    additionalWaitUntilNextWavePoint: 0
+  - name: Step23
+    hp: 0200000001000000
+    additionalWaitUntilNextWavePoint: 0
+  - name: Step24
+    hp: 0100000002000000
+    additionalWaitUntilNextWavePoint: 0
+  - name: Step25
+    hp: 0200000003000000
+    additionalWaitUntilNextWavePoint: 0
+  - name: Step26
+    hp: 0100000004000000
+    additionalWaitUntilNextWavePoint: 0
+  - name: Step27
+    hp: 0200000003000000
+    additionalWaitUntilNextWavePoint: 0
+  - name: Step28
+    hp: 0100000002000000
+    additionalWaitUntilNextWavePoint: 0
+  - name: Step29
     hp: 0200000001000000
     additionalWaitUntilNextWavePoint: 0

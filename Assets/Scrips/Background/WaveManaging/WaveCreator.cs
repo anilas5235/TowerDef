@@ -7,22 +7,28 @@ namespace Scrips.Background.WaveManaging
     {
         [SerializeField] private Wave targetWave;
 
-        private void Update()
+        private void Start()
         {
-            if (Input.GetButton(buttonName: "Jump"))
+            if (!targetWave)
             {
-                int points = 20;
-                targetWave.SpawnData = new WavePoint[points];
-                var D = new DiagonalDescendingPattern(1, 1, 2);
-                var A = new ZigZackPattern(2, 1, 3);
-                for (int i = 0; i < points; i++)
-                {
-                    targetWave.SpawnData[i] = new WavePoint();
-                    targetWave.SpawnData[i].hp = new[] { D.GetValue(), A.GetValue() };
-                    targetWave.SpawnData[i].name = $"Step{i}";
-                }
+                return;
             }
+            int points = 40;
+            targetWave.SpawnData = new WavePoint[points];
+            var D = new DiagonalDescendingPattern(2, 2, 4);
+            var A = new ZigZackPattern(5, 3, 5);
+            for (int i = 0; i < points; i++)
+            {
+                targetWave.SpawnData[i] = new WavePoint();
+                targetWave.SpawnData[i].hp = new[] { D.GetValue(), A.GetValue()};
+                targetWave.SpawnData[i].name = $"Step{i}";
+            }
+#if UNITY_EDITOR
+             UnityEditor.EditorUtility.SetDirty(targetWave);
+             UnityEditor.AssetDatabase.SaveAssets();
+#endif
         }
+
     }
 
     public abstract class PatternBase
