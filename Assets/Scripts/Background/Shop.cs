@@ -9,7 +9,7 @@ namespace Scrips.Background
         public static Shop Instance;
         [SerializeField] private TextMeshProUGUI speedButtonText;
         
-        private int _currentSpeedMode;
+        public int currentSpeedMode;
         private GameObject _currentlyHandledTower;
 
         private void Awake()
@@ -33,10 +33,10 @@ namespace Scrips.Background
 
         public void SpeedUp()
         {
-            _currentSpeedMode++;
-            if (_currentSpeedMode > 3)
-            { _currentSpeedMode = 0; }
-            Time.timeScale = _currentSpeedMode + 1f;
+            currentSpeedMode++;
+            if (currentSpeedMode > 3)
+            { currentSpeedMode = 0; }
+            Time.timeScale = currentSpeedMode + 1f;
             speedButtonText.text = "Speed: " + Time.timeScale;
         }
     }

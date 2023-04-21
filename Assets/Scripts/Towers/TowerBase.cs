@@ -36,7 +36,7 @@ namespace Scrips.Towers
             ownCollider = GetComponent<Collider2D>();
             BarrelPivotGameObject = gameObject.transform.GetChild(1).gameObject;
             StatsKeeper = StatsKeeper.Instance;
-            Shop = Background.Shop.Instance;
+            Shop = Shop.Instance;
             timeForNextAttack = Time.time;
             indicator.gameObject.transform.localScale = new Vector3(attackRadius*2, attackRadius*2, 1);
             VisualChange();
