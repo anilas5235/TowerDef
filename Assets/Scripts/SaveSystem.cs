@@ -51,7 +51,7 @@ public class SaveSystem : MonoBehaviour
 
             for (int i = 0; i < activeSave.audioOptions.Length; i++)
             {
-                activeSave.audioOptions[i] = 0.8f;
+                activeSave.audioOptions[i] = -2f;
             }
 
             for (int i = 0; i < activeSave.levelsUnlocked.Length; i++)
