@@ -94,7 +94,6 @@ namespace Background.SplinePath
 
         protected virtual void Start()
         {
-            AssembleSpline();
             _camera = Camera.main;
         }
 
@@ -109,7 +108,7 @@ namespace Background.SplinePath
             }
         }
 
-        protected void AssembleSpline()
+        [ContextMenu("AssembleSpline")] protected void AssembleSpline()
         {
             DeleteOldSpline();
             for (int i = 0; i < splinePoints.Count - 1; i++)
@@ -117,7 +116,6 @@ namespace Background.SplinePath
                 SetUpSplineSegment(i);
             }
         }
-    
         public abstract void SetUpSplineSegment(int indexOfTheFirstPoint);
 
         protected void DeleteOldSpline()
