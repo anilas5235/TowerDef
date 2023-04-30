@@ -1,38 +1,21 @@
 using System.Collections.Generic;
 using Unity.Mathematics;
 using UnityEngine;
-using UnityEngine.Serialization;
 
 namespace Background.SplinePath
 {
-    public class SplineMaster : BaseSplineBuilder
+    public class BSplineMaster : BaseSplineBuilder
     {
 
         private const float ScaleFactorOfVelocityVectors = 0.5f;
-        private float _oldScale;
-
-        protected override void Start()
-        {
-            base.Start();
-            _oldScale = ScaleFactorOfVelocityVectors;
-        }
-
-        protected override void Update()
-        {
-            base.Update();
-            if (math.distance(_oldScale, ScaleFactorOfVelocityVectors) > 0.05f)
-            {
-                AssembleSpline();
-                _oldScale = ScaleFactorOfVelocityVectors;
-            }
-        }
-
         public override void SetUpSplineSegment(int indexOfTheFirstPoint)
         {
-            if (indexOfTheFirstPoint > splinePoints.Count - 2 || indexOfTheFirstPoint < 0)
+            if (splinePoints.Count < 3)
             {
+                Debug.Log("this Spline needs at least three Points");
                 return;
             }
+            if (indexOfTheFirstPoint > splinePoints.Count - 2 || indexOfTheFirstPoint < 0) return;
 
             Vector3 v1 = Vector3.zero, v2 = Vector3.zero;
             if (indexOfTheFirstPoint < 1)
@@ -76,10 +59,10 @@ namespace Background.SplinePath
             current.Draw();
         }
 
-        protected override void AddPointToSpline(Transform newPoint)
+        public override void AddPointToSpline(Transform newPoint)
         {
             splinePoints.Add(newPoint);
-            splinePoints[splinePoints.Count-1].transform.SetParent(transform);
+            splinePoints[splinePoints.Count - 1].transform.SetParent(transform);
             SetUpSplineSegment(splinePoints.Count - 2);
             SetUpSplineSegment(splinePoints.Count - 3);
         }
@@ -87,46 +70,23 @@ namespace Background.SplinePath
 
     public abstract class BaseSplineBuilder : MonoBehaviour
     {
-        [SerializeField] protected List<Transform> splinePoints;
-        [SerializeField] protected GameObject Point, LineRendererPrefab, DrawCurvePrefab;
+        [HideInInspector] public List<Transform> splinePoints = new List<Transform> ();
+        [HideInInspector] public GameObject LineRendererPrefab, DrawCurvePrefab;
         protected List<DrawCurve> DrawCurvesList = new List<DrawCurve>();
-        protected Camera _camera;
 
-        protected virtual void Start()
-        {
-            _camera = Camera.main;
-        }
-
-        protected virtual void Update()
-        {
-            if (Input.GetButtonDown("Jump"))
-            {
-                Vector3 mousePosition = _camera.ScreenToWorldPoint(Input.mousePosition);
-                mousePosition.z = 0;
-                Transform newPoint = Instantiate(Point, mousePosition, quaternion.identity).transform;
-                AddPointToSpline(newPoint);
-            }
-        }
-
-        [ContextMenu("AssembleSpline")] protected void AssembleSpline()
+        public void AssembleSpline()
         {
             DeleteOldSpline();
-            for (int i = 0; i < splinePoints.Count - 1; i++)
-            {
-                SetUpSplineSegment(i);
-            }
+            for (int i = 0; i < splinePoints.Count - 1; i++) SetUpSplineSegment(i);
         }
         public abstract void SetUpSplineSegment(int indexOfTheFirstPoint);
 
         protected void DeleteOldSpline()
         {
-            foreach (DrawCurve drawCurve in DrawCurvesList)
-            {
-                drawCurve.DeleteOldDraw();
-            }
+            foreach (DrawCurve drawCurve in DrawCurvesList) drawCurve.DeleteOldDraw();
         }
 
-        protected abstract void AddPointToSpline(Transform newPoint);
+        public abstract void AddPointToSpline(Transform newPoint);
     }
     
     public class BezierHermiteSpline : CurveBase

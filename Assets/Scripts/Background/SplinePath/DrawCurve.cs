@@ -4,19 +4,19 @@ using UnityEngine;
 
 namespace Background.SplinePath
 {
-
-
     public class DrawCurve : MonoBehaviour
     {
-        public Transform[] pointsForTheCurve;
-        public GameObject gameObjectLineRenderer;
-        public Vector3[] velocities;
-        public BaseSplineBuilder mySplineBuilder;
-        public int indexOfTheFirstPoint;
+        [HideInInspector] public Transform[] pointsForTheCurve;
+        [HideInInspector] public GameObject gameObjectLineRenderer;
+        [HideInInspector] public Vector3[] velocities;
+        [HideInInspector] public BaseSplineBuilder mySplineBuilder;
+        [HideInInspector] public int indexOfTheFirstPoint;
+        public GameObject TiledObject;
+        public float RESOLUTION = 0.2f;
 
         private List<GameObject> _drawnPoints = new List<GameObject>();
+        private LineRenderer myLineRenderer;
         private bool _subedToPoints;
-        [SerializeField, Range(0.01f, 1f)] private float RESOLUTION = 0.2f;
 
         private void OnEnable()
         {
@@ -75,34 +75,69 @@ namespace Background.SplinePath
         public void DrawPoints(Vector3[] points, Color lineColor, float lineWidth)
         {
             int indexInDarwenPoints = 0;
-            for (int i = 0; i < points.Length - 1;)
+            if (TiledObject)
             {
-                int offset = 1;
-                while (Vector2.Distance(points[i], points[i + offset]) < RESOLUTION)
+                for (int i = 0; i < points.Length - 1;)
                 {
-                    if (i + offset >= points.Length - 1)
+                    int offset = 1;
+                    while (Vector2.Distance(points[i], points[i + offset]) < RESOLUTION)
                     {
-                        break;
+                        if (i + offset >= points.Length - 1)
+                        {
+                            break;
+                        }
+
+                        offset++;
                     }
 
-                    offset++;
-                }
+                    if (indexInDarwenPoints > _drawnPoints.Count - 1)
+                    {
+                        _drawnPoints.Add(Instantiate(gameObjectLineRenderer, transform.position, quaternion.identity));
+                        _drawnPoints[_drawnPoints.Count - 1].name = $"LineDrawnBy{this.name}";
+                    }
 
-                if (indexInDarwenPoints > _drawnPoints.Count - 1)
+                    _drawnPoints[indexInDarwenPoints].gameObject.SetActive(true);
+                    LineRenderer lineRenderer = _drawnPoints[indexInDarwenPoints].GetComponent<LineRenderer>();
+                    lineRenderer.SetPositions(new[] { points[i], points[i + offset] });
+                    lineRenderer.startColor = lineColor;
+                    lineRenderer.endColor = lineColor;
+                    lineRenderer.widthMultiplier = lineWidth;
+                    lineRenderer.gameObject.transform.SetParent(gameObject.transform);
+                    i += offset;
+                    indexInDarwenPoints++;
+                }
+            }
+            else
+            {
+                List<Vector3> pointsForLineRender = new List<Vector3>();
+                pointsForLineRender.Add(points[0]);
+                for (int i = 0; i < points.Length-1;)
                 {
-                    _drawnPoints.Add(Instantiate(gameObjectLineRenderer, transform.position, quaternion.identity));
-                    _drawnPoints[_drawnPoints.Count - 1].name = $"LineDrawnBy{this.name}";
+                    int offset = 1;
+                    while (Vector2.Distance(points[i], points[i + offset]) < RESOLUTION)
+                    {
+                        if (i + offset >= points.Length - 1) { break; }
+
+                        offset++;
+                    }
+
+                    pointsForLineRender.Add(points[i + offset]);
+                    i += offset;
+                }
+                pointsForLineRender.Add(points[points.Length-1]);
+
+                if (!myLineRenderer)
+                {
+                    myLineRenderer = Instantiate(gameObjectLineRenderer, transform.position, quaternion.identity)
+                        .GetComponent<LineRenderer>();
                 }
 
-                _drawnPoints[indexInDarwenPoints].gameObject.SetActive(true);
-                LineRenderer lineRenderer = _drawnPoints[indexInDarwenPoints].GetComponent<LineRenderer>();
-                lineRenderer.SetPositions(new[] { points[i], points[i + offset] });
-                lineRenderer.startColor = lineColor;
-                lineRenderer.endColor = lineColor;
-                lineRenderer.widthMultiplier = lineWidth;
-                lineRenderer.gameObject.transform.SetParent(gameObject.transform);
-                i += offset;
-                indexInDarwenPoints++;
+                myLineRenderer.positionCount = pointsForLineRender.Count;
+                myLineRenderer.SetPositions(pointsForLineRender.ToArray());
+                myLineRenderer.startColor = lineColor;
+                myLineRenderer.endColor = lineColor;
+                myLineRenderer.widthMultiplier = lineWidth;
+                myLineRenderer.gameObject.transform.SetParent(gameObject.transform);
             }
         }
 
