@@ -1,80 +1,21 @@
 using System.Collections.Generic;
+using Unity.Collections;
 using Unity.Mathematics;
 using UnityEngine;
 
 namespace Background.SplinePath
 {
-    public class BSplineMaster : BaseSplineBuilder
-    {
-
-        private const float ScaleFactorOfVelocityVectors = 0.5f;
-        public override void SetUpSplineSegment(int indexOfTheFirstPoint)
-        {
-            if (splinePoints.Count < 3)
-            {
-                Debug.Log("this Spline needs at least three Points");
-                return;
-            }
-            if (indexOfTheFirstPoint > splinePoints.Count - 2 || indexOfTheFirstPoint < 0) return;
-
-            Vector3 v1 = Vector3.zero, v2 = Vector3.zero;
-            if (indexOfTheFirstPoint < 1)
-            {
-                Vector3 ghostPoint = splinePoints[0].position +
-                                     -1 * (splinePoints[0].position - splinePoints[1].position);
-                v1 = splinePoints[1].position - ghostPoint;
-                v2 = splinePoints[2].position - splinePoints[0].position;
-
-            }
-            else if (indexOfTheFirstPoint < splinePoints.Count - 2)
-            {
-                v1 = splinePoints[indexOfTheFirstPoint + 1].position - splinePoints[indexOfTheFirstPoint - 1].position;
-                v2 = splinePoints[indexOfTheFirstPoint + 2].position - splinePoints[indexOfTheFirstPoint].position;
-            }
-            else
-            {
-                Vector3 ghostPoint = splinePoints[indexOfTheFirstPoint + 1].position + -1 *
-                    (splinePoints[indexOfTheFirstPoint + 1].position - splinePoints[indexOfTheFirstPoint].position);
-                v1 = splinePoints[indexOfTheFirstPoint + 1].position - splinePoints[indexOfTheFirstPoint - 1].position;
-                v2 = ghostPoint - splinePoints[indexOfTheFirstPoint].position;
-            }
-
-            if (indexOfTheFirstPoint > DrawCurvesList.Count - 1)
-            {
-                DrawCurvesList.Add(Instantiate(DrawCurvePrefab, transform.position, quaternion.identity).gameObject
-                    .GetComponent<DrawCurve>());
-                DrawCurvesList[DrawCurvesList.Count-1].gameObject.name = $"Segment{DrawCurvesList.Count - 1}";
-            }
-
-            DrawCurve current = DrawCurvesList[indexOfTheFirstPoint];
-            current.gameObject.transform.SetParent(transform);
-            current.pointsForTheCurve = new[]
-                { splinePoints[indexOfTheFirstPoint], splinePoints[indexOfTheFirstPoint + 1] };
-            current.velocities = new[] { ScaleFactorOfVelocityVectors * v1, ScaleFactorOfVelocityVectors * v2 };
-            current.gameObjectLineRenderer = LineRendererPrefab;
-            current.mySplineBuilder = this;
-            current.indexOfTheFirstPoint = indexOfTheFirstPoint;
-            current.SubscripeToPointEvent();
-            current.DeleteOldDraw();
-            current.Draw();
-        }
-
-        public override void AddPointToSpline(Transform newPoint)
-        {
-            splinePoints.Add(newPoint);
-            splinePoints[splinePoints.Count - 1].transform.SetParent(transform);
-            SetUpSplineSegment(splinePoints.Count - 2);
-            SetUpSplineSegment(splinePoints.Count - 3);
-        }
-    }
-
     public abstract class BaseSplineBuilder : MonoBehaviour
     {
-        [HideInInspector] public List<Transform> splinePoints = new List<Transform> ();
-        [HideInInspector] public GameObject LineRendererPrefab, DrawCurvePrefab;
+        [SerializeField] protected List<Transform> splinePoints = new List<Transform>();
         protected List<DrawCurve> DrawCurvesList = new List<DrawCurve>();
+        [HideInInspector] public GameObject Point, LineRendererPrefab,DrawCurvePrefab;
+        public GameObject Tile;
+        [Range(0.01f, 1f)] public float RESOLUTION = 0.2f;
+        public Color LineColor = Color.white;
+        public float LineThickness = 0.5f;
 
-        public void AssembleSpline()
+        public virtual void AssembleSpline()
         {
             DeleteOldSpline();
             for (int i = 0; i < splinePoints.Count - 1; i++) SetUpSplineSegment(i);
@@ -86,7 +27,14 @@ namespace Background.SplinePath
             foreach (DrawCurve drawCurve in DrawCurvesList) drawCurve.DeleteOldDraw();
         }
 
-        public abstract void AddPointToSpline(Transform newPoint);
+        public abstract void AddPointToSpline();
+        public void LoadPrefabs()
+        {
+            GameObject[] mySources = Resources.LoadAll<GameObject>("SplineStuff");
+            DrawCurvePrefab = mySources[0];
+            LineRendererPrefab = mySources[1];
+            Point = mySources[2];
+        }
     }
     
     public class BezierHermiteSpline : CurveBase

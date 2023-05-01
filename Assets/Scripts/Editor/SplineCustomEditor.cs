@@ -5,22 +5,20 @@ using UnityEngine;
 
 namespace Editor
 {
-    [CustomEditor(typeof(Spline))]
+    [CustomEditor(typeof(B_Spline))]
     public class SplineCustomEditor : UnityEditor.Editor
     {
         private void Reset()
         {
-            Spline script = (Spline) target;
-            script.LoadPrefaps();
+            B_Spline script = (B_Spline) target;
+            script.LoadPrefabs();
+            script.CheckForExistingComponents();
         }
-
         public override void OnInspectorGUI()
         {
             
-            Spline script = (Spline) target;
-            script.usedSplineType = (Spline.SplineType) EditorGUILayout.EnumPopup("SplineType", script.usedSplineType);
-            script.SplineTypeChange();
-            
+            B_Spline script = (B_Spline) target;
+
             GUILayout.BeginHorizontal();
             if (GUILayout.Button("Draw Spline"))
             {
@@ -29,14 +27,11 @@ namespace Editor
         
             if (GUILayout.Button("Add Point"))
             {
-                script.AddPoint();
+                script.AddPointToSpline();
             }
         
             GUILayout.EndHorizontal();
-            if (GUILayout.Button("Load Prefabs"))
-            {
-                script.LoadPrefaps();
-            }
+            //if (GUILayout.Button("Load Prefabs")) { script.LoadPrefabs(); }
             base.OnInspectorGUI();
         }
     }
