@@ -40,11 +40,7 @@ namespace Background.SplinePath
     public class BezierHermiteSpline : CurveBase
     {
         private static readonly Matrix4x4 MainMatrix = new Matrix4x4(new Vector4(1,0,0,0),new Vector4(0,1,0,0), new Vector4(-3,-2,3,-1),new Vector4(2,1,-2,1));
-        // 1  0  0  0
-        // 0  1  0  0
-        //-3 -2  3 -1
-        // 2  1 -2  1
-
+        
         public BezierHermiteSpline(Transform point1,Vector3 velocity1,Transform point2,Vector3 velocity2)
         {
             Points = new Vector3[4];
@@ -71,7 +67,6 @@ namespace Background.SplinePath
         }
     }
 
-    
     public abstract class CurveBase
     {
         protected Vector3[] Points;

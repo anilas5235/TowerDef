@@ -1,6 +1,6 @@
 using System.Collections.Generic;
 using System.Linq;
-using Unity.Mathematics;
+using UnityEditor;
 using UnityEngine;
 
 namespace Background.SplinePath
@@ -59,7 +59,7 @@ namespace Background.SplinePath
 
             if (indexOfTheFirstPoint > DrawCurvesList.Count - 1)
             {
-                DrawCurvesList.Add(Instantiate(DrawCurvePrefab, transform.position, quaternion.identity).gameObject
+                DrawCurvesList.Add( ((GameObject)PrefabUtility.InstantiatePrefab(DrawCurvePrefab))
                     .GetComponent<DrawCurve>());
                 DrawCurvesList[DrawCurvesList.Count-1].gameObject.name = $"Segment{DrawCurvesList.Count - 1}";
             }
@@ -76,8 +76,9 @@ namespace Background.SplinePath
 
         public override void AddPointToSpline()
         {
-            Transform newPoint = Instantiate(Point, transform.position, quaternion.identity).transform;
-            splinePoints.Add(newPoint);
+            GameObject newPoint = (GameObject)PrefabUtility.InstantiatePrefab(Point);
+            newPoint.transform.position = transform.position;
+            splinePoints.Add(newPoint.transform);
             splinePoints[splinePoints.Count - 1].transform.SetParent(transform);
             if (splinePoints.Count < 3)return;
             SetUpSplineSegment(splinePoints.Count - 2);
