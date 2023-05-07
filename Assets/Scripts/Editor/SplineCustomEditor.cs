@@ -10,8 +10,7 @@ namespace Editor
         private void Reset()
         {
             B_Spline script = (B_Spline) target;
-            script.LoadPrefabs();
-            script.CheckForExistingComponents();
+            script.InitializeSpline();
         }
         public override void OnInspectorGUI()
         {
@@ -19,11 +18,10 @@ namespace Editor
             B_Spline script = (B_Spline) target;
 
             GUILayout.BeginHorizontal();
-            if (GUILayout.Button("Draw Spline")) { script.AssembleSpline(); }
-        
             if (GUILayout.Button("Add Point")) { script.AddPointToSpline(); }
-        
+            if (GUILayout.Button("Redraw")) { script.AssembleSpline(); }
             GUILayout.EndHorizontal();
+            
             base.OnInspectorGUI();
         }
     }

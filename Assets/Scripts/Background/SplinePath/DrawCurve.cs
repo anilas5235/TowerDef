@@ -1,6 +1,5 @@
 using System.Collections.Generic;
 using Unity.Mathematics;
-using UnityEditor;
 using UnityEngine;
 
 namespace Background.SplinePath
@@ -10,32 +9,13 @@ namespace Background.SplinePath
         [HideInInspector] public Transform[] pointsForTheCurve;
         [HideInInspector] public Vector3[] velocities;
         [HideInInspector] public BaseSplineBuilder mySplineBuilder;
-        [HideInInspector] public int indexOfTheFirstPoint;
 
         private List<GameObject> _drawnPoints = new List<GameObject>();
         private LineRenderer myLineRenderer;
-        private bool _subedToPoints;
-
-        private void OnEnable()
-        {
-            SubscripeToPointEvent();
-        }
-
-        private void OnDisable()
-        {
-            foreach (Transform point in pointsForTheCurve)
-            {
-                if (point)
-                {
-                    point.gameObject.GetComponent<PointBehaviour>().PointMoved -= Draw;
-                }
-            }
-
-            _subedToPoints = false;
-        }
 
         public void Draw()
         {
+            myLineRenderer = GetComponent<LineRenderer>();
             DeleteOldDraw();
             CurveBase curve = new BezierHermiteSpline(
                 pointsForTheCurve[0], velocities[0],
@@ -54,13 +34,7 @@ namespace Background.SplinePath
 
         public void DeleteOldDraw()
         {
-            if (_drawnPoints.Count > 0)
-            {
-                for (int i = 0; i < _drawnPoints.Count; i++)
-                {
-                    _drawnPoints[i].gameObject.SetActive(false);
-                }
-            }
+            if (mySplineBuilder.Tile == null) { myLineRenderer.positionCount = 0; }
         }
 
         private void DrawPoints(Vector3[] points, Color lineColor, float lineWidth)
@@ -112,12 +86,6 @@ namespace Background.SplinePath
                 }
                 pointsForLineRender.Add(points[points.Length-1]);
 
-                if (!myLineRenderer)
-                {
-                    myLineRenderer = Instantiate(mySplineBuilder.LineRendererPrefab, transform.position, quaternion.identity)
-                        .GetComponent<LineRenderer>();
-                }
-
                 myLineRenderer.positionCount = pointsForLineRender.Count;
                 myLineRenderer.SetPositions(pointsForLineRender.ToArray());
                 myLineRenderer.startColor = lineColor;
@@ -131,28 +99,6 @@ namespace Background.SplinePath
         {
             DrawPoints(new[] { pointsForTheCurve[0].position, pointsForTheCurve[1].position }, Color.gray, 0.3f);
             DrawPoints(new[] { pointsForTheCurve[2].position, pointsForTheCurve[3].position }, Color.gray, 0.3f);
-        }
-
-        private void TriggerPointMoved()
-        {
-            if (mySplineBuilder != null)
-            {
-                mySplineBuilder.SetUpSplineSegment(indexOfTheFirstPoint);
-                mySplineBuilder.SetUpSplineSegment(indexOfTheFirstPoint + 1);
-                mySplineBuilder.SetUpSplineSegment(indexOfTheFirstPoint - 1);
-            }
-            else Draw();
-        }
-
-        public void SubscripeToPointEvent()
-        {
-            if (_subedToPoints || pointsForTheCurve.Length < 1) return;
-
-            foreach (Transform point in pointsForTheCurve)
-            {
-                if (point) point.gameObject.GetComponent<PointBehaviour>().PointMoved += TriggerPointMoved;
-            }
-            _subedToPoints = true;
         }
     }
 }

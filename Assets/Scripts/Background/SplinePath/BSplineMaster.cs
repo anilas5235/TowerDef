@@ -1,6 +1,7 @@
+using System;
 using System.Collections.Generic;
-using Unity.Collections;
 using Unity.Mathematics;
+using UnityEditor;
 using UnityEngine;
 
 namespace Background.SplinePath
@@ -9,7 +10,7 @@ namespace Background.SplinePath
     {
         [SerializeField] protected List<Transform> splinePoints = new List<Transform>();
         protected List<DrawCurve> DrawCurvesList = new List<DrawCurve>();
-        [HideInInspector] public GameObject Point, LineRendererPrefab,DrawCurvePrefab;
+        [HideInInspector] public GameObject Point,DrawCurvePrefab;
         public GameObject Tile;
         [Range(0.01f, 1f)] public float RESOLUTION = 0.2f;
         public Color LineColor = Color.white;
@@ -27,19 +28,56 @@ namespace Background.SplinePath
             foreach (DrawCurve drawCurve in DrawCurvesList) drawCurve.DeleteOldDraw();
         }
 
-        public abstract void AddPointToSpline();
+        public void AddPointToSpline()
+        {
+            GameObject newPoint = (GameObject)PrefabUtility.InstantiatePrefab(Point);
+            switch (splinePoints.Count)
+            {
+                case 0:
+                    newPoint.transform.position = transform.position;
+                    break;
+                case 1:
+                    newPoint.transform.position = splinePoints[splinePoints.Count - 1].position;
+                    break;
+                default:
+                    newPoint.transform.position = splinePoints[splinePoints.Count - 1].position
+                                                  + (splinePoints[splinePoints.Count - 1].position -
+                                                     splinePoints[splinePoints.Count - 2].position).normalized;
+                    break;
+            }
+            PointBehaviour current = newPoint.GetComponent<PointBehaviour>();
+            current.Master = this;
+            current.index = splinePoints.Count;
+            splinePoints.Add(newPoint.transform);
+            splinePoints[splinePoints.Count - 1].transform.SetParent(transform);
+            UpdatePointsAdded();
+        }
+
+        public void AddPointToSpline(Vector3 position)
+        {
+            GameObject newPoint = (GameObject)PrefabUtility.InstantiatePrefab(Point);
+            newPoint.transform.position = position;
+            PointBehaviour current = newPoint.GetComponent<PointBehaviour>();
+            current.Master = this;
+            current.index = splinePoints.Count;
+            splinePoints.Add(newPoint.transform);
+            splinePoints[splinePoints.Count - 1].transform.SetParent(transform);
+            UpdatePointsAdded();
+        }
+        protected abstract void UpdatePointsAdded();
         public void LoadPrefabs()
         {
             GameObject[] mySources = Resources.LoadAll<GameObject>("SplineStuff");
             DrawCurvePrefab = mySources[0];
-            LineRendererPrefab = mySources[1];
-            Point = mySources[2];
+            Point = mySources[1];
         }
+
+        public abstract void TriggerPointMoved(int index);
     }
     
     public class BezierHermiteSpline : CurveBase
     {
-        private static readonly Matrix4x4 MainMatrix = new Matrix4x4(new Vector4(1,0,0,0),new Vector4(0,1,0,0), new Vector4(-3,-2,3,-1),new Vector4(2,1,-2,1));
+        private static readonly Matrix4x4 SpecificMainMatrix = new Matrix4x4(new Vector4(1,0,0,0),new Vector4(0,1,0,0), new Vector4(-3,-2,3,-1),new Vector4(2,1,-2,1));
         
         public BezierHermiteSpline(Transform point1,Vector3 velocity1,Transform point2,Vector3 velocity2)
         {
@@ -48,28 +86,17 @@ namespace Background.SplinePath
             Points[1] = velocity1;
             Points[2] = point2.position;
             Points[3] = velocity2;
-        }
-
-        public override Vector3 GetPoint(float t)
-        {
-            Vector4 pattern = new Vector4(1, t, math.pow(t, 2), math.pow(t, 3));
-
-            Vector4 matrixFactoredPattern =  MainMatrix * pattern;
-
-            Vector3 returnVector3 = Vector3.zero;
-
-            returnVector3 += Points[0] * matrixFactoredPattern.x;
-            returnVector3 += Points[1] * matrixFactoredPattern.y;
-            returnVector3 += Points[2] * matrixFactoredPattern.z;
-            returnVector3 += Points[3] * matrixFactoredPattern.w;
-        
-            return returnVector3;
+            MainMatrix = SpecificMainMatrix;
         }
     }
 
     public abstract class CurveBase
     {
+        protected Matrix4x4 MainMatrix;
         protected Vector3[] Points;
-        public abstract Vector3 GetPoint(float t);
+        public virtual Vector3 GetPoint(float t)
+        {
+            return new Matrix4x4(Points[0],Points[1],Points[2],Points[3]) * (MainMatrix * new Vector4(1, t, math.pow(t, 2), math.pow(t, 3)));
+        }
     }
 }

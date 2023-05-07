@@ -1,39 +1,24 @@
-using System;
 using UnityEngine;
 
 namespace Background.SplinePath
 {
     public class PointBehaviour : MonoBehaviour
     {
-        public Action PointMoved;
+        [HideInInspector] public int index;
+        public BaseSplineBuilder Master;
+        private Vector3 oldPosition = Vector3.zero;
 
-        private bool currentlyDraged;
-        private Vector3 oldPosition;
-        private Camera _camera;
-
-        private void Start()
+        private void Reset()
         {
-            _camera = Camera.main;
             oldPosition = transform.position;
         }
 
-        private void OnMouseDown()
+        private void OnDrawGizmosSelected()
         {
-            currentlyDraged = !currentlyDraged;
-        }
-
-        private void Update()
-        {
-            if (currentlyDraged)
+            if (Vector3.Distance(transform.position, oldPosition) > 0.05f)
             {
-                Vector3 mousePosition = _camera.ScreenToWorldPoint(Input.mousePosition);
-                mousePosition.z = 0;
-                transform.position = mousePosition;
-                if (Vector3.Distance(transform.position, oldPosition) > 0.05f)
-                {
-                    PointMoved?.Invoke();
-                    oldPosition = transform.position;
-                }
+                Master.TriggerPointMoved(index);
+                oldPosition = transform.position;
             }
         }
     }
