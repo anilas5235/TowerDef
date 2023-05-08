@@ -4,6 +4,7 @@ using UnityEngine;
 
 namespace Background.SplinePath
 {
+    [RequireComponent(typeof(LineRenderer))]
     public class DrawCurve : MonoBehaviour
     {
         [HideInInspector] public Transform[] pointsForTheCurve;
@@ -15,7 +16,7 @@ namespace Background.SplinePath
 
         public void Draw()
         {
-            myLineRenderer = GetComponent<LineRenderer>();
+            if (myLineRenderer == null) { myLineRenderer = GetComponent<LineRenderer>(); }
             DeleteOldDraw();
             CurveBase curve = new BezierHermiteSpline(
                 pointsForTheCurve[0], velocities[0],
@@ -34,6 +35,7 @@ namespace Background.SplinePath
 
         public void DeleteOldDraw()
         {
+            if (myLineRenderer == null) { myLineRenderer = GetComponent<LineRenderer>(); }
             if (mySplineBuilder.Tile == null) { myLineRenderer.positionCount = 0; }
         }
 

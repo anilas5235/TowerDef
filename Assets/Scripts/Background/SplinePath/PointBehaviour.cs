@@ -4,7 +4,7 @@ namespace Background.SplinePath
 {
     public class PointBehaviour : MonoBehaviour
     {
-        [HideInInspector] public int index;
+        public int index;
         public BaseSplineBuilder Master;
         private Vector3 oldPosition = Vector3.zero;
 

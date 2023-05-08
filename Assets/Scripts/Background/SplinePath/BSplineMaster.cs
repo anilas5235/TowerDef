@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using Unity.Mathematics;
 using UnityEditor;
 using UnityEngine;
@@ -8,16 +9,38 @@ namespace Background.SplinePath
 {
     public abstract class BaseSplineBuilder : MonoBehaviour
     {
-        [SerializeField] protected List<Transform> splinePoints = new List<Transform>();
-        protected List<DrawCurve> DrawCurvesList = new List<DrawCurve>();
         [HideInInspector] public GameObject Point,DrawCurvePrefab;
         public GameObject Tile;
         [Range(0.01f, 1f)] public float RESOLUTION = 0.2f;
         public Color LineColor = Color.white;
         public float LineThickness = 0.5f;
+        [SerializeField] protected List<Transform> splinePoints = new List<Transform>();
+        [SerializeField] protected List<DrawCurve> DrawCurvesList = new List<DrawCurve>();
+
+        private Color currentLineColor = default;
+        private float currentLineThickness = default, currentRESOLUTION = default;
 
         public virtual void AssembleSpline()
         {
+            if (splinePoints.Count < 1 || DrawCurvesList.Count <1) CheckForExistingComponents();
+            for (int i = 0; i < splinePoints.Count; i++)
+            {
+                if (splinePoints[i] == null)
+                {
+                    splinePoints.RemoveAt(i);
+                    i--;
+                }
+                else
+                {
+                    splinePoints[i].gameObject.GetComponent<PointBehaviour>().index = i;
+#if UNITY_EDITOR
+                    UnityEditor.EditorUtility.SetDirty(splinePoints[i].gameObject.GetComponent<PointBehaviour>());
+#endif
+                }
+            }
+#if UNITY_EDITOR
+            UnityEditor.AssetDatabase.SaveAssets();
+#endif
             DeleteOldSpline();
             for (int i = 0; i < splinePoints.Count - 1; i++) SetUpSplineSegment(i);
         }
@@ -25,7 +48,19 @@ namespace Background.SplinePath
 
         protected void DeleteOldSpline()
         {
-            foreach (DrawCurve drawCurve in DrawCurvesList) drawCurve.DeleteOldDraw();
+            for (int i = 0; i < DrawCurvesList.Count; i++)
+            {
+                if (splinePoints.Count-3 < i)
+                {
+                    DestroyImmediate(DrawCurvesList[i].gameObject);
+                    DrawCurvesList.RemoveAt(i);
+                    i--;
+                }
+                else
+                {
+                    DrawCurvesList[i].DeleteOldDraw();
+                }
+            }
         }
 
         public void AddPointToSpline()
@@ -70,9 +105,46 @@ namespace Background.SplinePath
             GameObject[] mySources = Resources.LoadAll<GameObject>("SplineStuff");
             DrawCurvePrefab = mySources[0];
             Point = mySources[1];
+            CheckForExistingComponents();
         }
 
         public abstract void TriggerPointMoved(int index);
+
+        public void CheckForExistingComponents()
+        {
+            splinePoints.Clear();
+            foreach (var point in gameObject.GetComponentsInChildren<PointBehaviour>().ToList())
+            {
+                splinePoints.Add(point.gameObject.transform);
+                point.Master = this;
+            }
+
+            DrawCurvesList = gameObject.GetComponentsInChildren<DrawCurve>().ToList();
+        }
+        
+        protected virtual void OnDrawGizmosSelected()
+        {
+            bool needUpdate = false;
+            if (currentLineColor != LineColor)
+            {
+                needUpdate = true;
+                currentLineColor = LineColor;
+            }
+
+            if (math.abs( currentRESOLUTION - RESOLUTION) > 0.009f)
+            {
+                needUpdate = true;
+                currentRESOLUTION = RESOLUTION;
+            }
+
+            if (math.abs( currentLineThickness- LineThickness) > 0.009f)
+            {
+                needUpdate = true;
+                currentLineThickness = LineThickness;
+            }
+
+            if (needUpdate) AssembleSpline();
+        }
     }
     
     public class BezierHermiteSpline : CurveBase
@@ -94,7 +166,7 @@ namespace Background.SplinePath
     {
         protected Matrix4x4 MainMatrix;
         protected Vector3[] Points;
-        public virtual Vector3 GetPoint(float t)
+        public Vector3 GetPoint(float t)
         {
             return new Matrix4x4(Points[0],Points[1],Points[2],Points[3]) * (MainMatrix * new Vector4(1, t, math.pow(t, 2), math.pow(t, 3)));
         }

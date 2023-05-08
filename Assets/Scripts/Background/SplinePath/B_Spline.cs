@@ -1,29 +1,13 @@
-using System.Linq;
 using UnityEditor;
 using UnityEngine;
+using Unity.Mathematics;
 
 namespace Background.SplinePath
 {
     public class B_Spline : BaseSplineBuilder
     {
-        [SerializeField,Range(0.1f,1f)] private float ScaleFactorOfVelocityVectors = 0.5f;
-
-        public void CheckForExistingComponents()
-        {
-            if (splinePoints.Count < 1)
-            {
-                foreach (var point in gameObject.GetComponentsInChildren<PointBehaviour>().ToList())
-                {
-                    splinePoints.Add(point.gameObject.transform);
-                    point.Master = this;
-                }
-            }
-
-            if (DrawCurvesList.Count < 1)
-            {
-                 DrawCurvesList = gameObject.GetComponentsInChildren<DrawCurve>().ToList();
-            }
-        }
+        [SerializeField,Range(0.1f,1f)] private float TentionScale = 0.5f;
+        private float currentTentionScale = default;
 
         public override void SetUpSplineSegment(int indexOfTheFirstPoint)
         {
@@ -31,7 +15,7 @@ namespace Background.SplinePath
             {
                 if (splinePoint == null)
                 {
-                    AssembleSpline();
+                    this.AssembleSpline();
                     return;
                 }
             }
@@ -71,7 +55,7 @@ namespace Background.SplinePath
             DrawCurve current = DrawCurvesList[indexOfTheFirstPoint];
             current.gameObject.transform.SetParent(transform);
             current.pointsForTheCurve = new[] { splinePoints[indexOfTheFirstPoint], splinePoints[indexOfTheFirstPoint + 1] };
-            current.velocities = new[] { ScaleFactorOfVelocityVectors * v1, ScaleFactorOfVelocityVectors * v2 };
+            current.velocities = new[] { TentionScale * v1, TentionScale * v2 };
             current.mySplineBuilder = this;
             current.Draw();
         }
@@ -85,23 +69,13 @@ namespace Background.SplinePath
 
         public override void AssembleSpline()
         {
-            for (int i = 0; i < splinePoints.Count; i++)
-            {
-                if (splinePoints[i] == null)
-                {
-                    splinePoints.RemoveAt(i);
-                }
-                else
-                {
-                    splinePoints[i].gameObject.GetComponent<PointBehaviour>().index = i;
-                }
-            }
             if (splinePoints.Count < 3)return;
             base.AssembleSpline();
         }
 
         public override void TriggerPointMoved(int index)
         {
+            if (splinePoints.Count < 1 || DrawCurvesList.Count <1) CheckForExistingComponents();
             for (int i = -2; i < 3; i++)
             {
                 SetUpSplineSegment(index+ i);
@@ -111,10 +85,19 @@ namespace Background.SplinePath
         public void InitializeSpline()
         {
             LoadPrefabs();
-            CheckForExistingComponents();
             while (splinePoints.Count < 3)
             {
                 AddPointToSpline();
+            }
+        }
+
+        protected override void OnDrawGizmosSelected()
+        {
+            base.OnDrawGizmosSelected();
+            if (math.abs( currentTentionScale- TentionScale) > 0.009f)
+            {
+                currentTentionScale = TentionScale;
+                AssembleSpline();
             }
         }
     }

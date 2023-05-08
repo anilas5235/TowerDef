@@ -22,6 +22,8 @@ namespace Editor
             if (GUILayout.Button("Redraw")) { script.AssembleSpline(); }
             GUILayout.EndHorizontal();
             
+            if (GUILayout.Button("Check For New Components")) { script.CheckForExistingComponents(); }
+            
             base.OnInspectorGUI();
         }
     }
