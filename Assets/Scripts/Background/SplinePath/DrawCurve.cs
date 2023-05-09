@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using Unity.Mathematics;
 using UnityEngine;
@@ -14,19 +15,33 @@ namespace Background.SplinePath
         private List<GameObject> _drawnPoints = new List<GameObject>();
         private LineRenderer myLineRenderer;
 
+        
+
         public void Draw()
         {
             if (myLineRenderer == null) { myLineRenderer = GetComponent<LineRenderer>(); }
             DeleteOldDraw();
-            CurveBase curve = new BezierHermiteSpline(
-                pointsForTheCurve[0], velocities[0],
-                pointsForTheCurve[1], velocities[1]);
+            MatrixCurveBase matrixCurve;
+            switch (mySplineBuilder.MySplineType)
+            {
+                case BaseSplineBuilder.SplineType.B_Spline:
+                    matrixCurve = new BezierHermiteSpline(
+                        pointsForTheCurve[0], velocities[0],
+                        pointsForTheCurve[1], velocities[1]);
+                    break;
+                case BaseSplineBuilder.SplineType.Bezie_Spline:
+                    matrixCurve = new BezierCurveMatrix(pointsForTheCurve[0], pointsForTheCurve[1],
+                        pointsForTheCurve[2], pointsForTheCurve[3]);
+                    break;
+                default:
+                    throw new ArgumentOutOfRangeException();
+            }
 
             List<Vector3> _points = new List<Vector3>();
             float t = 0;
             while (t < 1)
             {
-                _points.Add(curve.GetPoint(t));
+                _points.Add(matrixCurve.GetPoint(t));
                 t += 0.01f;
             }
 
@@ -35,7 +50,7 @@ namespace Background.SplinePath
 
         public void DeleteOldDraw()
         {
-            if (myLineRenderer == null) { myLineRenderer = GetComponent<LineRenderer>(); }
+            if (myLineRenderer == null) { myLineRenderer = gameObject.GetComponent<LineRenderer>(); }
             if (mySplineBuilder.Tile == null) { myLineRenderer.positionCount = 0; }
         }
 
@@ -97,10 +112,17 @@ namespace Background.SplinePath
             }
         }
 
-        public void DrawArms()
+        private void DrawArms()
         {
-            DrawPoints(new[] { pointsForTheCurve[0].position, pointsForTheCurve[1].position }, Color.gray, 0.3f);
-            DrawPoints(new[] { pointsForTheCurve[2].position, pointsForTheCurve[3].position }, Color.gray, 0.3f);
+            if (pointsForTheCurve.Length  < 1)return;
+            Gizmos.color = Color.gray;
+            Gizmos.DrawLine( pointsForTheCurve[0].position, pointsForTheCurve[1].position);
+            Gizmos.DrawLine(pointsForTheCurve[2].position, pointsForTheCurve[3].position);
+        }
+
+        private void OnDrawGizmos()
+        {
+            DrawArms();
         }
     }
 }

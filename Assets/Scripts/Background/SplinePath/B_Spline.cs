@@ -11,6 +11,7 @@ namespace Background.SplinePath
 
         public override void SetUpSplineSegment(int indexOfTheFirstPoint)
         {
+            MySplineType = SplineType.B_Spline;
             foreach (Transform splinePoint in splinePoints)
             {
                 if (splinePoint == null)
@@ -69,8 +70,10 @@ namespace Background.SplinePath
 
         public override void AssembleSpline()
         {
+            MySplineType = SplineType.B_Spline;
             if (splinePoints.Count < 3)return;
             base.AssembleSpline();
+            for (int i = 0; i < splinePoints.Count - 1; i++) SetUpSplineSegment(i);
         }
 
         public override void TriggerPointMoved(int index)
@@ -82,7 +85,7 @@ namespace Background.SplinePath
             }
         }
 
-        public void InitializeSpline()
+        public override void InitializeSpline()
         {
             LoadPrefabs();
             while (splinePoints.Count < 3)

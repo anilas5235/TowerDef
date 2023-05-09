@@ -19,6 +19,14 @@ namespace Background.SplinePath
 
         private Color currentLineColor = default;
         private float currentLineThickness = default, currentRESOLUTION = default;
+        
+        [HideInInspector] public SplineType MySplineType;
+        
+        public enum SplineType
+        {
+            B_Spline =0,
+            Bezie_Spline=1,
+        }
 
         public virtual void AssembleSpline()
         {
@@ -32,17 +40,25 @@ namespace Background.SplinePath
                 }
                 else
                 {
-                    splinePoints[i].gameObject.GetComponent<PointBehaviour>().index = i;
+                    PointBehaviour currentPointBehaviour = splinePoints[i].gameObject.GetComponent<PointBehaviour>();
+                    currentPointBehaviour.index = i;
 #if UNITY_EDITOR
-                    UnityEditor.EditorUtility.SetDirty(splinePoints[i].gameObject.GetComponent<PointBehaviour>());
+                    UnityEditor.EditorUtility.SetDirty(currentPointBehaviour);
 #endif
                 }
             }
 #if UNITY_EDITOR
             UnityEditor.AssetDatabase.SaveAssets();
 #endif
+            for (int i = 0; i < DrawCurvesList.Count; i++)
+            {
+                if (DrawCurvesList[i] == null)
+                {
+                    DrawCurvesList.RemoveAt(i);
+                    i--;
+                }
+            }
             DeleteOldSpline();
-            for (int i = 0; i < splinePoints.Count - 1; i++) SetUpSplineSegment(i);
         }
         public abstract void SetUpSplineSegment(int indexOfTheFirstPoint);
 
@@ -145,9 +161,11 @@ namespace Background.SplinePath
 
             if (needUpdate) AssembleSpline();
         }
+
+        public abstract void InitializeSpline();
     }
     
-    public class BezierHermiteSpline : CurveBase
+    public class BezierHermiteSpline : MatrixCurveBase
     {
         private static readonly Matrix4x4 SpecificMainMatrix = new Matrix4x4(new Vector4(1,0,0,0),new Vector4(0,1,0,0), new Vector4(-3,-2,3,-1),new Vector4(2,1,-2,1));
         
@@ -161,8 +179,30 @@ namespace Background.SplinePath
             MainMatrix = SpecificMainMatrix;
         }
     }
+    
+    public class BezierCurveMatrix : MatrixCurveBase
+    {
+        private static readonly Matrix4x4 SpecificMainMatrix = new Matrix4x4(new Vector4(1,0,0,0),new Vector4(-3,3,0,0), new Vector4(3,-6,3,0),new Vector4(-1,3,-3,1));
 
-    public abstract class CurveBase
+        public BezierCurveMatrix(Transform point1,Transform point2,Transform point3,Transform point4)
+        {
+            Points = new Vector3[4];
+            Points[0] = point1.position;
+            Points[1] = point2.position;
+            Points[2] = point3.position;
+            Points[3] = point4.position;
+            MainMatrix = SpecificMainMatrix;
+        }
+        
+        public BezierCurveMatrix(Vector3[] points)
+        {
+            Points = new Vector3[4];
+            Points = points;
+            MainMatrix = SpecificMainMatrix;
+        }
+    }
+
+    public abstract class MatrixCurveBase
     {
         protected Matrix4x4 MainMatrix;
         protected Vector3[] Points;
