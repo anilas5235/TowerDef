@@ -9,11 +9,12 @@ namespace Background.SplinePath
 {
     public abstract class BaseSplineBuilder : MonoBehaviour
     {
-        [HideInInspector] public GameObject Point,DrawCurvePrefab;
+        public GameObject Point,DrawCurvePrefab;
+        public DrawMode CurrentDrawMode;
         public GameObject Tile;
         [Range(0.01f, 1f)] public float RESOLUTION = 0.2f;
         public Color LineColor = Color.white;
-        public float LineThickness = 0.5f;
+        public float LineThickness = 0.5f, tileSizeMultiplier =1f;
         [SerializeField] protected List<Transform> splinePoints = new List<Transform>();
         [SerializeField] protected List<DrawCurve> DrawCurvesList = new List<DrawCurve>();
 
@@ -21,11 +22,17 @@ namespace Background.SplinePath
         private float currentLineThickness = default, currentRESOLUTION = default;
         
         [HideInInspector] public SplineType MySplineType;
-        
+
         public enum SplineType
         {
             B_Spline =0,
             Bezie_Spline=1,
+        }
+        
+        public enum DrawMode
+        {
+            LineRender = 0,
+            ObjectTiling = 1,
         }
 
         public virtual void AssembleSpline()

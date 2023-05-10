@@ -6,7 +6,7 @@ namespace Background.SplinePath
 {
     public class B_Spline : BaseSplineBuilder
     {
-        [SerializeField,Range(0.1f,1f)] private float TentionScale = 0.5f;
+        [Range(0.1f,1f)] public float TentionScale = 0.5f;
         private float currentTentionScale = default;
 
         public override void SetUpSplineSegment(int indexOfTheFirstPoint)

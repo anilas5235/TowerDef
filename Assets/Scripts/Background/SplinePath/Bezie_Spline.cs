@@ -6,15 +6,31 @@ using UnityEngine;
 
 public class Bezie_Spline : BaseSplineBuilder
 {
-    [HideInInspector] public bool mirrorSplineArms = false;
+    public bool mirrorSplineArms = true;
     public override void SetUpSplineSegment(int indexOfTheFirstPoint)
     {
         if (indexOfTheFirstPoint < 0|| indexOfTheFirstPoint > splinePoints.Count-1) return;
         MySplineType = SplineType.Bezie_Spline;
+        foreach (Transform splinePoint in splinePoints)
+        {
+            if (splinePoint == null)
+            {
+                this.AssembleSpline();
+                return;
+            }
+        }
 
         DrawCurve current;
 
         int indexOfSegment = (int) Math.Floor(indexOfTheFirstPoint / 3f);
+        for (int i = 0; i < DrawCurvesList.Count; i++)
+        {
+            if (DrawCurvesList[i] == null)
+            {
+                DrawCurvesList.RemoveAt(i);
+                i--;
+            }
+        }
         if (indexOfSegment > DrawCurvesList.Count - 1 && indexOfSegment*3 < splinePoints.Count-1)
         {
             DrawCurvesList.Add(((GameObject)PrefabUtility.InstantiatePrefab(DrawCurvePrefab))
@@ -46,11 +62,7 @@ public class Bezie_Spline : BaseSplineBuilder
     public override void AssembleSpline()
     {
         MySplineType = SplineType.Bezie_Spline;
-        for (int i = 0; i < splinePoints.Count-1; i+=3)
-        {
-            splinePoints[i+1].transform.SetParent(splinePoints[i].transform);
-            splinePoints[i+2].transform.SetParent(splinePoints[i+3].transform);
-        }
+       
         if (splinePoints.Count < 4)return;
         base.AssembleSpline();
         int index = 1;
@@ -120,11 +132,20 @@ public class Bezie_Spline : BaseSplineBuilder
         {
             AddPointToSpline(positionOfLastPoint+directionForNewSegment*i);
         }
+        for (int i = 0; i < splinePoints.Count - 1; i += 3)
+        {
+            splinePoints[i + 1].transform.SetParent(splinePoints[i].transform);
+            splinePoints[i + 2].transform.SetParent(splinePoints[i + 3].transform);
+        }
         SetUpSplineSegment(splinePoints.Count-1);
     }
 
     public void InitialMirrorArmPoints()
     {
+        foreach (Transform splinePoint in splinePoints)
+        {
+            if (splinePoint == null){ return; }
+        }
         for (int i = 2; i < splinePoints.Count-3; i+=3)
         {
             splinePoints[i+2].transform.position = splinePoints[i + 1].transform.position +

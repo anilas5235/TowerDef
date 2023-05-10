@@ -4,18 +4,22 @@ using UnityEngine;
 namespace Editor
 {
     [CustomEditor(typeof(Bezie_Spline))]
-    public class BezieSplineCustomEditor : UnityEditor.Editor
+    public class BezieSplineCustomEditor : GeneralSplineCustomEditor
     {
-        private void Reset()
+        private Bezie_Spline script;
+        private SerializedProperty P_MirrorMode;
+        
+        protected override void OnEnable()
         {
-            Bezie_Spline script = (Bezie_Spline) target;
-            script.InitializeSpline();
+            base.OnEnable();
+            script = (Bezie_Spline)target;
+            P_MirrorMode = serializedObject.FindProperty(nameof(script.mirrorSplineArms));
         }
-        public override void OnInspectorGUI()
+        protected override void LayoutForSpecificSpline()
         {
-            Bezie_Spline script = (Bezie_Spline) target;
-            GUILayout.Space(10);
-
+            script = (Bezie_Spline)target;
+            GUILayout.BeginVertical(standartGUIStyle);
+            GUILayout.Space(5);
             GUILayout.BeginHorizontal();
             if (GUILayout.Button("Add Segment")) { script.AddSegment(); }
             if (GUILayout.Button("Redraw")) { script.AssembleSpline(); }
@@ -23,13 +27,10 @@ namespace Editor
             GUILayout.Space(5);
             if (GUILayout.Button("Check For New Components")) { script.CheckForExistingComponents(); }
             GUILayout.Space(5);
-            script.mirrorSplineArms = EditorGUILayout.Toggle("mirror Arms", script.mirrorSplineArms);
+            EditorGUILayout.PropertyField(P_MirrorMode);
             if (script.mirrorSplineArms)
             { script.InitialMirrorArmPoints(); }
-            
-            GUILayout.Space(20);
-
-            base.OnInspectorGUI();
+            GUILayout.EndVertical();
         }
     }
 }
