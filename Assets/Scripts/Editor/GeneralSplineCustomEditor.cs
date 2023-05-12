@@ -11,20 +11,22 @@ public abstract class GeneralSplineCustomEditor : UnityEditor.Editor
         P_LineThickness,
         P_TileSizeMutliplier;
 
-    protected GUIStyle standartGUIStyle = new GUIStyle();
+    protected GUIStyle standartGUIStyle;
 
     private BaseSplineBuilder script;
 
     private void Reset()
     {
-        standartGUIStyle.normal.background = MakeTex(600, 2, new Color(1, 1, 1, 0.3f));
+        standartGUIStyle = new GUIStyle();
+        standartGUIStyle.normal.background = MakeTex(600, 2, new Color(0, 0, 0, 0.2f));
         script = (BaseSplineBuilder)target;
         script.InitializeSpline();
     }
 
     protected virtual void OnEnable()
     {
-        standartGUIStyle.normal.background = MakeTex(600, 2, new Color(1, 1, 1, 0.3f));
+        standartGUIStyle = new GUIStyle();
+        standartGUIStyle.normal.background = MakeTex(600, 2, new Color(0, 0, 0, 0.2f));
         script = (BaseSplineBuilder)target;
         P_Tile = serializedObject.FindProperty(nameof(script.Tile));
         P_CurrentDrawMode = serializedObject.FindProperty(nameof(script.CurrentDrawMode));
@@ -36,7 +38,6 @@ public abstract class GeneralSplineCustomEditor : UnityEditor.Editor
 
     public override void OnInspectorGUI()
     {
-
         script = (BaseSplineBuilder)target;
 
         LayoutForSpecificSpline();
@@ -76,6 +77,8 @@ public abstract class GeneralSplineCustomEditor : UnityEditor.Editor
     private void DrawModeTiling()
     {
         EditorGUILayout.BeginVertical(standartGUIStyle);
+        if (GUILayout.Button("Reset All Objects")) { script.DeleteAllTileObjects(); }
+        if (GUILayout.Button("Delete Unseen Objects")) { script.DeleteAllTileObjects(); }
         EditorGUILayout.PropertyField(P_Tile);
         EditorGUILayout.PropertyField(P_Resolution);
         EditorGUILayout.PropertyField(P_TileSizeMutliplier);

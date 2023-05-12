@@ -1,4 +1,3 @@
-using System;
 using System.Collections.Generic;
 using System.Linq;
 using Unity.Mathematics;
@@ -7,6 +6,7 @@ using UnityEngine;
 
 namespace Background.SplinePath
 {
+    [DisallowMultipleComponent]
     public abstract class BaseSplineBuilder : MonoBehaviour
     {
         public GameObject Point,DrawCurvePrefab;
@@ -15,13 +15,15 @@ namespace Background.SplinePath
         [Range(0.01f, 1f)] public float RESOLUTION = 0.2f;
         public Color LineColor = Color.white;
         public float LineThickness = 0.5f, tileSizeMultiplier =1f;
-        [SerializeField] protected List<Transform> splinePoints = new List<Transform>();
-        [SerializeField] protected List<DrawCurve> DrawCurvesList = new List<DrawCurve>();
+        protected List<Transform> splinePoints = new List<Transform>();
+        protected List<DrawCurve> DrawCurvesList = new List<DrawCurve>();
+
 
         private Color currentLineColor = default;
         private float currentLineThickness = default, currentRESOLUTION = default;
+        protected float currentTileSizeMultiplier = default;
         
-        [HideInInspector] public SplineType MySplineType;
+        public SplineType MySplineType;
 
         public enum SplineType
         {
@@ -145,7 +147,7 @@ namespace Background.SplinePath
             DrawCurvesList = gameObject.GetComponentsInChildren<DrawCurve>().ToList();
         }
         
-        protected virtual void OnDrawGizmosSelected()
+        protected void OnDrawGizmosSelected()
         {
             bool needUpdate = false;
             if (currentLineColor != LineColor)
@@ -166,10 +168,26 @@ namespace Background.SplinePath
                 currentLineThickness = LineThickness;
             }
 
+            if (ExtraVariableCheck()) needUpdate = true;
+
             if (needUpdate) AssembleSpline();
         }
 
+        protected virtual bool ExtraVariableCheck()
+        {
+            return false;
+        }
+
         public abstract void InitializeSpline();
+
+        public void DeleteAllTileObjects()
+        {
+            foreach (DrawCurve drawCurve in DrawCurvesList)
+            {
+                drawCurve.DeleteMyTiles();
+            }
+            AssembleSpline();
+        }
     }
     
     public class BezierHermiteSpline : MatrixCurveBase

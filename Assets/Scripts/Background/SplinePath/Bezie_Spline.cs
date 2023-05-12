@@ -109,13 +109,16 @@ public class Bezie_Spline : BaseSplineBuilder
 
     public override void InitializeSpline()
     {
-        if (splinePoints.Count > 0)return;
+        if (splinePoints.Count > 0) return;
         LoadPrefabs();
         Vector3 position = transform.position;
-        AddPointToSpline(position+Vector3.left);
-        AddPointToSpline(position+new Vector3(-1,1,0));
-        AddPointToSpline(position+new Vector3(1,1,0));
-        AddPointToSpline(position+Vector3.right);
+        AddPointToSpline(position + Vector3.left);
+        AddPointToSpline(position + new Vector3(-1, 1, 0));
+        AddPointToSpline(position + new Vector3(1, 1, 0));
+        AddPointToSpline(position + Vector3.right);
+
+        splinePoints[1].transform.SetParent(splinePoints[0].transform);
+        splinePoints[2].transform.SetParent(splinePoints[3].transform);
     }
 
     public void AddSegment()
@@ -153,6 +156,16 @@ public class Bezie_Spline : BaseSplineBuilder
                                                         splinePoints[i].transform.position);
         }
         AssembleSpline();
+    }
+
+    private void OnDrawGizmos()
+    {
+        Handles.color = Color.grey;
+        for (int i = 0; i < splinePoints.Count-1; i+=3)
+        {
+            Handles.DrawLine(splinePoints[i].position,splinePoints[i+1].position,5f);
+            Handles.DrawLine(splinePoints[i+2].position,splinePoints[i+3].position,5f);
+        }
     }
 }
 

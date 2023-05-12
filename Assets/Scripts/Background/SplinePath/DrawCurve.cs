@@ -13,7 +13,7 @@ namespace Background.SplinePath
         [HideInInspector] public Vector3[] velocities;
         [HideInInspector] public BaseSplineBuilder mySplineBuilder;
 
-        private List<GameObject> _drawnPoints = new List<GameObject>();
+        private List<GameObject> _drawnObjects = new List<GameObject>();
         private LineRenderer myLineRenderer;
 
         
@@ -53,14 +53,23 @@ namespace Background.SplinePath
                 case BaseSplineBuilder.DrawMode.ObjectTiling: DrawPointsWithTiles(_points.ToArray(),mySplineBuilder.Tile,mySplineBuilder.tileSizeMultiplier);
                     break;
             }
-
-            
         }
 
         public void DeleteOldDraw()
         {
-            if (myLineRenderer == null) { myLineRenderer = gameObject.GetComponent<LineRenderer>(); }
-            if (mySplineBuilder.Tile == null) { myLineRenderer.positionCount = 0; }
+            switch (mySplineBuilder.CurrentDrawMode)
+            {
+                case BaseSplineBuilder.DrawMode.LineRender:
+                    if (myLineRenderer == null) { myLineRenderer = gameObject.GetComponent<LineRenderer>(); }
+                    if (mySplineBuilder.Tile == null) { myLineRenderer.positionCount = 0; }
+                    myLineRenderer.enabled = true;
+                    DeleteMyTiles();
+                    break;
+                case BaseSplineBuilder.DrawMode.ObjectTiling:
+                    foreach (GameObject drawnPoint in _drawnObjects) drawnPoint.SetActive(false);
+                    myLineRenderer.enabled = false;
+                    break;
+            }
         }
 
         private void DrawPointsWithLineRender(Vector3[] points, Color lineColor, float lineWidth)
@@ -91,6 +100,15 @@ namespace Background.SplinePath
 
         private void DrawPointsWithTiles(Vector3[] points, GameObject tile, float sizeMultiplier)
         {
+            if (mySplineBuilder.Tile == null) return;
+            if (_drawnObjects.Count < 1)
+            {
+                for (int i = 0; i < transform.childCount - 1; i++)
+                {
+                    _drawnObjects.Add(transform.GetChild(i).gameObject);
+                }
+            }
+
             int indexInDrawnPoints = 0;
             for (int i = 0; i < points.Length - 1;)
             {
@@ -101,62 +119,25 @@ namespace Background.SplinePath
                     offset++;
                 }
 
-                if (indexInDrawnPoints > _drawnPoints.Count - 1)
+                if (indexInDrawnPoints > _drawnObjects.Count - 1)
                 {
-                    _drawnPoints.Add(Instantiate(tile, transform.position, quaternion.identity));
-                    _drawnPoints[_drawnPoints.Count - 1].name = $"TileDrawnBy{this.name}";
+                    _drawnObjects.Add(Instantiate(tile, transform.position, quaternion.identity));
+                    _drawnObjects[_drawnObjects.Count - 1].name = $"TileDrawnBy{this.name}";
                 }
 
-                _drawnPoints[indexInDrawnPoints].gameObject.SetActive(true);
-                GameObject current = _drawnPoints[indexInDrawnPoints];
-                current.transform.localScale *= sizeMultiplier;
+                _drawnObjects[indexInDrawnPoints].gameObject.SetActive(true);
+                GameObject current = _drawnObjects[indexInDrawnPoints];
+                current.transform.localScale = mySplineBuilder.Tile.transform.localScale * sizeMultiplier;
+                current.transform.position = points[i] + (points[i + offset] - points[i]) * 0.5f;
+                current.transform.right = (points[i + offset] - points[i]).normalized;
                 current.gameObject.transform.SetParent(gameObject.transform);
                 i += offset;
                 indexInDrawnPoints++;
             }
         }
-        private void DrawArms()
-        {
-            Gizmos.color = Color.gray;
-            DrawLineGizmoLine(pointsForTheCurve[0].position, pointsForTheCurve[1].position,5f);
-            DrawLineGizmoLine(pointsForTheCurve[2].position, pointsForTheCurve[3].position,5f);
-        }
-
-        private static void DrawLineGizmoLine(Vector3 p1, Vector3 p2, float width)
-        {
-            int count = 1 + Mathf.CeilToInt(width); // how many lines are needed.
-            if (count == 1)
-            {
-                Gizmos.DrawLine(p1, p2);
-            }
-            else
-            {
-                Camera c = Camera.current;
-                if (c == null)
-                {
-                    Debug.LogError("Camera.current is null");
-                    return;
-                }
-                var scp1 = c.WorldToScreenPoint(p1);
-                var scp2 = c.WorldToScreenPoint(p2);
- 
-                Vector3 v1 = (scp2 - scp1).normalized; // line direction
-                Vector3 n = Vector3.Cross(v1, Vector3.forward); // normal vector
- 
-                for (int i = 0; i < count; i++)
-                {
-                    Vector3 o = 0.99f * n * width * ((float)i / (count - 1) - 0.5f);
-                    Vector3 origin = c.ScreenToWorldPoint(scp1 + o);
-                    Vector3 destiny = c.ScreenToWorldPoint(scp2 + o);
-                    Gizmos.DrawLine(origin, destiny);
-                }
-            }
-        }
-
         private void OnDrawGizmos()
         {
-            if (CheckForDeletedObjects())return;
-            DrawArms();
+            CheckForDeletedObjects();
         }
 
         private bool CheckForDeletedObjects()
@@ -184,6 +165,27 @@ namespace Background.SplinePath
                 mySplineBuilder.AssembleSpline();
             }
             return nullDetected;
+        }
+
+        public void DeleteMyTiles()
+        {
+            while (_drawnObjects.Count > 0)
+            {
+                DestroyImmediate(_drawnObjects[0]);
+                _drawnObjects.RemoveAt(0);
+            }
+        }
+
+        public void DeleteMyUnseenTiles()
+        {
+            for (int i = 0; i < _drawnObjects.Count; i++)
+            {
+                if (!_drawnObjects[i].activeSelf)
+                {
+                    DestroyImmediate(_drawnObjects[i]);
+                    i--;
+                }
+            }
         }
     }
 }

@@ -94,14 +94,22 @@ namespace Background.SplinePath
             }
         }
 
-        protected override void OnDrawGizmosSelected()
+        protected override bool ExtraVariableCheck()
         {
-            base.OnDrawGizmosSelected();
-            if (math.abs( currentTentionScale- TentionScale) > 0.009f)
+            bool needUpdate = false;
+            if (math.abs(currentTentionScale - TentionScale) > 0.009f)
             {
                 currentTentionScale = TentionScale;
-                AssembleSpline();
+                needUpdate = true;
             }
+            
+            if (math.abs(currentTileSizeMultiplier - tileSizeMultiplier) > 0.009f)
+            {
+                currentTileSizeMultiplier = tileSizeMultiplier;
+                needUpdate = true;
+            }
+
+            return needUpdate;
         }
     }
 }
