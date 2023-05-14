@@ -9,7 +9,7 @@ namespace Background.SplinePath
     [RequireComponent(typeof(LineRenderer))]
     public class DrawCurve : MonoBehaviour
     {
-        [HideInInspector] public Transform[] pointsForTheCurve;
+        public Transform[] pointsForTheCurve;
         [HideInInspector] public Vector3[] velocities;
         [HideInInspector] public BaseSplineBuilder mySplineBuilder;
 
@@ -123,6 +123,12 @@ namespace Background.SplinePath
                 {
                     _drawnObjects.Add(Instantiate(tile, transform.position, quaternion.identity));
                     _drawnObjects[_drawnObjects.Count - 1].name = $"TileDrawnBy{this.name}";
+                }
+
+                if (_drawnObjects[indexInDrawnPoints] == null)
+                {
+                    _drawnObjects[indexInDrawnPoints] = Instantiate(tile, transform.position, quaternion.identity);
+                    _drawnObjects[indexInDrawnPoints].name = $"TileDrawnBy{this.name}";
                 }
 
                 _drawnObjects[indexInDrawnPoints].gameObject.SetActive(true);

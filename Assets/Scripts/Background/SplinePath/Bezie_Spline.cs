@@ -116,9 +116,6 @@ public class Bezie_Spline : BaseSplineBuilder
         AddPointToSpline(position + new Vector3(-1, 1, 0));
         AddPointToSpline(position + new Vector3(1, 1, 0));
         AddPointToSpline(position + Vector3.right);
-
-        splinePoints[1].transform.SetParent(splinePoints[0].transform);
-        splinePoints[2].transform.SetParent(splinePoints[3].transform);
     }
 
     public void AddSegment()

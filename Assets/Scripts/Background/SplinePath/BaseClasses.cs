@@ -15,7 +15,7 @@ namespace Background.SplinePath
         [Range(0.01f, 1f)] public float RESOLUTION = 0.2f;
         public Color LineColor = Color.white;
         public float LineThickness = 0.5f, tileSizeMultiplier =1f;
-        protected List<Transform> splinePoints = new List<Transform>();
+        public List<Transform> splinePoints = new List<Transform>();
         protected List<DrawCurve> DrawCurvesList = new List<DrawCurve>();
 
 

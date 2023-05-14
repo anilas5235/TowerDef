@@ -1,0 +1,99 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: cf73f389650e9304a99252eb855d3818, type: 3}
+  m_Name: Waves Data
+  m_EditorClassIdentifier: 
+  Waves:
+  - Name: Wave0
+    ID: 0
+    SpawnData:
+    - Name: Step0
+      EnemyData: 0100000001000000010000000100000001000000010000000100000001000000010000000100000001000000010000000100000001000000
+      additionalWaitUntilNextWavePoint: 0
+    - Name: Step1
+      EnemyData: 000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000
+      additionalWaitUntilNextWavePoint: 0
+    - Name: Step2
+      EnemyData: 000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000
+      additionalWaitUntilNextWavePoint: 0
+    - Name: Step3
+      EnemyData: 000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000
+      additionalWaitUntilNextWavePoint: 0
+    - Name: Step4
+      EnemyData: 000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000
+      additionalWaitUntilNextWavePoint: 0
+    - Name: Step5
+      EnemyData: 000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000
+      additionalWaitUntilNextWavePoint: 0
+    - Name: Step6
+      EnemyData: 000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000
+      additionalWaitUntilNextWavePoint: 0
+    - Name: Step7
+      EnemyData: 000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000
+      additionalWaitUntilNextWavePoint: 0
+    - Name: Step8
+      EnemyData: 000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000
+      additionalWaitUntilNextWavePoint: 0
+    - Name: Step9
+      EnemyData: 000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000
+      additionalWaitUntilNextWavePoint: 0
+    - Name: Step10
+      EnemyData: 000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000
+      additionalWaitUntilNextWavePoint: 0
+  - Name: Wave1
+    ID: 1
+    SpawnData: []
+  - Name: Wave2
+    ID: 2
+    SpawnData: []
+  - Name: Wave3
+    ID: 3
+    SpawnData: []
+  - Name: Wave4
+    ID: 4
+    SpawnData: []
+  - Name: Wave5
+    ID: 5
+    SpawnData: []
+  - Name: Wave6
+    ID: 6
+    SpawnData: []
+  - Name: Wave7
+    ID: 7
+    SpawnData: []
+  - Name: Wave8
+    ID: 8
+    SpawnData: []
+  - Name: Wave9
+    ID: 9
+    SpawnData: []
+  - Name: Wave10
+    ID: 10
+    SpawnData: []
+  - Name: Wave11
+    ID: 11
+    SpawnData: []
+  - Name: Wave12
+    ID: 12
+    SpawnData: []
+  - Name: Wave13
+    ID: 13
+    SpawnData: []
+  - Name: Wave14
+    ID: 14
+    SpawnData: []
+  - Name: Wave15
+    ID: 15
+    SpawnData: []
+  - Name: Wave16
+    ID: 16
+    SpawnData: []

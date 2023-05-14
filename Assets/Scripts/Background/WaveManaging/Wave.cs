@@ -1,10 +1,23 @@
-using UnityEngine;
+using System.Collections.Generic;
+using Scrips.Background;
 
-namespace Scrips.Background.WaveManaging
+namespace Background.WaveManaging
 {
-   [CreateAssetMenu]
-   public class Wave : ScriptableObject
+   [System.Serializable]
+   public class Wave
    {
-      public WavePoint[] SpawnData;
+      public string Name;
+      public int ID;
+      public List<WavePoint> SpawnData;
+
+      public void NameSteps()
+      {
+         for (int i = 0; i < SpawnData.Count; i++)
+         {
+            SpawnData[i].Name = $"Step{i}";
+         }
+      }
    }
 }
+
+  

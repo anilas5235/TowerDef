@@ -1,7 +1,8 @@
+using Scrips.Background;
 using UnityEngine;
 using Random = UnityEngine.Random;
 
-namespace Scrips.Background.WaveManaging
+namespace Background.WaveManaging
 {
     public class WaveCreator : MonoBehaviour
     {
@@ -9,22 +10,22 @@ namespace Scrips.Background.WaveManaging
 
         private void Start()
         {
-            if (!targetWave)
+            if (targetWave == null)
             {
                 return;
             }
             int points = 40;
-            targetWave.SpawnData = new WavePoint[points];
+            //targetWave.SpawnData = new WavePoint[points];
             var D = new DiagonalDescendingPattern(2, 2, 4);
             var A = new ZigZackPattern(5, 3, 5);
             for (int i = 0; i < points; i++)
             {
                 targetWave.SpawnData[i] = new WavePoint();
-                targetWave.SpawnData[i].hp = new[] { D.GetValue(), A.GetValue()};
-                targetWave.SpawnData[i].name = $"Step{i}";
+                targetWave.SpawnData[i].EnemyData = new[] { D.GetValue(), A.GetValue()};
+                targetWave.SpawnData[i].Name = $"Step{i}";
             }
 #if UNITY_EDITOR
-             UnityEditor.EditorUtility.SetDirty(targetWave);
+             //UnityEditor.EditorUtility.SetDirty(targetWave);
              UnityEditor.AssetDatabase.SaveAssets();
 #endif
         }

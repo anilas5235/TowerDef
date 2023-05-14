@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using Background.WaveManaging;
 using Scrips.Background.Pooling;
 using UnityEngine;
 using Button = UnityEngine.UI.Button;
@@ -64,7 +65,7 @@ namespace Scrips.Background.WaveManaging
             }
             else
             {
-                foreach (var hpValue in currentWaveData[currentStep].hp)
+                foreach (var hpValue in currentWaveData[currentStep].EnemyData)
                 {
                     if (hpValue > 0 && hpValue < 10)
                     {
@@ -91,7 +92,7 @@ namespace Scrips.Background.WaveManaging
             }
 
             _currentWave++;
-            currentWaveData = waves[_currentWave].SpawnData;
+            currentWaveData = waves[_currentWave].SpawnData.ToArray();
             currentStep = 0;
             waveIsRunning = true;
             StartCoroutine(Spawn());
