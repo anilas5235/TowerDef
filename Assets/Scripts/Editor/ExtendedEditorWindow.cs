@@ -46,6 +46,7 @@ namespace Editor
             ScrollPosition = EditorGUILayout.BeginScrollView(ScrollPosition, "box");
             foreach (SerializedProperty p in property)
             {
+                if (p == null)continue;
                 if (GUILayout.Button(p.displayName)) selectedPropertyPath = p.propertyPath;
             }
             EditorGUILayout.EndScrollView();

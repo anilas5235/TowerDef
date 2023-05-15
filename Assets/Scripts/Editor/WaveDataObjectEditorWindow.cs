@@ -1,7 +1,4 @@
-using System;
 using Background.WaveManaging;
-using Scrips.Background;
-using Scrips.Background.WaveManaging;
 using UnityEditor;
 using UnityEngine;
 
@@ -12,16 +9,14 @@ namespace Editor
         private WavesData myWavesData;
         
         private Vector2 WaveScrollPosition = Vector2.zero, ToolBarScrollPosition = Vector2.zero;
-        private static GUIStyle guiStyleLight = new GUIStyle(), guiStyleDark = new GUIStyle();
 
+        private GUIStyle Test = new GUIStyle();
 
         public static void Open(WavesData dataObject)
         {
             WaveDataObjectEditorWindow window = GetWindow<WaveDataObjectEditorWindow>("Waves Data Editor");
             window.serializedObject = new SerializedObject(dataObject);
-            window.minSize = new Vector2(800, 200);
-            guiStyleLight.normal.background = MakeTexture2D(50, 2, new Color(1, 1, 1, 0.3f));
-            guiStyleDark.normal.background = MakeTexture2D(50, 2, new Color(1, 1, 1, 0.1f));
+            window.minSize = new Vector2(850, 200);
         }
 
         private void OnGUI()
@@ -56,6 +51,7 @@ namespace Editor
         {
             myWavesData.Waves.RemoveAt(index);
             myWavesData.NameWaves();
+            selectedProperty = null;
             SaveChanges();
             serializedObject = new SerializedObject(serializedObject.targetObject);
         }
@@ -70,44 +66,30 @@ namespace Editor
             EditorGUILayout.EndHorizontal();
             
             myWavesData.Waves[currentProperty.FindPropertyRelative("ID").intValue].NameSteps();
+            Debug.Log("NameStepsCalled");
 
             serializedObject.ApplyModifiedProperties();
             SaveChanges();
             serializedObject = new SerializedObject(serializedObject.targetObject);
 
             SerializedProperty thisSpawnData = currentProperty.FindPropertyRelative("SpawnData");
-            /*
-            EditorGUILayout.BeginFoldoutHeaderGroup(true, "WaveData");
-            for (int i = 0; i < thisSpawnData.arraySize; i++)
-            {
-                GUIStyle guiStyleForNext = i % 2 == 0 ? guiStyleLight : guiStyleDark;
-                EditorGUILayout.BeginHorizontal(guiStyleForNext);
-                EditorGUILayout.LabelField($"Step{i}",GUILayout.MinWidth(100));
-                EditorGUILayout.PropertyField(thisSpawnData.GetArrayElementAtIndex(i),true);
-                EditorGUILayout.EndHorizontal();
-            }
-            EditorGUILayout.EndFoldoutHeaderGroup();
-            */
+
+            thisSpawnData.isExpanded = true;
 
             EditorGUILayout.PropertyField(thisSpawnData,true);
-            /*
-            if (GUILayout.Button("+"))
-            {
-                myWavesData.Waves[currentProperty.FindPropertyRelative("ID").intValue].SpawnData.Add(new WavePoint());
-                serializedObject = new SerializedObject(serializedObject.targetObject);
-            }
-            */
+           
             EditorGUILayout.EndScrollView();
         }
 
         private void DrawToolBar()
         {
             EditorGUILayout.BeginVertical("box", GUILayout.MinWidth(150), GUILayout.ExpandHeight(true));
+            EditorGUILayout.LabelField("Tool Box",EditorStyles.boldLabel,GUILayout.MaxWidth(150));
             ToolBarScrollPosition = EditorGUILayout.BeginScrollView(ToolBarScrollPosition, "box");
-            if (GUILayout.Button("Add Wave")) AddWaveObject();
+            if (GUILayout.Button("Add Wave",GUILayout.Height(40f))) AddWaveObject();
             if (selectedProperty != null)
             {
-                if (GUILayout.Button("Delete Wave")) RemoveWaveObject(selectedProperty.FindPropertyRelative("ID").intValue);
+                if (GUILayout.Button("Delete Wave",GUILayout.Height(40f))) RemoveWaveObject(selectedProperty.FindPropertyRelative("ID").intValue);
             }
             EditorGUILayout.EndScrollView();
             EditorGUILayout.EndVertical();
@@ -116,6 +98,7 @@ namespace Editor
         private void DrawWaveSectionBar()
         {
             EditorGUILayout.BeginVertical("box", GUILayout.MinWidth(150), GUILayout.ExpandHeight(true));
+            EditorGUILayout.LabelField("Wave Section",EditorStyles.boldLabel,GUILayout.MaxWidth(150));
             DrawSideBar(currentProperty);
             EditorGUILayout.EndVertical();
         }
@@ -126,20 +109,6 @@ namespace Editor
             if (selectedProperty != null) DrawSelectedPropertiesPanel();
             else EditorGUILayout.LabelField($"Select one of the Wave to Edit",EditorStyles.boldLabel);
             EditorGUILayout.EndVertical();
-        }
-        
-        private static Texture2D MakeTexture2D(int width, int height, Color col)
-        {
-            Color[] pix = new Color[width * height];
-
-            for (int i = 0; i < pix.Length; i++)
-                pix[i] = col;
-
-            Texture2D result = new Texture2D(width, height);
-            result.SetPixels(pix);
-            result.Apply();
-
-            return result;
         }
     }
 }
