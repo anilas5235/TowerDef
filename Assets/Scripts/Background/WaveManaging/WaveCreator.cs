@@ -35,16 +35,24 @@ namespace Background.WaveManaging
     public abstract class PatternBase
     {
         protected int currentStep, min, max, repetitionCount;
-        protected const int MinOutputValue = 1, MaxOutputValue = 10;
+        protected const int MinOutputValue = 1, MaxOutputValue = 15;
+        
+        public enum PatternTypes
+        {
+            DiagonalDescending = 0,
+            DiagonalRising =1,
+            Linear =2,
+            ZigZack =3,
+            Custom =4,
+            Random = 5,
+        }
+        
 
         protected PatternBase(int startValue, int lowerBound, int upperBound)
         {
             if (lowerBound < MinOutputValue) lowerBound = MinOutputValue;
             if (upperBound > MaxOutputValue) upperBound = MaxOutputValue;
-            if (lowerBound > upperBound)
-            {
-                return;
-            }
+            if (lowerBound > upperBound) return;
 
             if (startValue > upperBound) startValue = upperBound;
             if (startValue < lowerBound) startValue = lowerBound;
@@ -71,7 +79,7 @@ namespace Background.WaveManaging
 
         protected PatternBase(int[] values)
         {
-            if (values.Length < 1) { return; }
+            if (values.Length < 1) return; 
         }
 
         public virtual int GetValue()
@@ -93,8 +101,8 @@ namespace Background.WaveManaging
 
     public class DiagonalDescendingPattern : PatternBase
     {
-        public DiagonalDescendingPattern(int startValue, int lowerBound, int upperBound) : base(startValue, lowerBound,
-            upperBound)
+        public DiagonalDescendingPattern(int startValue, int lowerBound, int upperBound) :
+            base(startValue, lowerBound, upperBound)
         {
             currentStep = startValue - min;
         }
@@ -109,8 +117,8 @@ namespace Background.WaveManaging
 
     public class DiagonalRisingPattern : PatternBase
     {
-        public DiagonalRisingPattern(int startVal, int lowerBound, int upperBound) : base(startVal, lowerBound,
-            upperBound)
+        public DiagonalRisingPattern(int startVal, int lowerBound, int upperBound) :
+            base(startVal, lowerBound, upperBound)
         {
             currentStep = max - startVal;
         }
@@ -174,25 +182,25 @@ namespace Background.WaveManaging
 
     public class CustomPattern : PatternBase
     {
-        private int[] customValues;
+        private int[] _customValues;
 
         public CustomPattern(int[] values) : base(values)
         {
             min = MinOutputValue;
             max = MaxOutputValue;
-            customValues = values;
+            _customValues = values;
         }
 
         protected override int Function(int step)
         {
-            if (step > customValues.Length - 1)
+            if (step > _customValues.Length - 1)
             {
                 currentStep = 0;
                 repetitionCount++;
                 step = 0;
             }
 
-            return customValues[step];
+            return _customValues[step];
         }
     }
 

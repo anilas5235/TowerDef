@@ -26,7 +26,13 @@ namespace Scrips.Background
 
         private static GUIStyle[] _guiStylesForButtons;
         private static int BackgroundIndicator =0;
-        private static Color light = new Color(1, 1, 1, 0.3f), dark = new Color(1, 1, 1, 0.1f);
+        public static int PP_BackgroundIndicator
+        {
+            get => BackgroundIndicator;
+            set => BackgroundIndicator = value < 1 ? 0 : 1;
+        }
+
+        private static Color light = new Color(1, 1, 1, 0.2f), dark = new Color(1, 1, 1, 0f);
             
 
         public override float GetPropertyHeight(SerializedProperty property, GUIContent label)

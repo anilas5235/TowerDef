@@ -47,7 +47,7 @@ namespace Editor
             foreach (SerializedProperty p in property)
             {
                 if (p == null)continue;
-                if (GUILayout.Button(p.displayName)) selectedPropertyPath = p.propertyPath;
+                if (GUILayout.Button(p.displayName,GUILayout.Height(25f))) selectedPropertyPath = p.propertyPath;
             }
             EditorGUILayout.EndScrollView();
 

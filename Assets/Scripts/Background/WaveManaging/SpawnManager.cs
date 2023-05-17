@@ -19,24 +19,26 @@ namespace Scrips.Background.WaveManaging
         private int currentStep = 0;
         private WavePoint[] currentWaveData;
 
-        [SerializeField] private Wave[] waves;
+        private WavesData waves;
         [SerializeField] private Button waveStartButton;
         private void Awake()
         {
             if (Instance == null) { Instance = this; }
-            else { Destroy(this); }
+            else { Destroy(this); return; }
+
+            waves = Resources.Load<WavesData>("WaveData/Standart100");
         }
 
         private void Start()
         {
-            if (waves.Length < 1)
+            if (waves.Waves.Count < 1)
             { print("no Waves defined"); }
         }
 
         private void Update()
         {
 
-            if(_currentWave >= waves.Length-1 || waveIsRunning)
+            if(_currentWave >= waves.Waves.Count-1 || waveIsRunning)
             {
                 waveStartButton.interactable = false;
             }
@@ -65,14 +67,15 @@ namespace Scrips.Background.WaveManaging
             }
             else
             {
-                foreach (var hpValue in currentWaveData[currentStep].EnemyData)
+                int[] enemyData = currentWaveData[currentStep].EnemyData;
+                for (int i = 0; i < enemyData.Length; i++)
                 {
-                    if (hpValue > 0 && hpValue < 10)
+                    if (enemyData[i]==1)
                     {
                         Enemy E = StandardEnemyPool.Instance.GetObjectFromPool().GetComponent<Enemy>();
                         E.RestVariables();
                         E.gameObject.transform.position = transform.position;
-                        E.hp = hpValue;
+                        E.hp = i;
                         E.SetColorAndSpeed();
                         E.pooled = false;
                         activeEnemys.Add(E.gameObject);
@@ -92,7 +95,7 @@ namespace Scrips.Background.WaveManaging
             }
 
             _currentWave++;
-            currentWaveData = waves[_currentWave].SpawnData.ToArray();
+            currentWaveData = waves.Waves[_currentWave].SpawnData.ToArray();
             currentStep = 0;
             waveIsRunning = true;
             StartCoroutine(Spawn());
