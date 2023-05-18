@@ -1,41 +1,11 @@
-using Scrips.Background;
-using UnityEngine;
 using Random = UnityEngine.Random;
 
 namespace Background.WaveManaging
 {
-    public class WaveCreator : MonoBehaviour
-    {
-        [SerializeField] private Wave targetWave;
-
-        private void Start()
-        {
-            if (targetWave == null)
-            {
-                return;
-            }
-            int points = 40;
-            //targetWave.SpawnData = new WavePoint[points];
-            var D = new DiagonalDescendingPattern(2, 2, 4);
-            var A = new ZigZackPattern(5, 3, 5);
-            for (int i = 0; i < points; i++)
-            {
-                targetWave.SpawnData[i] = new WavePoint();
-                targetWave.SpawnData[i].EnemyData = new[] { D.GetValue(), A.GetValue()};
-                targetWave.SpawnData[i].Name = $"Step{i}";
-            }
-#if UNITY_EDITOR
-             //UnityEditor.EditorUtility.SetDirty(targetWave);
-             UnityEditor.AssetDatabase.SaveAssets();
-#endif
-        }
-
-    }
-
     public abstract class PatternBase
     {
         protected int currentStep, min, max, repetitionCount;
-        protected const int MinOutputValue = 1, MaxOutputValue = 15;
+        protected const int MinOutputValue = 0, MaxOutputValue = 15;
         
         public enum PatternTypes
         {
