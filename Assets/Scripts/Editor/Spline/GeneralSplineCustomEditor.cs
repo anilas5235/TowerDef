@@ -1,8 +1,9 @@
 using Background.SplinePath;
 using UnityEditor;
 using UnityEngine;
+using UnityEngine.UIElements;
 
-namespace Editor
+namespace Editor.Spline
 {
     public abstract class GeneralSplineCustomEditor : UnityEditor.Editor
     {
@@ -12,7 +13,9 @@ namespace Editor
             P_LineColor,
             P_LineThickness,
             P_TileSizeMutliplier,
-            P_Points;
+            P_Points,
+            P_OffestAngle,
+            P_CurrentPathSave;
 
         protected GUIStyle standartGUIStyle;
 
@@ -38,6 +41,8 @@ namespace Editor
             P_LineThickness = serializedObject.FindProperty(nameof(script.LineThickness));
             P_TileSizeMutliplier = serializedObject.FindProperty(nameof(script.tileSizeMultiplier));
             P_Points = serializedObject.FindProperty(nameof(script.splinePoints));
+            P_OffestAngle = serializedObject.FindProperty(nameof(script.offsetAngle));
+            P_CurrentPathSave = serializedObject.FindProperty(nameof(script.CurrentPathPointSave));
         }
 
         public override void OnInspectorGUI()
@@ -51,6 +56,18 @@ namespace Editor
             EditorGUILayout.PropertyField(P_CurrentDrawMode);
 
             GUILayout.Space(5);
+
+            EditorGUILayout.PropertyField(P_CurrentPathSave);
+            if (GUILayout.Button("Save"))
+            {
+                script.CurrentPathPointSave.Points = script.GetAllUsedPoints();
+#if UNITY_EDITOR
+                UnityEditor.EditorUtility.SetDirty(script.CurrentPathPointSave);
+                UnityEditor.AssetDatabase.SaveAssets();
+#endif
+            }
+            
+            GUILayout.Space(10);
 
             switch (script.CurrentDrawMode)
             {
@@ -86,6 +103,7 @@ namespace Editor
             if (GUILayout.Button("Reset All Objects")) { script.DeleteAllTileObjects(); }
             if (GUILayout.Button("Delete Unseen Objects")) { script.DeleteAllTileObjects(); }
             EditorGUILayout.PropertyField(P_Tile);
+            EditorGUILayout.PropertyField(P_OffestAngle);
             EditorGUILayout.PropertyField(P_Resolution);
             EditorGUILayout.PropertyField(P_TileSizeMutliplier);
             EditorGUILayout.EndVertical();

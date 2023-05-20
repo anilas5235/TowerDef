@@ -82,7 +82,7 @@ namespace Scrips.Background.WaveManaging
                     }
                 }
 
-                yield return new WaitForSeconds(1f + currentWaveData[currentStep].additionalWaitUntilNextWavePoint);
+                yield return new WaitForSeconds(1f + currentWaveData[currentStep].ExtraWait);
                 currentStep++;
                 StartCoroutine(Spawn());
             }

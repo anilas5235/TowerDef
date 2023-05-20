@@ -1,7 +1,8 @@
 using System;
+using UnityEditor;
 using UnityEngine;
 
-namespace Others
+namespace Editor.Others
 {
     public static class EditorCustomFunctions
     {
@@ -66,6 +67,21 @@ namespace Others
             }
 
             return returnColor;
+        }
+        
+        public static int IntInputFieldWithLabel(int value,string labelName,int labelSize,int fieldSize)
+        {
+            EditorGUILayout.BeginHorizontal(GetStandardGUIStyle(StandardGUIStyles.LightGray)
+                ,GUILayout.MaxWidth(labelSize+fieldSize+10));
+            {
+                EditorGUILayout.LabelField(labelName + ":", GUILayout.MaxWidth(labelSize));
+                if (Int32.TryParse(EditorGUILayout.TextArea($"{value}", GUILayout.MaxWidth(fieldSize)), out var newVal))
+                {
+                    value = newVal;
+                }
+            }
+            EditorGUILayout.EndHorizontal();
+            return value;
         }
 
         private static void InitializeGUIStyles()

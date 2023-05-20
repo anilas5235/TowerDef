@@ -12,10 +12,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d7ca83c19207e0146820aaf9d17339af, type: 3}
   m_Name: ArtilleryTower
   m_EditorClassIdentifier: 
-  placingCosts: 400
-  upgradeCostsSlot0: 01000000010000000100000001000000
-  upgradeCostsSlot1: 01000000010000000100000001000000
-  upgradeCostsSlot2: 01000000010000000100000001000000
+  placingCosts: 800
+  upgradeCostsSlot0: 580200004c04000008070000c4090000
+  upgradeCostsSlot1: 90010000bc02000014050000d0070000
+  upgradeCostsSlot2: bc020000b00400004006000098080000
   statNames:
   - Barrels
   - AttackDamage

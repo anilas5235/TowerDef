@@ -2,7 +2,7 @@ using Background.SplinePath;
 using UnityEditor;
 using UnityEngine;
 
-namespace Editor
+namespace Editor.Spline
 {
     [CustomEditor(typeof(B_Spline))]
     public class BSplineCustomEditor : GeneralSplineCustomEditor

@@ -1,7 +1,8 @@
+using Background.SplinePath;
 using UnityEditor;
 using UnityEngine;
 
-namespace Editor
+namespace Editor.Spline
 {
     [CustomEditor(typeof(Bezie_Spline))]
     public class BezieSplineCustomEditor : GeneralSplineCustomEditor

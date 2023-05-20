@@ -12,10 +12,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d7ca83c19207e0146820aaf9d17339af, type: 3}
   m_Name: VolcanoTower
   m_EditorClassIdentifier: 
-  placingCosts: 400
-  upgradeCostsSlot0: 01000000010000000100000001000000
-  upgradeCostsSlot1: 01000000010000000100000001000000
-  upgradeCostsSlot2: 01000000010000000100000001000000
+  placingCosts: 1200
+  upgradeCostsSlot0: 2c0100005802000084030000b0040000
+  upgradeCostsSlot1: e803000040060000fc080000ac0d0000
+  upgradeCostsSlot2: f40100008403000014050000a4060000
   statNames:
   - AttackRange
   - Damage

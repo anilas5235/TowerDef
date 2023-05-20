@@ -1,4 +1,5 @@
 using System.Collections;
+using Background.Keeper;
 using Scrips.Background;
 using Scrips.Background.Pooling;
 using Scrips.Background.WaveManaging;
@@ -28,10 +29,7 @@ namespace Scrips
 
         private void Start()
         {
-            if (Pool == null)
-            {
-                Pool = StandardEnemyPool.Instance;
-            }
+            if (Pool == null) Pool = StandardEnemyPool.Instance;
             _pathKeeper = PathKeeper.Instance;
             _statsKeeper = StatsKeeper.Instance;
         }
@@ -42,12 +40,13 @@ namespace Scrips
 
             if (_directionDriftOf.magnitude > 0.1f)
             {
-                transform.position += _directionDriftOf * (Time.deltaTime * _speed * 0.6f); return;
+                transform.position += _directionDriftOf * (Time.deltaTime * _speed * 0.7f);
+                return;
             }
-            transform.Translate(((_pathKeeper.PathPoints[_nextPointInArry].transform.position - transform.position).normalized) *
+            transform.Translate(((_pathKeeper.PathPoints[_nextPointInArry] - transform.position).normalized) *
                                 (Time.deltaTime * _speed));
             distance += Time.deltaTime * _speed;
-            if (Vector3.Distance( transform.position, _pathKeeper.PathPoints[_nextPointInArry].transform.position) < 0.1f)
+            if (Vector3.Distance( transform.position, _pathKeeper.PathPoints[_nextPointInArry]) < 0.1f)
             {
                 if (_nextPointInArry == _pathKeeper.PathPoints.Length - 1)
                 {

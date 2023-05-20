@@ -1,6 +1,6 @@
 using UnityEngine;
 
-namespace Scrips.Background
+namespace Background.Keeper
 {
     public class ColorKeeper : MonoBehaviour
     {

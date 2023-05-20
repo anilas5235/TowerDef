@@ -12,10 +12,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d7ca83c19207e0146820aaf9d17339af, type: 3}
   m_Name: TimeFreezerTower
   m_EditorClassIdentifier: 
-  placingCosts: 400
-  upgradeCostsSlot0: 01000000010000000100000001000000
-  upgradeCostsSlot1: 01000000010000000100000001000000
-  upgradeCostsSlot2: 01000000010000000100000001000000
+  placingCosts: 550
+  upgradeCostsSlot0: fa000000a90100009e0200007a030000
+  upgradeCostsSlot1: 2c010000c20100005802000084030000
+  upgradeCostsSlot2: c2010000ee020000e2040000d0070000
   statNames:
   - AttackRadius
   - StopDuration

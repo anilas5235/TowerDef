@@ -12,10 +12,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d7ca83c19207e0146820aaf9d17339af, type: 3}
   m_Name: BellowTowerData
   m_EditorClassIdentifier: 
-  placingCosts: 400
-  upgradeCostsSlot0: 01000000010000000100000001000000
-  upgradeCostsSlot1: 01000000010000000100000001000000
-  upgradeCostsSlot2: 01000000010000000100000001000000
+  placingCosts: 600
+  upgradeCostsSlot0: 9001000020030000780500006c070000
+  upgradeCostsSlot1: f40100008403000078050000d0070000
+  upgradeCostsSlot2: 90010000ee020000e8030000dc050000
   statNames:
   - PushArea
   - PushStrength

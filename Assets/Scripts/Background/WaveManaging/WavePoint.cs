@@ -1,107 +1,29 @@
-using Others;
-using UnityEditor;
-using UnityEngine;
-
-namespace Scrips.Background
+namespace Scrips.Background.WaveManaging
 {
     [System.Serializable]
-    public class WavePoint 
+    public class WavePoint
     {
+        public static int WavePointSize = 15;
         public WavePoint()
         {
-            EnemyData = new int[15];
-            additionalWaitUntilNextWavePoint = 0;
+            EnemyData = new int[WavePointSize];
+            extraWait = 0;
         }
         public string Name;
         public int[] EnemyData;
-        public int additionalWaitUntilNextWavePoint;
-    }
 
-    
-    [CustomPropertyDrawer(typeof(WavePoint))]
-    public class WavePointCustomPropertyDrawer : PropertyDrawer
-    {
-        private const float FoldoutHeight = 20f;
-        private SerializedProperty P_EnemyData = null;
-
-        private static GUIStyle[] _guiStylesForButtons;
-        private static int BackgroundIndicator =0;
-        public static int PP_BackgroundIndicator
+        private int extraWait;
+        public int ExtraWait
         {
-            get => BackgroundIndicator;
-            set => BackgroundIndicator = value < 1 ? 0 : 1;
-        }
-
-
-        public override float GetPropertyHeight(SerializedProperty property, GUIContent label)
-        {
-            return FoldoutHeight+2f;
-        }
-
-        public override void OnGUI(Rect position, SerializedProperty property, GUIContent label)
-        {
-            if (_guiStylesForButtons == null)InitializeGUIStyles();
-            P_EnemyData = property.FindPropertyRelative("EnemyData");
-
-            if (P_EnemyData.arraySize < 15) { P_EnemyData.arraySize = 15; }
-            
-            EditorGUI.BeginProperty(position, label, property);
-            EditorGUI.indentLevel++;
-            
-            EditorGUI.DrawRect(position, LightDarkAlternating());
-            EditorGUI.LabelField( new Rect(position.x,position.y,80,FoldoutHeight),property.FindPropertyRelative("Name").stringValue);
-            float addX = 80;
-            float offsetX = 4f;
-
-            for (int i = 0; i < P_EnemyData.arraySize; i++)
+            get => extraWait;
+            set
             {
-                Rect rect = new Rect(position.x + addX, position.y+2f, FoldoutHeight, FoldoutHeight);
-                GUIStyle style = P_EnemyData.GetArrayElementAtIndex(i).intValue == 1 ? _guiStylesForButtons[i+1] : _guiStylesForButtons[0];
-                
-                if (GUI.Button(rect, "", style))
+                if (value != extraWait)
                 {
-                    P_EnemyData.GetArrayElementAtIndex(i).intValue = P_EnemyData.GetArrayElementAtIndex(i).intValue == 1 ? 0 : 1;
+                    if (value < -1) value = -1;
+                    extraWait = value;
                 }
-                addX += FoldoutHeight + offsetX;
             }
-
-            EditorGUI.indentLevel--;
-            EditorGUI.EndProperty();
-            
-            property.serializedObject.ApplyModifiedProperties();
-        }
-
-        private void InitializeGUIStyles()
-        {
-            _guiStylesForButtons = new GUIStyle[16];
-            _guiStylesForButtons[0] = new GUIStyle
-            {
-                normal =
-                {
-                    background = EditorCustomFunctions.MakeTexture2D(50, 2, new Color(0, 0, 0, 0.1f))
-                }
-            };
-            for (int i = 1; i < _guiStylesForButtons.Length; i++)
-            {
-                _guiStylesForButtons[i] = new GUIStyle
-                {
-                    normal =
-                    {
-                        background =  EditorCustomFunctions.MakeTexture2D(50, 2, ColorKeeper.StandardColors(i - 1))
-                    }
-                };
-            }
-        }
-
-        private static Color LightDarkAlternating()
-        {
-            Color color = BackgroundIndicator == 0
-                ? EditorCustomFunctions.GetStandardColor(EditorCustomFunctions.StandardColors.LightGray)
-                : EditorCustomFunctions.GetStandardColor(EditorCustomFunctions.StandardColors.DarkGray);
-            BackgroundIndicator++;
-            if (BackgroundIndicator > 1) BackgroundIndicator = 0;
-
-            return color;
         }
     }
 }

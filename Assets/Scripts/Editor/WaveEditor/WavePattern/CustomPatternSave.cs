@@ -1,6 +1,6 @@
 using UnityEngine;
 
-namespace Editor
+namespace Editor.WaveEditor.WavePattern
 {
     [CreateAssetMenu]
     public class CustomPatternSave : ScriptableObject

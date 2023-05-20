@@ -3,9 +3,9 @@ using UnityEditor;
 using UnityEditor.Callbacks;
 using UnityEngine;
 
-namespace Editor
+namespace Editor.WaveEditor
 {
-    public class AssetHandler
+    public abstract class AssetHandler
     {
         [OnOpenAsset()]
         public static bool OpenEditor(int instanceID, int line)
@@ -26,7 +26,6 @@ namespace Editor
         public override void OnInspectorGUI()
         {
             if (GUILayout.Button("Open Editor")) WaveDataObjectEditorWindow.Open((WavesData) target);
-            base.OnInspectorGUI();
         }
     }
 }

@@ -1,7 +1,7 @@
 using System.Collections.Generic;
 using System.Linq;
+using Background.Keeper;
 using Unity.Mathematics;
-using UnityEditor;
 using UnityEngine;
 
 namespace Background.SplinePath
@@ -12,16 +12,19 @@ namespace Background.SplinePath
         public GameObject Point,DrawCurvePrefab;
         public DrawMode CurrentDrawMode;
         public GameObject Tile;
-        [Range(0.01f, 1f)] public float RESOLUTION = 0.2f;
+        [Range(0.01f, 4f)] public float RESOLUTION = 0.2f;
         public Color LineColor = Color.white;
         public float LineThickness = 0.5f, tileSizeMultiplier =1f;
+        
         public List<Transform> splinePoints = new List<Transform>();
         protected List<DrawCurve> DrawCurvesList = new List<DrawCurve>();
 
-
-        private Color currentLineColor = default;
-        private float currentLineThickness = default, currentRESOLUTION = default;
+        private Color currentLineColor ;
+        private float currentLineThickness, currentRESOLUTION, currentOffsetAngle;
         protected float currentTileSizeMultiplier = default;
+        public float offsetAngle =0;
+
+        public PathPointSave CurrentPathPointSave;
         
         public SplineType MySplineType;
 
@@ -90,7 +93,15 @@ namespace Background.SplinePath
 
         public void AddPointToSpline()
         {
-            GameObject newPoint = (GameObject)PrefabUtility.InstantiatePrefab(Point);
+            GameObject newPoint = null;
+#if UNITY_EDITOR
+            newPoint = (GameObject)UnityEditor.PrefabUtility.InstantiatePrefab(Point);
+#endif
+            if (newPoint == null)
+            {
+                newPoint = Instantiate(Point);
+            }
+            
             switch (splinePoints.Count)
             {
                 case 0:
@@ -115,7 +126,14 @@ namespace Background.SplinePath
 
         public void AddPointToSpline(Vector3 position)
         {
-            GameObject newPoint = (GameObject)PrefabUtility.InstantiatePrefab(Point);
+            GameObject newPoint = null;
+#if UNITY_EDITOR
+            newPoint = (GameObject)UnityEditor.PrefabUtility.InstantiatePrefab(Point);
+#endif
+            if (newPoint == null)
+            {
+                newPoint = Instantiate(Point);
+            }
             newPoint.transform.position = position;
             PointBehaviour current = newPoint.GetComponent<PointBehaviour>();
             current.Master = this;
@@ -167,6 +185,12 @@ namespace Background.SplinePath
                 needUpdate = true;
                 currentLineThickness = LineThickness;
             }
+            
+            if (math.abs( currentOffsetAngle- offsetAngle) > 0.009f)
+            {
+                needUpdate = true;
+                currentOffsetAngle = offsetAngle;
+            }
 
             if (ExtraVariableCheck()) needUpdate = true;
 
@@ -187,6 +211,19 @@ namespace Background.SplinePath
                 drawCurve.DeleteMyTiles();
             }
             AssembleSpline();
+        }
+
+        public Vector3[] GetAllUsedPoints()
+        {
+            List<Vector3> usedPoints = new List<Vector3>();
+            AssembleSpline();
+
+            foreach (DrawCurve curve in DrawCurvesList)
+            {
+                usedPoints.AddRange(curve.usedPoints);
+            }
+
+            return usedPoints.ToArray();
         }
     }
     

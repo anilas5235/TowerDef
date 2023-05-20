@@ -2,7 +2,7 @@ using TMPro;
 using Unity.Mathematics;
 using UnityEngine;
 
-namespace Scrips.Background
+namespace Background
 {
     public class Shop : MonoBehaviour
     {

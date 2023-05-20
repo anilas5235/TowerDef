@@ -1,7 +1,6 @@
 using System;
 using System.Collections.Generic;
 using Unity.Mathematics;
-using UnityEditor;
 using UnityEngine;
 
 namespace Background.SplinePath
@@ -12,6 +11,7 @@ namespace Background.SplinePath
         public Transform[] pointsForTheCurve;
         [HideInInspector] public Vector3[] velocities;
         [HideInInspector] public BaseSplineBuilder mySplineBuilder;
+        [HideInInspector] public List< Vector3> usedPoints = new List<Vector3>();
 
         private List<GameObject> _drawnObjects = new List<GameObject>();
         private LineRenderer myLineRenderer;
@@ -57,12 +57,13 @@ namespace Background.SplinePath
 
         public void DeleteOldDraw()
         {
+            if (myLineRenderer == null) { myLineRenderer = gameObject.GetComponent<LineRenderer>(); }
+            
             switch (mySplineBuilder.CurrentDrawMode)
             {
                 case BaseSplineBuilder.DrawMode.LineRender:
-                    if (myLineRenderer == null) { myLineRenderer = gameObject.GetComponent<LineRenderer>(); }
-                    if (mySplineBuilder.Tile == null) { myLineRenderer.positionCount = 0; }
                     myLineRenderer.enabled = true;
+                    if (mySplineBuilder.Tile == null) { myLineRenderer.positionCount = 0; }
                     DeleteMyTiles();
                     break;
                 case BaseSplineBuilder.DrawMode.ObjectTiling:
@@ -74,8 +75,8 @@ namespace Background.SplinePath
 
         private void DrawPointsWithLineRender(Vector3[] points, Color lineColor, float lineWidth)
         {
-            List<Vector3> pointsForLineRender = new List<Vector3>();
-            pointsForLineRender.Add(points[0]);
+            usedPoints = new List<Vector3>();
+            usedPoints.Add(points[0]);
             for (int i = 0; i < points.Length-1;)
             {
                 int offset = 1;
@@ -85,13 +86,13 @@ namespace Background.SplinePath
                     offset++;
                 }
 
-                pointsForLineRender.Add(points[i + offset]);
+                usedPoints.Add(points[i + offset]);
                 i += offset;
             }
-            pointsForLineRender.Add(points[points.Length-1]);
+            usedPoints.Add(points[points.Length-1]);
 
-            myLineRenderer.positionCount = pointsForLineRender.Count;
-            myLineRenderer.SetPositions(pointsForLineRender.ToArray());
+            myLineRenderer.positionCount = usedPoints.Count;
+            myLineRenderer.SetPositions(usedPoints.ToArray());
             myLineRenderer.startColor = lineColor;
             myLineRenderer.endColor = lineColor;
             myLineRenderer.widthMultiplier = lineWidth;
@@ -109,6 +110,9 @@ namespace Background.SplinePath
                 }
             }
 
+            usedPoints = new List<Vector3>();
+            usedPoints.Add(points[0]);
+
             int indexInDrawnPoints = 0;
             for (int i = 0; i < points.Length - 1;)
             {
@@ -118,6 +122,7 @@ namespace Background.SplinePath
                     if (i + offset >= points.Length - 1) break;
                     offset++;
                 }
+                usedPoints.Add(points[i + offset]);
 
                 if (indexInDrawnPoints > _drawnObjects.Count - 1)
                 {
@@ -136,10 +141,13 @@ namespace Background.SplinePath
                 current.transform.localScale = mySplineBuilder.Tile.transform.localScale * sizeMultiplier;
                 current.transform.position = points[i] + (points[i + offset] - points[i]) * 0.5f;
                 current.transform.right = (points[i + offset] - points[i]).normalized;
+                Vector3 currentLocalRotation = current.transform.localRotation.eulerAngles;
+                current.transform.localRotation = Quaternion.Euler(currentLocalRotation.x,currentLocalRotation.y,currentLocalRotation.z+mySplineBuilder.offsetAngle);
                 current.gameObject.transform.SetParent(gameObject.transform);
                 i += offset;
                 indexInDrawnPoints++;
             }
+            usedPoints.Add(points[points.Length-1]);
         }
         private void OnDrawGizmos()
         {

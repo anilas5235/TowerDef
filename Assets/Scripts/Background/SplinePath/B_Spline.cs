@@ -1,6 +1,5 @@
-using UnityEditor;
-using UnityEngine;
 using Unity.Mathematics;
+using UnityEngine;
 
 namespace Background.SplinePath
 {
@@ -48,7 +47,16 @@ namespace Background.SplinePath
 
             if (indexOfTheFirstPoint > DrawCurvesList.Count - 1)
             {
-                DrawCurvesList.Add( ((GameObject)PrefabUtility.InstantiatePrefab(DrawCurvePrefab)).GetComponent<DrawCurve>());
+                Object newObject = null;
+#if UNITY_EDITOR
+                newObject = UnityEditor.PrefabUtility.InstantiatePrefab(DrawCurvePrefab);
+#endif
+                if (newObject == null)
+                {
+                   newObject = Instantiate(DrawCurvePrefab);
+                }
+
+                DrawCurvesList.Add( ((GameObject) newObject).GetComponent<DrawCurve>());
                 DrawCurvesList[DrawCurvesList.Count-1].gameObject.name = $"Segment{DrawCurvesList.Count - 1}";
             }
 

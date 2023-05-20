@@ -1,9 +1,10 @@
+using Scrips.Background;
 using Scrips.Towers;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
-namespace Scrips.Background
+namespace Background
 {
     public class UpgradeManager : MonoBehaviour
     {
@@ -52,10 +53,9 @@ namespace Scrips.Background
                         _currentTowerScript = newTowerBase;
                         SelectTower();
                         
-                        Vector3 T = towerUiWindow.transform.position;
-                        if (mousePosition.x > 1.5f) //place UI left or right
-                        { T.x = -710 + 960; towerUiWindow.transform.position = T; }
-                        else { T.x = 325 +960; towerUiWindow.transform.position = T; }
+                        Vector3 T = towerUiWindow.transform.localPosition;
+                        T.x = mousePosition.x > 1.5f ? -710f : 325f; //place UI left or right
+                        towerUiWindow.transform.localPosition = T;
 
                         break;
                     }

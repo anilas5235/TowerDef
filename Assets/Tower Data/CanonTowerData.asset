@@ -12,10 +12,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d7ca83c19207e0146820aaf9d17339af, type: 3}
   m_Name: CanonTowerData
   m_EditorClassIdentifier: 
-  placingCosts: 100
-  upgradeCostsSlot0: 8c000000fa00000090010000
-  upgradeCostsSlot1: 960000000e0100001c020000
-  upgradeCostsSlot2: a0000000f0000000d6010000
+  placingCosts: 500
+  upgradeCostsSlot0: c8000000c2010000bc020000e8030000
+  upgradeCostsSlot1: c20100002a03000054060000fc080000
+  upgradeCostsSlot2: 40010000e0010000ac03000046050000
   statNames:
   - AttackRadius
   - AttackDamage

@@ -2,12 +2,13 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using Background.WaveManaging;
-using Others;
-using Scrips.Background;
+using Editor.Others;
+using Editor.WaveEditor.WavePattern;
+using Scrips.Background.WaveManaging;
 using UnityEditor;
 using UnityEngine;
 
-namespace Editor
+namespace Editor.WaveEditor
 {
     public class WaveDataObjectEditorWindow : ExtendedEditorWindow
     {
@@ -18,7 +19,7 @@ namespace Editor
         private int InputValueWaveSize, SizeOfCustomPattern = 5;
         private int[] CustomPattern;
         private int IdOfSelectedWave = -1;
-        private int StandartLabelSize = 70;
+        private int StandartLabelSize = 70, StandartFieldSize = 70;
         private WavePoint[] CopiedWaveData;
         private CustomPatternSave loadedCustomPatternSave;
 
@@ -95,7 +96,7 @@ namespace Editor
                     EditorGUILayout.LabelField(currentProperty.displayName, EditorStyles.boldLabel,
                         GUILayout.MaxWidth(70));
                     
-                    InputValueWaveSize = InputFieldWithLabel(InputValueWaveSize, "Size", 50);
+                    InputValueWaveSize = EditorCustomFunctions.IntInputFieldWithLabel(InputValueWaveSize, "Size", 50, StandartFieldSize);
                     if (GUILayout.Button("Apply", GUILayout.MaxWidth(50)))
                         OverrideWaveDataLength(IdOfSelectedWave,InputValueWaveSize);
                 }
@@ -105,7 +106,18 @@ namespace Editor
 
                 EditorGUILayout.BeginVertical();
                 {
-                    DrawProperties(thisSpawnData, true);
+                    for (int i = 0; i < thisSpawnData.arraySize; i++)
+                    {
+                        EditorGUILayout.BeginHorizontal();
+                        {
+                            EditorGUILayout.PropertyField(thisSpawnData.GetArrayElementAtIndex(i), false);
+                            myWavesData.Waves[IdOfSelectedWave].SpawnData[i].ExtraWait =
+                                EditorCustomFunctions.IntInputFieldWithLabel(
+                                    myWavesData.Waves[IdOfSelectedWave].SpawnData[i].ExtraWait, "+Time",
+                                    50, 30);
+                        }
+                        EditorGUILayout.EndHorizontal();
+                    }
                 }
                 EditorGUILayout.EndVertical();
 
@@ -229,7 +241,8 @@ namespace Editor
 
         private void DrawWaveEditingBox()
         {
-            EditorGUILayout.BeginVertical("box", GUILayout.ExpandHeight(true),GUILayout.MinWidth(150+(18+4)*15)); // ToDo: make calculation based an vars not hardcoded
+            EditorGUILayout.BeginVertical("box", GUILayout.ExpandHeight(true),
+                GUILayout.ExpandWidth(true));
             {
                 if (selectedProperty != null) DrawSelectedPropertiesPanel();
                 else EditorGUILayout.LabelField($"Select one of the Wave to Edit", EditorStyles.boldLabel);
@@ -275,8 +288,8 @@ namespace Editor
 
                     GUILayout.Space(10);
 
-                    StepLowerBound = InputFieldWithLabel(StepLowerBound, "From Step", StandartLabelSize);
-                    StepUpperBound = InputFieldWithLabel(StepUpperBound, "To Step", StandartLabelSize);
+                    StepLowerBound = EditorCustomFunctions.IntInputFieldWithLabel(StepLowerBound, "From Step", StandartLabelSize,StandartFieldSize);
+                    StepUpperBound = EditorCustomFunctions.IntInputFieldWithLabel(StepUpperBound, "To Step", StandartLabelSize,StandartFieldSize);
 
                     switch (selectedPatternType)
                     {
@@ -287,14 +300,14 @@ namespace Editor
                             StandardInput();
                             break;
                         case PatternBase.PatternTypes.Linear:
-                            linearValue = InputFieldWithLabel(linearValue, "Value", StandartLabelSize);
+                            linearValue = EditorCustomFunctions.IntInputFieldWithLabel(linearValue, "Value", StandartLabelSize,StandartFieldSize);
                             break;
                         case PatternBase.PatternTypes.ZigZack:
                             StandardInput();
                             break;
                         case PatternBase.PatternTypes.Custom:
                           
-                            SizeOfCustomPattern = InputFieldWithLabel(SizeOfCustomPattern, "Size", StandartLabelSize);
+                            SizeOfCustomPattern = EditorCustomFunctions.IntInputFieldWithLabel(SizeOfCustomPattern, "Size", StandartLabelSize,StandartFieldSize);
 
                             if (GUILayout.Button("Apply Size", GUILayout.MaxWidth(100),GUILayout.MinWidth(40)))
                             {
@@ -343,17 +356,17 @@ namespace Editor
 
                             break;
                         case PatternBase.PatternTypes.Random:
-                            MinValue = InputFieldWithLabel(MinValue, $"MinValue", StandartLabelSize);
-                            MaxValue = InputFieldWithLabel(MaxValue, $"MaxValue", StandartLabelSize);
+                            MinValue = EditorCustomFunctions.IntInputFieldWithLabel(MinValue, $"MinValue", StandartLabelSize,StandartFieldSize);
+                            MaxValue = EditorCustomFunctions.IntInputFieldWithLabel(MaxValue, $"MaxValue", StandartLabelSize,StandartFieldSize);
                             break;
                         default: return;
                     }
 
                     void StandardInput()
                     {
-                        StartValue = InputFieldWithLabel(StartValue, $"StartValue", StandartLabelSize);
-                        ValueLowerBound = InputFieldWithLabel(ValueLowerBound, "Value Min", StandartLabelSize);
-                        ValueUpperBound = InputFieldWithLabel(ValueUpperBound, "Value Max", StandartLabelSize);
+                        StartValue = EditorCustomFunctions.IntInputFieldWithLabel(StartValue, $"StartValue", StandartLabelSize,StandartFieldSize);
+                        ValueLowerBound = EditorCustomFunctions.IntInputFieldWithLabel(ValueLowerBound, "Value Min", StandartLabelSize,StandartFieldSize);
+                        ValueUpperBound = EditorCustomFunctions.IntInputFieldWithLabel(ValueUpperBound, "Value Max", StandartLabelSize,StandartFieldSize);
                     }
 
                     GUILayout.Space(10);
@@ -404,20 +417,6 @@ namespace Editor
                 myWavesData.Waves[waveID].SpawnData[i].EnemyData[pattern.GetValue()] = 1;
             }
             serializedObject = new SerializedObject(serializedObject.targetObject);
-        }
-
-        private static int InputFieldWithLabel(int value,string labelName,int labelSize)
-        {
-            EditorGUILayout.BeginHorizontal(EditorCustomFunctions.GetStandardGUIStyle(EditorCustomFunctions.StandardGUIStyles.LightGray));
-            {
-                EditorGUILayout.LabelField(labelName + ":", GUILayout.MaxWidth(labelSize));
-                if (Int32.TryParse(EditorGUILayout.TextArea($"{value}", GUILayout.MaxWidth(70)), out var newVal))
-                {
-                    value = newVal;
-                }
-            }
-            EditorGUILayout.EndHorizontal();
-            return value;
         }
     }
 }
