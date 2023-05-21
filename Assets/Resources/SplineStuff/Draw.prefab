@@ -11,7 +11,9 @@ GameObject:
   - component: {fileID: 2451984078947333357}
   - component: {fileID: 7549846926433431343}
   - component: {fileID: 8469865019590072115}
-  m_Layer: 0
+  - component: {fileID: 3817719125036068859}
+  - component: {fileID: 2767327638406923466}
+  m_Layer: 6
   m_Name: Draw
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -47,7 +49,8 @@ MonoBehaviour:
   pointsForTheCurve: []
   velocities: []
   mySplineBuilder: {fileID: 0}
-  indexOfTheFirstPoint: 0
+  usedPoints: []
+  mySplineCollider2D: {fileID: 2767327638406923466}
 --- !u!120 &8469865019590072115
 LineRenderer:
   m_ObjectHideFlags: 0
@@ -146,3 +149,29 @@ LineRenderer:
     generateLightingData: 0
   m_UseWorldSpace: 1
   m_Loop: 0
+--- !u!64 &3817719125036068859
+MeshCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1188658763252296357}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 0
+  m_Enabled: 1
+  serializedVersion: 4
+  m_Convex: 0
+  m_CookingOptions: 30
+  m_Mesh: {fileID: 0}
+--- !u!114 &2767327638406923466
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1188658763252296357}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 22fa6d999dcac4b43a11d58173975e64, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 

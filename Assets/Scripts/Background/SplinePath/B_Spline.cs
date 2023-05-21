@@ -5,7 +5,7 @@ namespace Background.SplinePath
 {
     public class B_Spline : BaseSplineBuilder
     {
-        [Range(0.1f,1f)] public float TentionScale = 0.5f;
+        [Range(0f,1f)] public float TentionScale = 0.5f;
         private float currentTentionScale = default;
 
         public override void SetUpSplineSegment(int indexOfTheFirstPoint)

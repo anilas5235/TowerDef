@@ -40,7 +40,7 @@ namespace Scrips
 
             if (_directionDriftOf.magnitude > 0.1f)
             {
-                transform.position += _directionDriftOf * (Time.deltaTime * _speed * 0.7f);
+                transform.position += _directionDriftOf * (Time.deltaTime);
                 return;
             }
             transform.Translate(((_pathKeeper.PathPoints[_nextPointInArry] - transform.position).normalized) *
@@ -62,10 +62,7 @@ namespace Scrips
 
         public void SetColorAndSpeed()
         {
-            if (hp > 0)
-            {
-                _spriteRenderer.color = ColorKeeper.StandardColors(hp - 1);
-            }
+            if (hp > 0) _spriteRenderer.color = ColorKeeper.StandardColors(hp - 1);
             _speed = 1 + (hp - 1) * 0.5f;
         }
 
@@ -91,10 +88,9 @@ namespace Scrips
 
         public void TriggerStopEnemy(float sec)
         {
-            if (_currentStopEnemy != null)
-            {
-                StopCoroutine(_currentStopEnemy);
-            }
+            if (_currentStopEnemy != null)StopCoroutine(_currentStopEnemy);
+            _directionDriftOf = Vector3.zero;
+            _currentDrift = null;
             _currentStopEnemy = StartCoroutine(StopEnemy(sec));
         }
 
@@ -105,19 +101,20 @@ namespace Scrips
             _stop = false;
         }
 
-        public void ThrowBack(int pointsOnPath, Vector3 drift)
+        public void ThrowBack(int driftTime ,Vector3 drift)
         {
             if (_currentDrift != null) return;
-            _nextPointInArry -= pointsOnPath;
+            _nextPointInArry--;
             if (_nextPointInArry < 1)
             { _nextPointInArry = 0; }
             _directionDriftOf = drift;
-            _currentDrift = StartCoroutine(DriftTime());
+            if (driftTime < 0) driftTime = 0;
+            _currentDrift = StartCoroutine(DriftTime(driftTime));
         }
     
-        private IEnumerator DriftTime()
+        private IEnumerator DriftTime(int time)
         {
-            yield return new WaitForSeconds(2f);
+            yield return new WaitForSeconds(time);
             _directionDriftOf = Vector3.zero;
             _currentDrift = null;
         }

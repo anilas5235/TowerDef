@@ -50,7 +50,10 @@ namespace Scrips.Towers
             {
                 List<Collider2D> cols = new List<Collider2D>();
                 ownCollider.OverlapCollider(_placeableFilter, cols);               
-                _nowPlaceable = cols.Count <1 && StatsKeeper.Money >= towerData.placingCosts;
+
+                Collider[] result = new Collider[1];
+                Physics.OverlapSphereNonAlloc(transform.position, 0.4f, result);
+                _nowPlaceable = result[0] == null && cols.Count <1 && StatsKeeper.Money >= towerData.placingCosts;
                
                 Vector3 mousePosition = _camera.ScreenToWorldPoint(Input.mousePosition);
                 mousePosition.z = 0;

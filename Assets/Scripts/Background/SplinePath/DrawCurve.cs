@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using Unity.Mathematics;
 using UnityEngine;
 
@@ -12,6 +13,7 @@ namespace Background.SplinePath
         [HideInInspector] public Vector3[] velocities;
         [HideInInspector] public BaseSplineBuilder mySplineBuilder;
         [HideInInspector] public List< Vector3> usedPoints = new List<Vector3>();
+        [SerializeField] private SplineCollider2D mySplineCollider2D;
 
         private List<GameObject> _drawnObjects = new List<GameObject>();
         private LineRenderer myLineRenderer;
@@ -48,9 +50,17 @@ namespace Background.SplinePath
 
             switch (mySplineBuilder.CurrentDrawMode)
             {
-                case BaseSplineBuilder.DrawMode.LineRender: DrawPointsWithLineRender(_points.ToArray(), mySplineBuilder.LineColor, mySplineBuilder.LineThickness);
+                case BaseSplineBuilder.DrawMode.LineRender:
+                    DrawPointsWithLineRender(_points.ToArray(), mySplineBuilder.LineColor,
+                        mySplineBuilder.LineThickness);
+                    myLineRenderer.Simplify(0.01f);
+                    if (mySplineCollider2D) mySplineCollider2D.CreateCollider();
+                    Vector3[] lineRendererPoints = new Vector3[myLineRenderer.positionCount];
+                    myLineRenderer.GetPositions(lineRendererPoints);
+                    usedPoints = lineRendererPoints.ToList();
                     break;
-                case BaseSplineBuilder.DrawMode.ObjectTiling: DrawPointsWithTiles(_points.ToArray(),mySplineBuilder.Tile,mySplineBuilder.tileSizeMultiplier);
+                case BaseSplineBuilder.DrawMode.ObjectTiling:
+                    DrawPointsWithTiles(_points.ToArray(), mySplineBuilder.Tile, mySplineBuilder.tileSizeMultiplier);
                     break;
             }
         }

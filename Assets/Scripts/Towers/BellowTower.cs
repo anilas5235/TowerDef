@@ -6,6 +6,7 @@ namespace Scrips.Towers
     public class BellowTower : TowerBase
     {
         [SerializeField] private PolygonCollider2D pushArea;
+        [SerializeField] private ParticleSystem myParticleSystem;
 
         private Vector2[] _pointsForPushArea = new Vector2[9];
         private ContactFilter2D _filter2D;
@@ -48,11 +49,12 @@ namespace Scrips.Towers
                 foreach (Collider2D target in targets)
                 {
                     target.GetComponent<Enemy>().ThrowBack(_throwBackStrength,
-                        (target.transform.position - transform.position).normalized * (1 + 0.2f*_throwBackStrength));
+                        (target.transform.position - transform.position).normalized);
                 }
-                
+
                 timeForNextAttack = Time.time + _attackDelay;
             }
+            myParticleSystem.Play();
         }
 
         protected override void VisualChange()

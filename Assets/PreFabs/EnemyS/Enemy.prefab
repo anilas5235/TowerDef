@@ -72,7 +72,7 @@ SpriteRenderer:
   m_LightmapParameters: {fileID: 0}
   m_SortingLayerID: 0
   m_SortingLayer: 0
-  m_SortingOrder: 0
+  m_SortingOrder: 5
   m_Sprite: {fileID: -2413806693520163455, guid: ebe73ca9363db456bacf42c025bb4847, type: 3}
   m_Color: {r: 1, g: 0, b: 0, a: 1}
   m_FlipX: 0
@@ -98,6 +98,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   hp: 1
   distance: 0
+  pooled: 0
   deathParticleSystem: {fileID: 6147174879001106214, guid: a17c32a617f398944843525898eea79e, type: 3}
   _spriteRenderer: {fileID: 2489806855999879603}
 --- !u!58 &1981881481921620540
