@@ -15,7 +15,7 @@ namespace Background.SplinePath
             if (!myMeshCollider) myMeshCollider = GetComponent<MeshCollider>();
 
             Mesh mesh = new Mesh();
-            myLineRender.BakeMesh(mesh);
+            myLineRender.BakeMesh(mesh,true);
             myMeshCollider.sharedMesh = mesh;
 #if UNITY_EDITOR
             UnityEditor.EditorUtility.SetDirty(myMeshCollider);

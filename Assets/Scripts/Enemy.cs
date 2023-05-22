@@ -6,144 +6,152 @@ using Scrips.Background.WaveManaging;
 using Unity.Mathematics;
 using UnityEngine;
 
-namespace Scrips
+public class Enemy : MonoBehaviour
 {
-    public class Enemy : MonoBehaviour
+    private PathKeeper _pathKeeper;
+    private StatsKeeper _statsKeeper;
+    private Coroutine _currentStopEnemy, _currentDrift;
+    private Vector3 _directionDriftOf;
+    private int _nextPointInArry = 0;
+    private float _speed;
+    private bool _stop;
+
+    private static StandardEnemyPool Pool;
+        
+    public int hp = 1;
+    public float distance;
+    public bool pooled;
+        
+    [SerializeField] private ParticleSystem deathParticleSystem;
+    [SerializeField] private SpriteRenderer _spriteRenderer;
+
+    private void Start()
     {
-        private PathKeeper _pathKeeper;
-        private StatsKeeper _statsKeeper;
-        private Coroutine _currentStopEnemy, _currentDrift;
-        private Vector3 _directionDriftOf;
-        private int _nextPointInArry = 0;
-        private float _speed;
-        private bool _stop;
+        if (Pool == null) Pool = StandardEnemyPool.Instance;
+        _pathKeeper = PathKeeper.Instance;
+        _statsKeeper = StatsKeeper.Instance;
+    }
 
-        private static StandardEnemyPool Pool;
-        
-        public int hp = 1;
-        public float distance;
-        public bool pooled;
-        
-        [SerializeField] private ParticleSystem deathParticleSystem;
-        [SerializeField] private SpriteRenderer _spriteRenderer;
+    private void Update()
+    {
+        if (_stop || pooled) {return; }
 
-        private void Start()
+        if (_directionDriftOf.magnitude > 0.1f)
         {
-            if (Pool == null) Pool = StandardEnemyPool.Instance;
-            _pathKeeper = PathKeeper.Instance;
-            _statsKeeper = StatsKeeper.Instance;
+            transform.position += _directionDriftOf * (Time.deltaTime);
+            return;
         }
-
-        private void Update()
+        transform.Translate(((_pathKeeper.PathPoints[_nextPointInArry] - transform.position).normalized) *
+                            (Time.deltaTime * _speed));
+        distance += Time.deltaTime * _speed;
+        if (Vector3.Distance( transform.position, _pathKeeper.PathPoints[_nextPointInArry]) < 0.1f)
         {
-            if (_stop || pooled) {return; }
-
-            if (_directionDriftOf.magnitude > 0.1f)
+            if (_nextPointInArry == _pathKeeper.PathPoints.Length - 1)
             {
-                transform.position += _directionDriftOf * (Time.deltaTime);
-                return;
-            }
-            transform.Translate(((_pathKeeper.PathPoints[_nextPointInArry] - transform.position).normalized) *
-                                (Time.deltaTime * _speed));
-            distance += Time.deltaTime * _speed;
-            if (Vector3.Distance( transform.position, _pathKeeper.PathPoints[_nextPointInArry]) < 0.1f)
-            {
-                if (_nextPointInArry == _pathKeeper.PathPoints.Length - 1)
-                {
-                    _statsKeeper.Hp -= hp;
-                    Death();
-                    return;
-                }
-
-                _nextPointInArry++;
-                _directionDriftOf = Vector3.zero;
-            }
-        }
-
-        public void SetColorAndSpeed()
-        {
-            if (hp > 0) _spriteRenderer.color = ColorKeeper.StandardColors(hp - 1);
-            _speed = 1 + (hp - 1) * 0.5f;
-        }
-
-        public void TakeDamage(int damage)
-        {
-            if (damage < 1 || hp < 1) { return; }
-            hp -= damage;
-            if (hp < 1)
-            {
-                ParticleSystem.MainModule particlesMain = Instantiate(deathParticleSystem, transform.position,
-                    quaternion.identity).main;
-                particlesMain.startColor = _spriteRenderer.color;
-                _statsKeeper.Money += damage + hp;
+                _statsKeeper.Hp -= hp;
                 Death();
                 return;
             }
-            else
-            {
-                _statsKeeper.Money += damage;
-            }
-            SetColorAndSpeed();
-        }
 
-        public void TriggerStopEnemy(float sec)
-        {
-            if (_currentStopEnemy != null)StopCoroutine(_currentStopEnemy);
+            _nextPointInArry++;
             _directionDriftOf = Vector3.zero;
-            _currentDrift = null;
-            _currentStopEnemy = StartCoroutine(StopEnemy(sec));
         }
+    }
 
-        private IEnumerator StopEnemy(float sec)
-        {
-            _stop = true;
-            yield return new WaitForSeconds(sec);
-            _stop = false;
-        }
+    public void SetColorAndSpeed()
+    {
+        if (hp > 0) _spriteRenderer.color = ColorKeeper.StandardColors(hp - 1);
+        _speed = 1 + (hp - 1) * 0.5f;
+    }
 
-        public void ThrowBack(int driftTime ,Vector3 drift)
+    public void TakeDamage(int damage)
+    {
+        if (damage < 1 || hp < 1) { return; }
+        hp -= damage;
+        if (hp < 1)
         {
-            if (_currentDrift != null) return;
-            _nextPointInArry--;
-            if (_nextPointInArry < 1)
-            { _nextPointInArry = 0; }
-            _directionDriftOf = drift;
-            if (driftTime < 0) driftTime = 0;
-            _currentDrift = StartCoroutine(DriftTime(driftTime));
+            ParticleSystem.MainModule particlesMain = Instantiate(deathParticleSystem, transform.position,
+                quaternion.identity).main;
+            particlesMain.startColor = _spriteRenderer.color;
+            _statsKeeper.Money += damage + hp;
+            Death();
+            return;
         }
+        else
+        {
+            _statsKeeper.Money += damage;
+        }
+        SetColorAndSpeed();
+    }
+
+    public void TriggerStopEnemy(float sec)
+    {
+        if (_currentStopEnemy != null)StopCoroutine(_currentStopEnemy);
+        _directionDriftOf = Vector3.zero;
+        _currentDrift = null;
+        _currentStopEnemy = StartCoroutine(StopEnemy(sec));
+    }
+
+    private IEnumerator StopEnemy(float sec)
+    {
+        Freeze();
+        yield return new WaitForSeconds(sec);
+        UnFreeze();
+    }
+
+    public void Freeze() => _stop = true;
+
+    public void UnFreeze() => _stop = false;
+
+    public void ThrowBack(int driftTime ,Vector3 drift)
+    {
+        if (_currentDrift != null) return;
+        _nextPointInArry--;
+        if (_nextPointInArry < 1)
+        { _nextPointInArry = 0; }
+        _directionDriftOf = drift;
+        if (driftTime < 0) driftTime = 0;
+        _currentDrift = StartCoroutine(DriftTime(driftTime));
+    }
+
+    public void SetBackInPath(int amountOfPoints)
+    {
+        _nextPointInArry-=amountOfPoints;
+        if (_nextPointInArry < 1)
+        { _nextPointInArry = 0; }
+    }
     
-        private IEnumerator DriftTime(int time)
+    private IEnumerator DriftTime(int time)
+    {
+        yield return new WaitForSeconds(time);
+        _directionDriftOf = Vector3.zero;
+        _currentDrift = null;
+    }
+
+    public void RestVariables()
+    {
+        hp = 1;
+        distance = 0;
+        _nextPointInArry = 0;
+        _speed = 0;
+        if (_currentStopEnemy != null)
         {
-            yield return new WaitForSeconds(time);
-            _directionDriftOf = Vector3.zero;
+            StopCoroutine(_currentStopEnemy);
+            _currentStopEnemy = null;
+        }
+        _stop = false;
+        if (_currentDrift != null)
+        {
+            StopCoroutine(_currentDrift);
             _currentDrift = null;
         }
+        _directionDriftOf = Vector3.zero;
+    }
 
-        public void RestVariables()
-        {
-            hp = 1;
-            distance = 0;
-            _nextPointInArry = 0;
-            _speed = 0;
-            if (_currentStopEnemy != null)
-            {
-                StopCoroutine(_currentStopEnemy);
-                _currentStopEnemy = null;
-            }
-            _stop = false;
-            if (_currentDrift != null)
-            {
-                StopCoroutine(_currentDrift);
-                _currentDrift = null;
-            }
-            _directionDriftOf = Vector3.zero;
-        }
-
-        private void Death()
-        {
-            pooled = true;
-            SpawnManager.Instance.activeEnemys.Remove(this.gameObject);
-            Pool.AddObjectToPool(gameObject);
-        }
+    private void Death()
+    {
+        pooled = true;
+        SpawnManager.Instance.activeEnemys.Remove(this.gameObject);
+        Pool.AddObjectToPool(gameObject);
     }
 }

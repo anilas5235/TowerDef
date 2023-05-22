@@ -1,12 +1,16 @@
 using System.Collections.Generic;
+using Projectiles;
+using Scrips;
+using Scrips.Towers;
 using UnityEngine;
 
-namespace Scrips.Towers
+namespace Towers
 {
     public class BellowTower : TowerBase
     {
         [SerializeField] private PolygonCollider2D pushArea;
-        [SerializeField] private ParticleSystem myParticleSystem;
+        [SerializeField] private GameObject airBlade;
+        [SerializeField] private Transform barrelTip;
 
         private Vector2[] _pointsForPushArea = new Vector2[9];
         private ContactFilter2D _filter2D;
@@ -43,18 +47,23 @@ namespace Scrips.Towers
 
             if (Time.time >= timeForNextAttack)
             {
-                List<Collider2D> targets = new List<Collider2D>();
-                pushArea.OverlapCollider(_filter2D, targets);
-
-                foreach (Collider2D target in targets)
-                {
-                    target.GetComponent<Enemy>().ThrowBack(_throwBackStrength,
-                        (target.transform.position - transform.position).normalized);
-                }
+                // List<Collider2D> targets = new List<Collider2D>();
+                // pushArea.OverlapCollider(_filter2D, targets);
+                //
+                // foreach (Collider2D target in targets)
+                // {
+                //     target.GetComponent<Enemy>().ThrowBack(_throwBackStrength,
+                //         (target.transform.position - transform.position).normalized);
+                // }
 
                 timeForNextAttack = Time.time + _attackDelay;
+                AirBlade current = Instantiate(this.airBlade, barrelTip.position, Quaternion.identity)
+                    .GetComponentInChildren<AirBlade>();
+                current.transform.localRotation = BarrelPivotGameObject.transform.localRotation;
+                current.direction = (barrelTip.position - transform.position).normalized;
+                current.KillYourSelf(1);
+                current.speed = 2;
             }
-            myParticleSystem.Play();
         }
 
         protected override void VisualChange()

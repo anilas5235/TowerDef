@@ -1,4 +1,4 @@
-namespace Scrips.Background.WaveManaging
+namespace Background.WaveManaging
 {
     [System.Serializable]
     public class WavePoint

@@ -3,6 +3,7 @@ using Background;
 using Background.Keeper;
 using Scrips.Background;
 using Scrips.Background.WaveManaging;
+using Towers;
 using UnityEngine;
 
 namespace Scrips.Towers
@@ -52,7 +53,7 @@ namespace Scrips.Towers
                 ownCollider.OverlapCollider(_placeableFilter, cols);               
 
                 Collider[] result = new Collider[1];
-                Physics.OverlapSphereNonAlloc(transform.position, 0.4f, result);
+                Physics.OverlapSphereNonAlloc(transform.position, 0.5f, result);
                 _nowPlaceable = result[0] == null && cols.Count <1 && StatsKeeper.Money >= towerData.placingCosts;
                
                 Vector3 mousePosition = _camera.ScreenToWorldPoint(Input.mousePosition);

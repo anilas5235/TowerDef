@@ -1,6 +1,6 @@
 using UnityEngine;
 
-namespace Scrips.Towers
+namespace Towers
 {
     [CreateAssetMenu]
     public class TowerData : ScriptableObject

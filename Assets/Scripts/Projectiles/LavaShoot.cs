@@ -46,7 +46,7 @@ namespace Scrips.Projectiles
                 { return; }
                 if (col.gameObject.CompareTag("Enemy"))
                 {
-                    Scrips.Enemy enemy = col.gameObject.GetComponent<Enemy>();
+                    Enemy enemy = col.gameObject.GetComponent<Enemy>();
                     int enemyhp = enemy.hp;
                     enemy.TakeDamage(storedDamage);
                     storedDamage -= enemyhp;

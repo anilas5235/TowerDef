@@ -1,4 +1,5 @@
 using Background.Keeper;
+using Background.WaveManaging;
 using Editor.Others;
 using Scrips.Background;
 using Scrips.Background.WaveManaging;
@@ -32,9 +33,8 @@ namespace Editor.WaveEditor
             if (_guiStylesForButtons == null)InitializeGUIStyles();
             P_EnemyData = property.FindPropertyRelative("EnemyData");
 
-            if (P_EnemyData.arraySize < WavePoint.WavePointSize) { P_EnemyData.arraySize = WavePoint.WavePointSize; }
-            
-            EditorGUI.BeginProperty(position, label, property);
+            if (P_EnemyData.arraySize < WavePoint.WavePointSize) P_EnemyData.arraySize = WavePoint.WavePointSize; 
+
             EditorGUILayout.BeginHorizontal(LightDarkAlternating());
             {
                 EditorGUILayout.LabelField( property.FindPropertyRelative("Name").stringValue,
@@ -53,8 +53,7 @@ namespace Editor.WaveEditor
                 }
             }
             EditorGUILayout.EndHorizontal();
-            EditorGUI.EndProperty();
-            
+
             property.serializedObject.ApplyModifiedProperties();
         }
 

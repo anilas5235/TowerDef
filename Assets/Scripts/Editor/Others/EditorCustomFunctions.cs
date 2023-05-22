@@ -83,6 +83,21 @@ namespace Editor.Others
             EditorGUILayout.EndHorizontal();
             return value;
         }
+        
+        public static int IntInputFieldWithLabel(int value,string labelName,int labelWidth,int fieldWidth,int labelHeight)
+        {
+            EditorGUILayout.BeginHorizontal(GetStandardGUIStyle(StandardGUIStyles.LightGray)
+                ,GUILayout.MaxWidth(labelWidth+fieldWidth+10));
+            {
+                EditorGUILayout.LabelField(labelName + ":", GUILayout.MaxWidth(labelWidth),GUILayout.MaxHeight(labelHeight));
+                if (Int32.TryParse(EditorGUILayout.TextArea($"{value}", GUILayout.MaxWidth(fieldWidth)), out var newVal))
+                {
+                    value = newVal;
+                }
+            }
+            EditorGUILayout.EndHorizontal();
+            return value;
+        }
 
         private static void InitializeGUIStyles()
         {

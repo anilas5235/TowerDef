@@ -4,7 +4,6 @@ using System.Linq;
 using Background.WaveManaging;
 using Editor.Others;
 using Editor.WaveEditor.WavePattern;
-using Scrips.Background.WaveManaging;
 using UnityEditor;
 using UnityEngine;
 
@@ -22,17 +21,19 @@ namespace Editor.WaveEditor
         private int StandartLabelSize = 70, StandartFieldSize = 70;
         private WavePoint[] CopiedWaveData;
         private CustomPatternSave loadedCustomPatternSave;
+        private static GUIContent emptyLabel;
 
         public static void Open(WavesData dataObject)
         {
             WaveDataObjectEditorWindow window = GetWindow<WaveDataObjectEditorWindow>("Waves Data Editor");
             window.serializedObject = new SerializedObject(dataObject);
-            window.minSize = new Vector2(800, 200);
+            window.minSize = new Vector2(1000, 200);
         }
 
         private void OnEnable()
         {
             CustomPattern = new int[SizeOfCustomPattern];
+            emptyLabel = GUIContent.none;
         }
 
         private void OnGUI()
@@ -91,61 +92,72 @@ namespace Editor.WaveEditor
 
             WaveScrollPosition = EditorGUILayout.BeginScrollView(WaveScrollPosition, "box");
             {
-                EditorGUILayout.BeginHorizontal("box");
-                {
-                    EditorGUILayout.LabelField(currentProperty.displayName, EditorStyles.boldLabel,
-                        GUILayout.MaxWidth(70));
-                    
-                    InputValueWaveSize = EditorCustomFunctions.IntInputFieldWithLabel(InputValueWaveSize, "Size", 50, StandartFieldSize);
-                    if (GUILayout.Button("Apply", GUILayout.MaxWidth(50)))
-                        OverrideWaveDataLength(IdOfSelectedWave,InputValueWaveSize);
-                }
-                EditorGUILayout.EndHorizontal();
-
-                SerializedProperty thisSpawnData = currentProperty.FindPropertyRelative("SpawnData");
-
                 EditorGUILayout.BeginVertical();
                 {
-                    for (int i = 0; i < thisSpawnData.arraySize; i++)
+
+                    EditorGUILayout.BeginHorizontal("box");
                     {
-                        EditorGUILayout.BeginHorizontal();
-                        {
-                            EditorGUILayout.PropertyField(thisSpawnData.GetArrayElementAtIndex(i), false);
-                            myWavesData.Waves[IdOfSelectedWave].SpawnData[i].ExtraWait =
-                                EditorCustomFunctions.IntInputFieldWithLabel(
-                                    myWavesData.Waves[IdOfSelectedWave].SpawnData[i].ExtraWait, "+Time",
-                                    50, 30);
+                        EditorGUILayout.LabelField(currentProperty.displayName, EditorStyles.boldLabel,
+                            GUILayout.MaxWidth(70));
+
+                        InputValueWaveSize =
+                            EditorCustomFunctions.IntInputFieldWithLabel(InputValueWaveSize, "Size", 50,
+                                StandartFieldSize);
+                        if (GUILayout.Button("Apply", GUILayout.MaxWidth(50)))
+                            OverrideWaveDataLength(IdOfSelectedWave, InputValueWaveSize);
+                    }
+                    EditorGUILayout.EndHorizontal();
+
+                    SerializedProperty thisSpawnData = currentProperty.FindPropertyRelative("SpawnData");
+
+                    EditorGUILayout.BeginVertical();
+                    {
+                        Rect rect = new Rect(0, 30, WavePoint.WavePointSize * 20, 20);
+                        for (int i = 0; i < thisSpawnData.arraySize; i++){
+
+                            EditorGUILayout.BeginHorizontal();
+                            {
+                                EditorGUI.PropertyField(rect,thisSpawnData.GetArrayElementAtIndex(i), emptyLabel);
+
+                                myWavesData.Waves[IdOfSelectedWave].SpawnData[i].ExtraWait =
+                                    EditorCustomFunctions.IntInputFieldWithLabel(
+                                        myWavesData.Waves[IdOfSelectedWave].SpawnData[i].ExtraWait, "+Time",
+                                        50, 30, 20);
+                            }
+                            EditorGUILayout.EndHorizontal();
+                            rect.x += rect.height+2;
+                            EditorGUILayout.Space(2);
                         }
-                        EditorGUILayout.EndHorizontal();
                     }
-                }
-                EditorGUILayout.EndVertical();
+                    EditorGUILayout.EndVertical();
 
-                EditorGUILayout.BeginHorizontal();
-                {
-
-                    if (GUILayout.Button("+", GUILayout.MaxWidth(StandartLabelSize / 2f), GUILayout.Height(20)))
+                    EditorGUILayout.BeginHorizontal();
                     {
-                        myWavesData.Waves[IdOfSelectedWave].SpawnData.Add(new WavePoint());
-                        myWavesData.Waves[IdOfSelectedWave].NameSteps();
-                        serializedObject.ApplyModifiedProperties();
-                        SaveChanges();
-                        serializedObject = new SerializedObject(serializedObject.targetObject);
-                        InputValueWaveSize = myWavesData.Waves[IdOfSelectedWave].SpawnData.Count;
-                        
-                    }
 
-                    if (GUILayout.Button("-", GUILayout.MaxWidth(StandartLabelSize / 2f), GUILayout.Height(20)))
-                    {
-                        myWavesData.Waves[IdOfSelectedWave].SpawnData
-                            .RemoveAt(myWavesData.Waves[IdOfSelectedWave].SpawnData.Count - 1);
-                        SaveChanges();
-                        serializedObject = new SerializedObject(serializedObject.targetObject);
-                        InputValueWaveSize = myWavesData.Waves[IdOfSelectedWave].SpawnData.Count;
+                        if (GUILayout.Button("+", GUILayout.MaxWidth(StandartLabelSize / 2f), GUILayout.Height(20)))
+                        {
+                            myWavesData.Waves[IdOfSelectedWave].SpawnData.Add(new WavePoint());
+                            myWavesData.Waves[IdOfSelectedWave].NameSteps();
+                            serializedObject.ApplyModifiedProperties();
+                            SaveChanges();
+                            serializedObject = new SerializedObject(serializedObject.targetObject);
+                            InputValueWaveSize = myWavesData.Waves[IdOfSelectedWave].SpawnData.Count;
+
+                        }
+
+                        if (GUILayout.Button("-", GUILayout.MaxWidth(StandartLabelSize / 2f), GUILayout.Height(20)))
+                        {
+                            myWavesData.Waves[IdOfSelectedWave].SpawnData
+                                .RemoveAt(myWavesData.Waves[IdOfSelectedWave].SpawnData.Count - 1);
+                            SaveChanges();
+                            serializedObject = new SerializedObject(serializedObject.targetObject);
+                            InputValueWaveSize = myWavesData.Waves[IdOfSelectedWave].SpawnData.Count;
+                        }
                     }
-                }
-                EditorGUILayout.EndHorizontal();
+                    EditorGUILayout.EndHorizontal();
+                } EditorGUILayout.EndVertical();
             }
+                
             EditorGUILayout.EndScrollView();
         }
 
