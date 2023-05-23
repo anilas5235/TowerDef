@@ -2,7 +2,7 @@ using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 
-namespace Scrips.Background.Pooling
+namespace Background.Pooling
 {
     public abstract class ObjectPooling : MonoBehaviour
     {
@@ -16,10 +16,7 @@ namespace Scrips.Background.Pooling
 
         public void AddObjectToPool(GameObject objectToPool)
         {
-            if (_objectPool.Contains(objectToPool))
-            {
-                return;
-            }
+            if (_objectPool.Contains(objectToPool)) return;
             objectToPool.transform.position = transform.position;
             objectToPool.transform.SetParent(transform);
             _objectPool.Add(objectToPool);

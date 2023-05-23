@@ -28,6 +28,7 @@ namespace Editor.WaveEditor
             WaveDataObjectEditorWindow window = GetWindow<WaveDataObjectEditorWindow>("Waves Data Editor");
             window.serializedObject = new SerializedObject(dataObject);
             window.minSize = new Vector2(1000, 200);
+            EditorUtility.SetDirty(dataObject);
         }
 
         private void OnEnable()
@@ -64,7 +65,12 @@ namespace Editor.WaveEditor
 
         private void AddWaveObject()
         {
-            myWavesData.Waves.Add(new Wave());
+            myWavesData.Waves ??= new List<Wave>();
+            Wave newWave = new Wave
+            {
+                SpawnData = new List<WavePoint>()
+            };
+            myWavesData.Waves.Add(newWave);
             myWavesData.NameWaves();
             SaveChanges();
             serializedObject = new SerializedObject(serializedObject.targetObject);
@@ -190,22 +196,30 @@ namespace Editor.WaveEditor
                 if (GUILayout.Button("Add Wave", GUILayout.Height(30f), GUILayout.MaxWidth(sizeOfToolBarButtons))) AddWaveObject();
                 if (selectedProperty != null)
                 {
-                    if (GUILayout.Button("Delete Wave", GUILayout.Height(30f), GUILayout.MaxWidth(sizeOfToolBarButtons)))
-                        RemoveWaveObject(IdOfSelectedWave);
-                    if (GUILayout.Button("Clear Wave Data", GUILayout.Height(30f), GUILayout.MaxWidth(sizeOfToolBarButtons)))
-                        ClearDataOfWave(IdOfSelectedWave);
-                    if (GUILayout.Button("Copy Wave Data", GUILayout.Height(30f), GUILayout.MaxWidth(sizeOfToolBarButtons)))
-                        CopyWaveDataOfWave(IdOfSelectedWave);
-                    if (CopiedWaveData != null)
+                    if (IdOfSelectedWave < myWavesData.Waves.Count)
                     {
-                        if (GUILayout.Button("Past Wave Data", GUILayout.Height(30f), GUILayout.MaxWidth(sizeOfToolBarButtons)))
-                            PasteWaveDataToWave(IdOfSelectedWave);
-                    }
+                        if (GUILayout.Button("Delete Wave", GUILayout.Height(30f),
+                                GUILayout.MaxWidth(sizeOfToolBarButtons)))
+                        {RemoveWaveObject(IdOfSelectedWave); return;}
+                        if (GUILayout.Button("Clear Wave Data", GUILayout.Height(30f),
+                                GUILayout.MaxWidth(sizeOfToolBarButtons)))
+                            ClearDataOfWave(IdOfSelectedWave);
+                        if (GUILayout.Button("Copy Wave Data", GUILayout.Height(30f),
+                                GUILayout.MaxWidth(sizeOfToolBarButtons)))
+                            CopyWaveDataOfWave(IdOfSelectedWave);
+                        if (CopiedWaveData != null)
+                        {
+                            if (GUILayout.Button("Past Wave Data", GUILayout.Height(30f),
+                                    GUILayout.MaxWidth(sizeOfToolBarButtons)))
+                                PasteWaveDataToWave(IdOfSelectedWave);
+                        }
 
-                    if (myWavesData.Waves[IdOfSelectedWave].SpawnData.Count > 0)
-                    {
-                        if (GUILayout.Button("Delete Wave Data", GUILayout.Height(30f), GUILayout.MaxWidth(sizeOfToolBarButtons)))
-                            OverrideWaveDataLength(IdOfSelectedWave,0);
+                        if (myWavesData.Waves[IdOfSelectedWave].SpawnData.Count > 0)
+                        {
+                            if (GUILayout.Button("Delete Wave Data", GUILayout.Height(30f),
+                                    GUILayout.MaxWidth(sizeOfToolBarButtons)))
+                                OverrideWaveDataLength(IdOfSelectedWave, 0);
+                        }
                     }
                 }
             }
@@ -426,7 +440,8 @@ namespace Editor.WaveEditor
             int waveID = selectedProperty.FindPropertyRelative("ID").intValue;
             for (int i = lowerBoundIndex; i < upperBoundIndex; i++)
             {
-                myWavesData.Waves[waveID].SpawnData[i].EnemyData[pattern.GetValue()] = 1;
+                int patternValue = pattern.GetValue();
+                myWavesData.Waves[waveID].SpawnData[i].EnemyData[patternValue] = 1;
             }
             serializedObject = new SerializedObject(serializedObject.targetObject);
         }

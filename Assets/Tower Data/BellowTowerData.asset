@@ -17,7 +17,7 @@ MonoBehaviour:
   upgradeCostsSlot1: f40100008403000078050000d0070000
   upgradeCostsSlot2: 90010000ee020000e8030000dc050000
   statNames:
-  - PushArea
+  - AirBladeSize
   - PushStrength
   - AttackSpeed
   towerName: Bellow

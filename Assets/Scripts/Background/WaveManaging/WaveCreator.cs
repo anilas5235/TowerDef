@@ -44,7 +44,6 @@ namespace Background.WaveManaging
         {
             if (startValue > MaxOutputValue) startValue = MaxOutputValue;
             if (startValue < MinOutputValue) startValue = MinOutputValue;
-           
         }
 
         protected PatternBase(int[] values)
@@ -73,80 +72,40 @@ namespace Background.WaveManaging
     {
         public DiagonalDescendingPattern(int startValue, int lowerBound, int upperBound) :
             base(startValue, lowerBound, upperBound)
-        {
-            currentStep = startValue - min;
-        }
+        { currentStep = startValue - min; }
 
-        protected override int Function(int step)
-        {
-            int returnVal = min;
-            returnVal += currentStep;
-            return returnVal;
-        }
+        protected override int Function(int step){ return min + currentStep; }
     }
 
     public class DiagonalRisingPattern : PatternBase
     {
         public DiagonalRisingPattern(int startVal, int lowerBound, int upperBound) :
             base(startVal, lowerBound, upperBound)
-        {
-            currentStep = max - startVal;
-        }
+        { currentStep = max - startVal; }
 
-        protected override int Function(int step)
-        {
-            int returnVal = max;
-            returnVal -= currentStep;
-            return returnVal;
-        }
+        protected override int Function(int step) { return max - currentStep; }
     }
 
     public class LinearPattern : PatternBase
     {
         private int _val;
 
-        public LinearPattern(int startValue) : base(startValue)
-        {
-            _val = startValue;
-        }
+        public LinearPattern(int startValue) : base(startValue) { _val = startValue; }
 
-        protected override int Function(int step)
-        {
-            return _val;
-        }
+        protected override int Function(int step) { return _val; }
     }
 
     public class ZigZackPattern : PatternBase
     {
-        private int patternLength;
-
         public ZigZackPattern(int startVal, int lowerBound, int upperBound) : base(startVal, lowerBound, upperBound)
         {
             currentStep = startVal - min;
-            patternLength = max - min;
         }
 
         protected override int Function(int step)
         {
-            int returnVal = 0;
-            if (currentStep + 1 > patternLength)
-            {
-                currentStep += 1;
-                return returnVal;
-            }
-
-            if (repetitionCount % 2 == 0)
-            {
-                returnVal = min;
-                returnVal += currentStep;
-            }
-            else
-            {
-                returnVal = max;
-                returnVal -= currentStep;
-            }
-
-            return returnVal;
+            if (repetitionCount > 0 && currentStep == 0) currentStep++;
+            return  repetitionCount % 2 == 0 ? min + currentStep : max - currentStep;
         }
     }
 
@@ -176,13 +135,8 @@ namespace Background.WaveManaging
 
     public class RandomPattern : PatternBase
     {
-        public RandomPattern(int min, int max) : base(min, max)
-        {
-        }
+        public RandomPattern(int min, int max) : base(min, max) { }
 
-        protected override int Function(int step)
-        {
-            return Random.Range(min,max);
-        }
+        protected override int Function(int step) { return Random.Range(min, max); }
     }
 }

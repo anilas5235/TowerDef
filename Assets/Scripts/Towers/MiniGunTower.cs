@@ -1,10 +1,10 @@
-using Scrips.Background;
-using Scrips.Background.Pooling;
+using Background.Pooling;
 using Scrips.Projectiles;
+using Scrips.Towers;
 using UnityEngine;
 using Random = UnityEngine.Random;
 
-namespace Scrips.Towers
+namespace Towers
 {
     public class MiniGunTower : TowerBase
     {

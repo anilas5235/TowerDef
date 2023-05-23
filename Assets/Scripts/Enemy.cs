@@ -1,8 +1,8 @@
 using System.Collections;
 using Background.Keeper;
+using Background.Pooling;
+using Background.WaveManaging;
 using Scrips.Background;
-using Scrips.Background.Pooling;
-using Scrips.Background.WaveManaging;
 using Unity.Mathematics;
 using UnityEngine;
 
@@ -10,11 +10,11 @@ public class Enemy : MonoBehaviour
 {
     private PathKeeper _pathKeeper;
     private StatsKeeper _statsKeeper;
-    private Coroutine _currentStopEnemy, _currentDrift;
-    private Vector3 _directionDriftOf;
+    private Coroutine _currentStopEnemy;
+    private Vector3 _positionBeforeDriftOff;
     private int _nextPointInArry = 0;
     private float _speed;
-    private bool _stop;
+    private EnemyBehaviourStates myBehaviourState;
 
     private static StandardEnemyPool Pool;
         
@@ -25,43 +25,64 @@ public class Enemy : MonoBehaviour
     [SerializeField] private ParticleSystem deathParticleSystem;
     [SerializeField] private SpriteRenderer _spriteRenderer;
 
+    private enum EnemyBehaviourStates
+    {
+        Normal = 0,
+        Stop = 1,
+        Drift = 2,
+        RecoveringFormDrift =3,
+    }
     private void Start()
     {
         if (Pool == null) Pool = StandardEnemyPool.Instance;
         _pathKeeper = PathKeeper.Instance;
         _statsKeeper = StatsKeeper.Instance;
+        myBehaviourState = EnemyBehaviourStates.Normal;
     }
 
     private void Update()
     {
-        if (_stop || pooled) {return; }
+        if (pooled) {return; }
 
-        if (_directionDriftOf.magnitude > 0.1f)
+        switch (myBehaviourState)
         {
-            transform.position += _directionDriftOf * (Time.deltaTime);
-            return;
-        }
-        transform.Translate(((_pathKeeper.PathPoints[_nextPointInArry] - transform.position).normalized) *
-                            (Time.deltaTime * _speed));
-        distance += Time.deltaTime * _speed;
-        if (Vector3.Distance( transform.position, _pathKeeper.PathPoints[_nextPointInArry]) < 0.1f)
-        {
-            if (_nextPointInArry == _pathKeeper.PathPoints.Length - 1)
-            {
-                _statsKeeper.Hp -= hp;
-                Death();
-                return;
-            }
+            case EnemyBehaviourStates.Normal:
+                transform.Translate(((_pathKeeper.PathPoints[_nextPointInArry] - transform.position).normalized) *
+                                    (Time.deltaTime * _speed));
+                if (Vector3.Distance(transform.position, _pathKeeper.PathPoints[_nextPointInArry]) < 0.1f)
+                {
+                    if (_nextPointInArry == _pathKeeper.PathPoints.Length - 1)
+                    {
+                        _statsKeeper.Hp -= hp;
+                        Death();
+                        return;
+                    }
 
-            _nextPointInArry++;
-            _directionDriftOf = Vector3.zero;
+                    _nextPointInArry++;
+                }
+
+                distance += Time.deltaTime * _speed;
+
+                break;
+            case EnemyBehaviourStates.Stop: return;
+            case EnemyBehaviourStates.Drift: return;
+            case EnemyBehaviourStates.RecoveringFormDrift:
+                transform.Translate((_positionBeforeDriftOff - transform.position).normalized *
+                                    (Time.deltaTime * _speed));
+                if (Vector3.Distance(_positionBeforeDriftOff, transform.position) < 0.1f)
+                {
+                    myBehaviourState = EnemyBehaviourStates.Normal;
+                }
+
+                distance += Time.deltaTime * _speed;
+                break;
         }
     }
 
     public void SetColorAndSpeed()
     {
         if (hp > 0) _spriteRenderer.color = ColorKeeper.StandardColors(hp - 1);
-        _speed = 1 + (hp - 1) * 0.5f;
+        _speed = 1 + (hp - 1) * 0.4f;
     }
 
     public void TakeDamage(int damage)
@@ -77,18 +98,13 @@ public class Enemy : MonoBehaviour
             Death();
             return;
         }
-        else
-        {
-            _statsKeeper.Money += damage;
-        }
+        else _statsKeeper.Money += damage;
         SetColorAndSpeed();
     }
 
     public void TriggerStopEnemy(float sec)
     {
         if (_currentStopEnemy != null)StopCoroutine(_currentStopEnemy);
-        _directionDriftOf = Vector3.zero;
-        _currentDrift = null;
         _currentStopEnemy = StartCoroutine(StopEnemy(sec));
     }
 
@@ -99,34 +115,17 @@ public class Enemy : MonoBehaviour
         UnFreeze();
     }
 
-    public void Freeze() => _stop = true;
+    private void Freeze() => myBehaviourState = EnemyBehaviourStates.Stop;
 
-    public void UnFreeze() => _stop = false;
+    private void UnFreeze() => myBehaviourState = EnemyBehaviourStates.Normal;
 
-    public void ThrowBack(int driftTime ,Vector3 drift)
+    public void StartDrift()
     {
-        if (_currentDrift != null) return;
-        _nextPointInArry--;
-        if (_nextPointInArry < 1)
-        { _nextPointInArry = 0; }
-        _directionDriftOf = drift;
-        if (driftTime < 0) driftTime = 0;
-        _currentDrift = StartCoroutine(DriftTime(driftTime));
+        _positionBeforeDriftOff = transform.position;
+        myBehaviourState = EnemyBehaviourStates.Drift;
     }
 
-    public void SetBackInPath(int amountOfPoints)
-    {
-        _nextPointInArry-=amountOfPoints;
-        if (_nextPointInArry < 1)
-        { _nextPointInArry = 0; }
-    }
-    
-    private IEnumerator DriftTime(int time)
-    {
-        yield return new WaitForSeconds(time);
-        _directionDriftOf = Vector3.zero;
-        _currentDrift = null;
-    }
+    public void StopDrift() => myBehaviourState = EnemyBehaviourStates.RecoveringFormDrift;
 
     public void RestVariables()
     {
@@ -139,19 +138,14 @@ public class Enemy : MonoBehaviour
             StopCoroutine(_currentStopEnemy);
             _currentStopEnemy = null;
         }
-        _stop = false;
-        if (_currentDrift != null)
-        {
-            StopCoroutine(_currentDrift);
-            _currentDrift = null;
-        }
-        _directionDriftOf = Vector3.zero;
+
+        myBehaviourState = EnemyBehaviourStates.Normal;
     }
 
     private void Death()
     {
         pooled = true;
-        SpawnManager.Instance.activeEnemys.Remove(this.gameObject);
+        SpawnManager.Instance.activeEnemies.Remove(this.gameObject);
         Pool.AddObjectToPool(gameObject);
     }
 }

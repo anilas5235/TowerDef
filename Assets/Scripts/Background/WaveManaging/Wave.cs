@@ -1,5 +1,4 @@
 using System.Collections.Generic;
-using Scrips.Background.WaveManaging;
 
 namespace Background.WaveManaging
 {

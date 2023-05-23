@@ -31,15 +31,15 @@ namespace Scrips.Background
 
         private void Start()
         {
-            HPUI = GameObject.Find("Hp_Anzeige").GetComponent<TextMeshProUGUI>();
-            MoneyUI = GameObject.Find("money_Anzeige").GetComponent<TextMeshProUGUI>();
+            HPUI = GameObject.Find("Hp_Anzeige")?.GetComponent<TextMeshProUGUI>();
+            MoneyUI = GameObject.Find("money_Anzeige")?.GetComponent<TextMeshProUGUI>();
             UpdateUI();
         }
 
         private void UpdateUI()
         {
-            HPUI.text = "leben :" + hp;
-            MoneyUI.text = "Money :" + Money;
+            if(HPUI )  HPUI.text = "Lives :" + hp ;
+            if(MoneyUI)  MoneyUI.text = "Money :" + Money ;
         }
     }
 }

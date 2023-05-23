@@ -1,7 +1,7 @@
 using System;
+using Background.Pooling;
+using Background.WaveManaging;
 using Scrips.Background;
-using Scrips.Background.Pooling;
-using Scrips.Background.WaveManaging;
 using UnityEngine;
 
 namespace Scrips.Projectiles

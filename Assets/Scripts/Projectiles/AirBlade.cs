@@ -1,6 +1,7 @@
 using System;
+using System.Collections;
 using System.Collections.Generic;
-using Scrips;
+using Background.Pooling;
 using UnityEngine;
 
 namespace Projectiles
@@ -9,41 +10,27 @@ namespace Projectiles
     {
         public Vector3 direction;
         public float speed;
+        public float sizeMultiplier = 0.3f;
 
-        private float sizeMultiplier = 0.1f;
+        [SerializeField] private Transform parent;
+        private SpriteRenderer mySpriteRenderer;
+        private float sizeOverTimeMultiplier = 0.1f, lifeTime =1f;
         private List<Transform> attachedEnemies = new List<Transform>();
-        private Transform parent;
-
-        //[SerializeField] private Collider2D myCollider;
-        //[SerializeField] private LayerMask enemyLayer;
-        //private ContactFilter2D EnemyFilter;
-
-        // private void OnEnable()
-        // {
-        //     EnemyFilter.NoFilter();
-        //     EnemyFilter.SetLayerMask(enemyLayer);
-        //     EnemyFilter.SetDepth(-50, 50);
-        // }
+        private Color originalColor;
 
         private void OnEnable()
         {
-            parent = transform.parent;
+            if (mySpriteRenderer) return;
+            mySpriteRenderer = gameObject.GetComponent<SpriteRenderer>();
+            originalColor = mySpriteRenderer.color;
         }
 
         void Update()
         {
             parent.position += direction * (Time.deltaTime * speed);
-            transform.localScale = Vector3.one * sizeMultiplier;
-            if (sizeMultiplier < .3f) sizeMultiplier += Time.deltaTime;
-            /*
-            List<Collider2D> cols = new List<Collider2D>();
-            myCollider.OverlapCollider(EnemyFilter, cols);
-
-            foreach (Collider2D col in cols)
-            {
-                col.GetComponent<Enemy>().ThrowBack();
-            }
-            */
+            transform.localScale = Vector3.one * (sizeOverTimeMultiplier * sizeMultiplier);
+            mySpriteRenderer.color = new Color(originalColor.r,originalColor.g,originalColor.b, originalColor.r - ((sizeOverTimeMultiplier / lifeTime)*0.2f));
+            if (sizeOverTimeMultiplier < lifeTime) sizeOverTimeMultiplier += Time.deltaTime;
         }
 
         private void OnTriggerEnter2D(Collider2D col)
@@ -53,24 +40,38 @@ namespace Projectiles
                 if (attachedEnemies.Contains(col.transform))return;
                 col.transform.SetParent(parent);
                 attachedEnemies.Add(col.transform);
-                col.gameObject.GetComponent<Enemy>().Freeze();
+                col.gameObject.GetComponent<Enemy>().StartDrift();
             }
         }
 
-        private void OnDestroy()
+        private void OnDestroy() => AppendEnemies();
+
+        private void AppendEnemies()
         {
             foreach (Transform attachedEnemy in attachedEnemies)
             {
+                if (!attachedEnemy) continue;
                 attachedEnemy.transform.SetParent(null);
                 Enemy enemy = attachedEnemy.gameObject.GetComponent<Enemy>();
-                enemy.UnFreeze();
-                enemy.SetBackInPath(1);
+                enemy.StopDrift();
             }
+            attachedEnemies = new List<Transform>();
         }
 
-        public void KillYourSelf(float lifeTime)
+        public void StartDeathTimer(float time)
         {
-            Destroy(gameObject, lifeTime);
+            lifeTime = time;
+            StartCoroutine( DeathTimer(lifeTime));
+        }
+
+        private IEnumerator DeathTimer(float time)
+        {
+            yield return new WaitForSeconds(time);
+            AppendEnemies();
+            mySpriteRenderer.color = originalColor;
+            sizeOverTimeMultiplier = 0.1f;
+            transform.localScale = Vector3.one * 0.3f;
+            AirBladePool.Instance.AddObjectToPool(parent.gameObject);
         }
     }
 }

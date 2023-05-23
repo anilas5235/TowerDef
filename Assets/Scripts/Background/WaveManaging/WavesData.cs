@@ -6,7 +6,7 @@ namespace Background.WaveManaging
     [CreateAssetMenu]
     public class WavesData : ScriptableObject
     {
-        public List<Wave> Waves;
+        public List<Wave> Waves = new List<Wave>();
 
         public void NameWaves()
         {

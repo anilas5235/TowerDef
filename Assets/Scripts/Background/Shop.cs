@@ -14,15 +14,13 @@ namespace Background
 
         private void Awake()
         {
-            if (!Instance)
-            { Instance = this; }
-            else
-            { Destroy(this); }
+            if (!Instance) Instance = this; 
+            else Destroy(this); 
         }
 
         public void BuyTower(GameObject tower)
         {
-            if (_currentlyHandledTower) { return; }
+            if (_currentlyHandledTower)  return; 
            _currentlyHandledTower = Instantiate(tower, Vector3.zero, quaternion.identity);
         }
 
@@ -35,8 +33,8 @@ namespace Background
         {
             currentSpeedMode++;
             if (currentSpeedMode > 3)
-            { currentSpeedMode = 0; }
-            Time.timeScale = currentSpeedMode + 1f;
+            { currentSpeedMode = 1; }
+            Time.timeScale = currentSpeedMode ;
             speedButtonText.text = "Speed: " + Time.timeScale;
         }
     }

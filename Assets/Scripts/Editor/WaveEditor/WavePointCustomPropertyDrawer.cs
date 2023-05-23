@@ -2,7 +2,6 @@ using Background.Keeper;
 using Background.WaveManaging;
 using Editor.Others;
 using Scrips.Background;
-using Scrips.Background.WaveManaging;
 using UnityEditor;
 using UnityEngine;
 

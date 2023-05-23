@@ -1,8 +1,9 @@
-using Scrips.Background.Pooling;
+using Background.Pooling;
 using Scrips.Projectiles;
+using Scrips.Towers;
 using UnityEngine;
 
-namespace Scrips.Towers
+namespace Towers
 {
     public class WheelTower : TowerBase
     {
@@ -11,7 +12,7 @@ namespace Scrips.Towers
         private GameObject[] _barrels = new GameObject[10];
         private StandardProjectilePool Pool;
         private int _numberOfBarrels = 6, _attackDamage = 1, _multiHit = 2;
-        private float _attackDelay = 3;
+        private float _attackDelay = 2;
 
         protected override void Start()
         {
@@ -28,7 +29,7 @@ namespace Scrips.Towers
         public override void UpgradeTower(Vector3 upgrade)
         {
             upgradeLevel += upgrade;
-            _attackDelay -= 1f /2 * upgrade.x;
+            _attackDelay -= .3f * upgrade.x;
             _attackDamage +=  1 * (int)upgrade.y;
             _numberOfBarrels += 1 * (int)upgrade.z;
 
