@@ -1,5 +1,5 @@
 using System;
-using Background;
+using UIScripts.ShopUi;
 using UnityEngine;
 using UnityEngine.Audio;
 using UnityEngine.SceneManagement;
@@ -128,7 +128,6 @@ namespace UIScripts
                     state = index switch
                     {
                         0 => UIStates.Normal,
-                        1 => UIStates.Pause,
                         2 => UIStates.Options,
                         3 => UIStates.AudioOptions,
                         _ => throw new ArgumentException("No defined State for this Index")
@@ -139,11 +138,12 @@ namespace UIScripts
                     state = index switch
                     {
                         0 => UIStates.Normal,
+                        1 => UIStates.Pause,
                         2 => UIStates.Options,
                         3 => UIStates.AudioOptions,
                         _ => throw new ArgumentException("No defined State for this Index")
                     };
-                    ChangeUIStateInTitle(state);
+                    ChangeUIStateInGame(state);
                     break;
                 default:
                     Debug.Log("Scene not registered");
@@ -195,9 +195,6 @@ namespace UIScripts
                     if (set) ChangeUIStateInGame(state); 
                     break;
             }
-
-
-            
         }
         public void UpdateSoundOptions()
         {

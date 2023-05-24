@@ -1,12 +1,10 @@
 using System.Collections.Generic;
-using Background;
 using Background.Keeper;
 using Background.WaveManaging;
-using Scrips.Background;
-using Towers;
+using UIScripts.ShopUi;
 using UnityEngine;
 
-namespace Scrips.Towers
+namespace Towers
 {
     public abstract class TowerBase : MonoBehaviour
     {
@@ -15,7 +13,21 @@ namespace Scrips.Towers
         public SpriteRenderer indicator; 
         public TowerData towerData;
         public bool needsTargetAtAll = true;
-        
+        private int towerInvestmentsTillNow = 0;
+
+        public int TowerInvestmentsTillNow
+        {
+            get => towerInvestmentsTillNow;
+
+            set
+            {
+                if (value >0)
+                {
+                    towerInvestmentsTillNow += value;
+                }
+            }
+        }
+            
         private bool _nowPlaceable = true;
         private Collider2D ownCollider;
         private ContactFilter2D _placeableFilter;
@@ -66,7 +78,9 @@ namespace Scrips.Towers
                     placed = true;
                     Shop.TowerHandled();
                     indicator.enabled = false;
-                    StatsKeeper.Money -= towerData.placingCosts;
+                    int cost = (int)(towerData.placingCosts * Shop.Instance.priceMultiplier);
+                    StatsKeeper.Money -= cost;
+                    TowerInvestmentsTillNow += cost;
                 }
                 else if(Input.GetMouseButtonDown(1)) { Destroy(gameObject);Shop.TowerHandled(); }
             }

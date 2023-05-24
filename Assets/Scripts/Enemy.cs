@@ -2,7 +2,6 @@ using System.Collections;
 using Background.Keeper;
 using Background.Pooling;
 using Background.WaveManaging;
-using Scrips.Background;
 using Unity.Mathematics;
 using UnityEngine;
 

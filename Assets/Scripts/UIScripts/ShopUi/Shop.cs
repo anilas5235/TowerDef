@@ -2,7 +2,7 @@ using TMPro;
 using Unity.Mathematics;
 using UnityEngine;
 
-namespace Background
+namespace UIScripts.ShopUi
 {
     public class Shop : MonoBehaviour
     {
@@ -10,6 +10,7 @@ namespace Background
         [SerializeField] private TextMeshProUGUI speedButtonText;
         
         public int currentSpeedMode;
+        public float priceMultiplier = 1f;
         private GameObject _currentlyHandledTower;
 
         private void Awake()

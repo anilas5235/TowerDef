@@ -1,7 +1,8 @@
-using Scrips.Background;
+using Background.Keeper;
 using Scrips.Towers;
 using TMPro;
 using Towers;
+using UIScripts.ShopUi;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -78,7 +79,7 @@ namespace Background
                 if (furtherUpgradable)
                 {
                     statNames[i].text = _towerData.statNames[i] + " :\n lvl " + (upgradeLevelOfState + 1);
-                    statCosts[i].text = "Cost to Upgrade : \n" + costForNextUpgrades[upgradeLevelOfState];
+                    statCosts[i].text = "Cost to Upgrade : \n" + costForNextUpgrades[upgradeLevelOfState]* Shop.Instance.priceMultiplier;
                     statButtons[i].gameObject.SetActive( true);
                 }else
                 {
@@ -113,11 +114,11 @@ namespace Background
         {
             var green = new Color(23 / 255f, 130 / 255f, 20 / 255f);
             if (_upgradeLevel.x < _towerData.upgradeCostsSlot0.Length)
-            { statButtonColors[0].color = _statsKeeper.Money < _towerData.upgradeCostsSlot0[(int)_upgradeLevel.x] ? Color.red : green;}
+            { statButtonColors[0].color = _statsKeeper.Money < _towerData.upgradeCostsSlot0[(int)_upgradeLevel.x] * Shop.Instance.priceMultiplier ? Color.red : green;}
             if(_upgradeLevel.y < _towerData.upgradeCostsSlot1.Length)
-            {statButtonColors[1].color = _statsKeeper.Money < _towerData.upgradeCostsSlot1[(int)_upgradeLevel.y] ? Color.red : green;}    
+            {statButtonColors[1].color = _statsKeeper.Money < _towerData.upgradeCostsSlot1[(int)_upgradeLevel.y] * Shop.Instance.priceMultiplier ? Color.red : green;}    
             if(_upgradeLevel.z <  _towerData.upgradeCostsSlot2.Length)
-            {statButtonColors[2].color = _statsKeeper.Money < _towerData.upgradeCostsSlot2[(int)_upgradeLevel.z] ? Color.red : green;}
+            {statButtonColors[2].color = _statsKeeper.Money < _towerData.upgradeCostsSlot2[(int)_upgradeLevel.z] * Shop.Instance.priceMultiplier ? Color.red : green;}
         }
 
         public void UpgradeStat(int index)
@@ -126,17 +127,18 @@ namespace Background
             switch (index)
             {
                 case 0: if (_upgradeLevel.x > _towerData.upgradeCostsSlot0.Length) {return; }
-                    cost = _towerData.upgradeCostsSlot0[(int)_upgradeLevel.x]; break;
+                    cost = (int)(_towerData.upgradeCostsSlot0[(int)_upgradeLevel.x] * Shop.Instance.priceMultiplier); break;
                 case 1: if (_upgradeLevel.y > _towerData.upgradeCostsSlot1.Length) {return; }
-                    cost = _towerData.upgradeCostsSlot1[(int)_upgradeLevel.y]; break;
+                    cost = (int)(_towerData.upgradeCostsSlot0[(int)_upgradeLevel.y] * Shop.Instance.priceMultiplier); break;
                 case 2: if (_upgradeLevel.z > _towerData.upgradeCostsSlot2.Length) {return; }
-                    cost = _towerData.upgradeCostsSlot2[(int)_upgradeLevel.z]; break;
+                    cost =(int)(_towerData.upgradeCostsSlot0[(int)_upgradeLevel.z] * Shop.Instance.priceMultiplier); break;
                 default: print(" For this Upgrade index "+index+ " is not defined a function"); 
                     return;
             }
          
             if(cost > _statsKeeper.Money){print("Upgrade failed, not enough Money");  return;}
             _statsKeeper.Money -= cost;
+            _currentTowerScript.TowerInvestmentsTillNow += cost;
         
             Vector3 uVector= Vector3.zero;
             switch (index)
@@ -180,6 +182,13 @@ namespace Background
                 case 7: _currentTowerScript.gameObject.GetComponent<ArtilleryTower>().ChangingTargetPosition();
                     DeselectTower(); _mouseoverUI = false;  break;
             }
+        }
+
+        public void SellTower()
+        {
+            StatsKeeper.Instance.Money += _currentTowerScript.TowerInvestmentsTillNow / 2;
+            Destroy(_currentTowerScript.gameObject);
+            DeselectTower();
         }
     }
 }

@@ -1,7 +1,6 @@
 using System;
 using Background.Keeper;
 using Background.Pooling;
-using Scrips.Background;
 using UnityEngine;
 
 namespace Scrips.Projectiles

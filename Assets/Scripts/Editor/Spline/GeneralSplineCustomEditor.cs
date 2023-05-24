@@ -15,7 +15,9 @@ namespace Editor.Spline
             P_TileSizeMutliplier,
             P_Points,
             P_OffestAngle,
-            P_CurrentPathSave;
+            P_CurrentPathSave,
+            P_IgnoreNewComponents,
+            P_Segments;
 
         protected GUIStyle standartGUIStyle;
 
@@ -43,6 +45,8 @@ namespace Editor.Spline
             P_Points = serializedObject.FindProperty(nameof(script.splinePoints));
             P_OffestAngle = serializedObject.FindProperty(nameof(script.offsetAngle));
             P_CurrentPathSave = serializedObject.FindProperty(nameof(script.CurrentPathPointSave));
+            P_IgnoreNewComponents = serializedObject.FindProperty(nameof(script.ignoreNewComponents));
+            P_Segments = serializedObject.FindProperty(nameof(script.DrawCurvesList));
         }
 
         public override void OnInspectorGUI()
@@ -66,6 +70,8 @@ namespace Editor.Spline
                 UnityEditor.AssetDatabase.SaveAssets();
 #endif
             }
+
+            EditorGUILayout.PropertyField(P_IgnoreNewComponents);
             
             GUILayout.Space(10);
 
@@ -80,6 +86,7 @@ namespace Editor.Spline
             }
         
             EditorGUILayout.PropertyField(P_Points);
+            EditorGUILayout.PropertyField(P_Segments);
         
             serializedObject.ApplyModifiedProperties();
         }

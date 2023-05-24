@@ -1,13 +1,13 @@
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using Background.Pooling;
-using Scrips.Background;
 using Scrips.Projectiles;
-using Unity.Mathematics;
+using Scrips.Towers;
 using UnityEngine;
 using Random = UnityEngine.Random;
 
-namespace Scrips.Towers
+namespace Towers
 {
     public class VolcanoTower : TowerBase
     {
@@ -52,40 +52,35 @@ namespace Scrips.Towers
 
         private void ThrowLavaShoot()
         {
-            List<Collider2D> possiblePathSegments = Physics2D.OverlapCircleAll(transform.position, attackRadius, pathLayer).ToList();
+            Collider[] cols = Physics.OverlapSphere(transform.position, attackRadius, pathLayer);
+            if (cols.Length < 1)return;
             Vector3 targetPosition = Vector3.zero;
+            int index = Random.Range(0, cols.Length);
+            int count = 0;
             bool done = false;
-            
-
-            Vector3 GetAPointInBoxCollider(int indexInList)
-            {
-                BoxCollider2D col = (BoxCollider2D) possiblePathSegments[indexInList];
-                Vector2 offset = new Vector2( col.size.x/2 * Random.Range(-0.9f, 0.9f), col.size.y/2 * Random.Range(-1f, 1f));
-                Vector3 point = col.transform.TransformPoint(offset);
-                return point;
-            }
+            LineRenderer line = (cols[index]).GetComponent<LineRenderer>();
+            Vector3[] points = new Vector3[line.positionCount];
+            line.GetPositions(points);
 
             do
             {
-                int count = 0;
-                int rd = Random.Range(0, possiblePathSegments.Count);
-                
+                count++;
+                int one,two;
+                one = Random.Range(0, points.Length);
                 do
                 {
-                    count++;
-                    targetPosition = GetAPointInBoxCollider(rd);
-                    if (Vector2.Distance(targetPosition, transform.position) < attackRadius)
-                    {
-                        done = true;
-                    }else if (count > 3)
-                    {
-                        possiblePathSegments.Remove(possiblePathSegments[rd]);
-                        break;
-                    }
-                    
-                } while (!done);
+                    two = Random.Range(0, points.Length);
+                } while (two == one);
+            
+                targetPosition = Vector3.Lerp(points[one], points[two], Random.Range(0, 1f));
+                targetPosition.z = 0;
+                targetPosition += new Vector3(Random.Range(-0.1f, 0.1f), Random.Range(-0.1f, 0.1f), 0); 
+            
+                if (Vector3.Distance(transform.position,targetPosition)< attackRadius+0.1f) done = true;
 
-            } while ( !done);
+                if (count > 100) done = true;
+
+            } while (!done);
 
             LavaShoot shoot = Pool.GetObjectFromPool().GetComponent<LavaShoot>();
             shoot.gameObject.transform.position = targetPosition;
@@ -93,6 +88,22 @@ namespace Scrips.Towers
             shoot.Colors = Colors;
             shoot.AppearanceUpdate();
             shoot.pooled = false;
+        }
+
+        private void OnDrawGizmos()
+        {
+            int RaysToShoot = 36;
+            float angle = 0;
+            for (int i = 0; i < RaysToShoot; i++)
+            {
+                float x = Mathf.Sin(angle);
+                float y = Mathf.Cos(angle);
+                angle += 2 * Mathf.PI / RaysToShoot;
+
+                Vector3 dir = new Vector3( x,  y, 0);
+                Gizmos.DrawLine(transform.position,   transform.position+ dir  * attackRadius);
+            }
+
         }
     }
 }

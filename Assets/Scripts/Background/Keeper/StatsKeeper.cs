@@ -1,14 +1,14 @@
 using TMPro;
 using UnityEngine;
 
-namespace Scrips.Background
+namespace Background.Keeper
 {
     public class StatsKeeper : MonoBehaviour
     {
         public static StatsKeeper Instance;
     
         private int hp = 100, money =60000;
-        private TextMeshProUGUI HPUI,MoneyUI;
+        [SerializeField] private TextMeshProUGUI HPUI,MoneyUI;
 
         public int Money
         {
@@ -31,8 +31,6 @@ namespace Scrips.Background
 
         private void Start()
         {
-            HPUI = GameObject.Find("Hp_Anzeige")?.GetComponent<TextMeshProUGUI>();
-            MoneyUI = GameObject.Find("money_Anzeige")?.GetComponent<TextMeshProUGUI>();
             UpdateUI();
         }
 

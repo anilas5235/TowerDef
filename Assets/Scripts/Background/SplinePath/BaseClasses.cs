@@ -17,7 +17,7 @@ namespace Background.SplinePath
         public float LineThickness = 0.5f, tileSizeMultiplier =1f;
         
         public List<Transform> splinePoints = new List<Transform>();
-        protected List<DrawCurve> DrawCurvesList = new List<DrawCurve>();
+        public List<DrawCurve> DrawCurvesList = new List<DrawCurve>();
 
         private Color currentLineColor ;
         private float currentLineThickness, currentRESOLUTION, currentOffsetAngle;
@@ -27,6 +27,7 @@ namespace Background.SplinePath
         public PathPointSave CurrentPathPointSave;
         
         public SplineType MySplineType;
+        public bool ignoreNewComponents = false;
 
         public enum SplineType
         {
@@ -155,6 +156,7 @@ namespace Background.SplinePath
 
         public void CheckForExistingComponents()
         {
+            if (ignoreNewComponents)return;
             splinePoints.Clear();
             foreach (var point in gameObject.GetComponentsInChildren<PointBehaviour>().ToList())
             {
