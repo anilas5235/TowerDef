@@ -1,9 +1,9 @@
-using System;
+using System.Linq.Expressions;
 using Background.Pooling;
 using Background.WaveManaging;
 using UnityEngine;
 
-namespace Scrips.Projectiles
+namespace Projectiles
 {
     public class LavaShoot : MonoBehaviour
     {
@@ -12,6 +12,8 @@ namespace Scrips.Projectiles
         
         [SerializeField] private SpriteRenderer mySpriteRenderer;
         [SerializeField] private LayerMask Enemy;
+        [SerializeField] private ParticleSystem _particleSystem;
+        private ParticleSystem.MainModule _mainModule;
         public Color[] Colors = new Color[5];
         
         private static LavaShootPool Pool;
@@ -20,10 +22,7 @@ namespace Scrips.Projectiles
 
         private void Start()
         {
-            if (Pool == null)
-            {
-                Pool = LavaShootPool.Instance;
-            }
+            Pool ??= LavaShootPool.Instance;
         }
         private void FixedUpdate()
         {
@@ -61,14 +60,17 @@ namespace Scrips.Projectiles
         }
         public void AppearanceUpdate()
         {
-            Color newColor;
+            int colorIndex;
+
+            if (storedDamage > 20) colorIndex = 4;
+            else if (storedDamage > 15) colorIndex = 3;
+            else if (storedDamage > 10) colorIndex = 2;
+            else if (storedDamage > 5) colorIndex = 1;
+            else colorIndex = 0;
             
-            if (storedDamage > 20) { newColor = Colors[4]; }
-            else if (storedDamage > 15) { newColor = Colors[3]; }
-            else if (storedDamage > 10) { newColor = Colors[2]; }
-            else if (storedDamage > 5) { newColor = Colors[1]; }
-            else  { newColor = Colors[0]; }
-            mySpriteRenderer.color = newColor;
+            mySpriteRenderer.color = Colors[colorIndex];
+            _mainModule = _particleSystem.main;
+            _mainModule.startColor = colorIndex < Colors.Length-1 ? Colors[colorIndex+1]: Color.white;
         }
     }
 }

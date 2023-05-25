@@ -1,9 +1,5 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
 using Background.Pooling;
-using Scrips.Projectiles;
-using Scrips.Towers;
+using Projectiles;
 using UnityEngine;
 using Random = UnityEngine.Random;
 
@@ -14,6 +10,8 @@ namespace Towers
         [SerializeField] private LayerMask pathLayer;
         [SerializeField] private Color[] Colors = new Color[5];
         [SerializeField] private SpriteRenderer lavaTop;
+        [SerializeField] private ParticleSystem _particleSystem;
+        private ParticleSystem.MainModule _mainModule;
         private LavaShootPool Pool;
         private float _attackDelay = 4;
         private int _damageLoadPerShoot = 5;
@@ -48,6 +46,8 @@ namespace Towers
         protected override void VisualChange()
         {
             lavaTop.color = Colors[(int)upgradeLevel.y];
+            _mainModule = _particleSystem.main;
+            _mainModule.startColor = (int)upgradeLevel.y < Colors.Length-1 ? Colors[(int)upgradeLevel.y+1]: Color.white;
         }
 
         private void ThrowLavaShoot()

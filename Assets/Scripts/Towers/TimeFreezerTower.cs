@@ -1,12 +1,11 @@
-using Towers;
-using Unity.Collections;
 using UnityEngine;
 
-namespace Scrips.Towers
+namespace Towers
 {
     public class TimeFreezerTower : TowerBase
     {
         [SerializeField] private Color[] upgradeColors = new Color[5];
+        [SerializeField] private ParticleSystem _particleSystem;
         
         private float _stopDuration = 2f,_attackDelay = 6f;
         protected override void Start()
@@ -39,6 +38,7 @@ namespace Scrips.Towers
                     }
                 }
                 timeForNextAttack = Time.time + _attackDelay;
+                _particleSystem.Play();
             }
         }
 
