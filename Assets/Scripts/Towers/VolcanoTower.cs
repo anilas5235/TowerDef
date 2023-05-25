@@ -65,18 +65,14 @@ namespace Towers
             do
             {
                 count++;
-                int one,two;
-                one = Random.Range(0, points.Length);
-                do
-                {
-                    two = Random.Range(0, points.Length);
-                } while (two == one);
-            
-                targetPosition = Vector3.Lerp(points[one], points[two], Random.Range(0, 1f));
+
+                int i = (points.Length < 2) ? 0 : Random.Range(0, points.Length - 1);
+
+                targetPosition = Vector3.Lerp(points[i], points[i + 1], Random.Range(0, 1f));
                 targetPosition.z = 0;
-                targetPosition += new Vector3(Random.Range(-0.1f, 0.1f), Random.Range(-0.1f, 0.1f), 0); 
-            
-                if (Vector3.Distance(transform.position,targetPosition)< attackRadius+0.1f) done = true;
+                targetPosition += new Vector3(Random.Range(-0.1f, 0.1f), Random.Range(-0.1f, 0.1f), 0);
+
+                if (Vector3.Distance(transform.position, targetPosition) < attackRadius + 0.1f) done = true;
 
                 if (count > 100) done = true;
 
