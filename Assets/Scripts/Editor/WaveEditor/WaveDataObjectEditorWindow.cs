@@ -74,6 +74,7 @@ namespace Editor.WaveEditor
             myWavesData.NameWaves();
             SaveChanges();
             serializedObject = new SerializedObject(serializedObject.targetObject);
+            Repaint();
         }
 
         private void RemoveWaveObject(int index)
@@ -83,6 +84,7 @@ namespace Editor.WaveEditor
             selectedProperty = null;
             SaveChanges();
             serializedObject = new SerializedObject(serializedObject.targetObject);
+            Repaint();
         }
 
         private void DrawSelectedPropertiesPanel()
@@ -114,13 +116,15 @@ namespace Editor.WaveEditor
                     }
                     EditorGUILayout.EndHorizontal();
 
+                    serializedObject = new SerializedObject(serializedObject.targetObject);
                     SerializedProperty thisSpawnData = currentProperty.FindPropertyRelative("SpawnData");
 
                     EditorGUILayout.BeginVertical();
                     {
                         Rect rect = new Rect(0, 30, WavePoint.WavePointSize * 20, 20);
-                        for (int i = 0; i < thisSpawnData.arraySize; i++){
-
+                        for (int i = 0; i < myWavesData.Waves[IdOfSelectedWave].SpawnData.Count; i++)
+                        {
+                            if (i >= thisSpawnData.arraySize){ continue; }
                             EditorGUILayout.BeginHorizontal();
                             {
                                 EditorGUI.PropertyField(rect,thisSpawnData.GetArrayElementAtIndex(i), emptyLabel);
@@ -184,6 +188,7 @@ namespace Editor.WaveEditor
                 serializedObject.ApplyModifiedProperties();
                 SaveChanges();
                 serializedObject = new SerializedObject(serializedObject.targetObject);
+                Repaint();
             }
         }
 
@@ -444,6 +449,7 @@ namespace Editor.WaveEditor
                 myWavesData.Waves[waveID].SpawnData[i].EnemyData[patternValue] = 1;
             }
             serializedObject = new SerializedObject(serializedObject.targetObject);
+            Repaint();
         }
     }
 }

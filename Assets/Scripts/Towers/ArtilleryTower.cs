@@ -2,6 +2,7 @@ using System.Collections;
 using Towers;
 using Unity.Mathematics;
 using UnityEngine;
+using Random = UnityEngine.Random;
 
 namespace Scrips.Towers
 {
@@ -62,8 +63,9 @@ namespace Scrips.Towers
                 {
                     target.GetComponent<Enemy>().TakeDamage(_attackDamage);
                 }
-                Instantiate(explosion, indicator.transform.position, quaternion.identity,indicator.gameObject.transform);
+                Instantiate(explosion, indicator.transform.position+ new Vector3(Random.Range(-0.2f,0.2f),Random.Range(-0.2f,0.2f),0), quaternion.identity,indicator.gameObject.transform);
                 timeForNextAttack = Time.time + _attackDelay/_barrelNumber;
+                Debug.Log("shoot");
             }
         }
 

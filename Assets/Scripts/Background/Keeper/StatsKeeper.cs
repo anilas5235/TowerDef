@@ -7,7 +7,7 @@ namespace Background.Keeper
     {
         public static StatsKeeper Instance;
     
-        private int hp = 100, money =60000;
+        private int hp = 100, money =600;
         [SerializeField] private TextMeshProUGUI HPUI,MoneyUI;
 
         public int Money
