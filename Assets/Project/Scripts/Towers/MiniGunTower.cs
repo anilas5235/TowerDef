@@ -39,7 +39,7 @@ namespace Towers
             BarrelPivotGameObject.transform.localRotation = Quaternion.Euler(0,0,angle);
             if (Time.time >= timeForNextAttack)
             {
-                AudioManager.Instance.PlayShootSound();
+                AudioManager.Instance.PlayShootSound(4,7);
                 Projectile shoot = Pool.GetObjectFromPool().GetComponent<Projectile>();
                 shoot.ResetProjectileValues();
                 shoot.gameObject.transform.position = barrelTips[Random.Range(0,2)].position;

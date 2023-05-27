@@ -4906,7 +4906,7 @@ CircleCollider2D:
   m_UsedByComposite: 0
   m_Offset: {x: 0, y: 0}
   serializedVersion: 2
-  m_Radius: 0.5
+  m_Radius: 0.6
 --- !u!114 &6645119090830104044
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -4919,6 +4919,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d0d55fd49e1cb934d8816caef64efd1a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  blockRadius: 0.5
   upgradeLevel: {x: 0, y: 0, z: 0}
   placed: 0
   indicator: {fileID: 5219271899957719761}

@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using Background.Keeper;
 using Background.Pooling;
+using UIScripts;
 using UnityEngine;
 using Button = UnityEngine.UI.Button;
 
@@ -81,14 +82,15 @@ namespace Background.WaveManaging
         public void StartWave()
         {
             if (waveIsRunning) return;
-
-
             _currentWave++;
-            if (infiniteSpawn && _currentWave >= waves.Waves.Count)
+
+            if (_currentWave >= waves.Waves.Count)
             {
-                RestartWave();
+                if (infiniteSpawn) RestartWave();
+                else UIMaster.Instance.ChangeUIStateWithIndex(5);
                 return;
             }
+
 
             currentWaveData = waves.Waves[_currentWave].SpawnData.ToArray();
             currentStep = 0;

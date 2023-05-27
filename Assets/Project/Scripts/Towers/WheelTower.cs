@@ -42,9 +42,9 @@ namespace Towers
         {
             if (Time.time >= timeForNextAttack && Physics2D.OverlapCircle(transform.position, attackRadius, enemyLayer))
             {
+                AudioManager.Instance.PlayShootSound(1,3);
                 for (int i = 0; i < _numberOfBarrels; i++)
                 {
-                    AudioManager.Instance.PlayShootSound();
                     Projectile shoot = Pool.GetObjectFromPool().GetComponent<Projectile>();
                     shoot.ResetProjectileValues();
                     shoot.gameObject.transform.position = _barrels[i].transform.position;

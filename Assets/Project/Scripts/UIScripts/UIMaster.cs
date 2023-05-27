@@ -1,4 +1,5 @@
 using System;
+using Background.Audio;
 using Project.Scripts.Background;
 using UIScripts.ShopUi;
 using UnityEngine;
@@ -30,7 +31,10 @@ namespace UIScripts
             Pause = 1,
             Options = 2,
             AudioOptions = 3,
+            Lose = 5,
+            Winn = 6,
         }
+
         private void Start()
         {
             LoadFromSaveText();
@@ -44,7 +48,6 @@ namespace UIScripts
                 default:
                     throw new ArgumentOutOfRangeException();
             }
-            
         }
 
         private void Update()
@@ -65,6 +68,10 @@ namespace UIScripts
                     break;
                 case UIStates.AudioOptions: SaveOptionsToText(); windowControllers[2].SetActive(false); 
                     break;
+                case UIStates.Lose: windowControllers[3].SetActive(false);
+                    break;
+                case UIStates.Winn: windowControllers[4].SetActive(false);
+                    break;
                 default:
                     throw new ArgumentOutOfRangeException();
             }
@@ -73,13 +80,19 @@ namespace UIScripts
 
             switch (currentUIState)
             {
-                case UIStates.Normal: Time.timeScale = Shop.Instance.currentSpeedMode +1f;
+                case UIStates.Normal: Time.timeScale = Shop.Instance.CurrentSpeedMode;
                     break;
                 case UIStates.Pause: windowControllers[0].SetActive(true);
                     break;
                 case UIStates.Options:  windowControllers[1].SetActive(true);
                     break;
                 case UIStates.AudioOptions: windowControllers[2].SetActive(true);
+                    break;
+                case UIStates.Lose: windowControllers[3].SetActive(true); AudioManager.Instance.StopMusic();
+                    AudioManager.Instance.PlayLoseSound();
+                    break;
+                case UIStates.Winn: windowControllers[4].SetActive(true); AudioManager.Instance.StopMusic();
+                    AudioManager.Instance.PlayWinSound();
                     break;
                 default:
                     throw new ArgumentOutOfRangeException();
@@ -135,6 +148,8 @@ namespace UIScripts
                         1 => UIStates.Pause,
                         2 => UIStates.Options,
                         3 => UIStates.AudioOptions,
+                        4 => UIStates.Lose,
+                        5 => UIStates.Winn,
                         _ => throw new ArgumentException("No defined State for this Index")
                     };
                     ChangeUIStateInGame(state);
@@ -233,6 +248,6 @@ namespace UIScripts
             }
         }
 
-        public void ChangeScene(int id)=> SceneManager.LoadScene(id);
+        public static void ChangeScene(int id)=> SceneManager.LoadScene(id);
     }
 }

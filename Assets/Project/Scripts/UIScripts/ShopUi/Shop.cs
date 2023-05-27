@@ -8,8 +8,12 @@ namespace UIScripts.ShopUi
     {
         public static Shop Instance;
         [SerializeField] private TextMeshProUGUI speedButtonText;
-        
-        public int currentSpeedMode;
+
+        private int currentSpeedMode = 1;
+        public int CurrentSpeedMode
+        {
+            get => currentSpeedMode;
+        }
         public float priceMultiplier = 1f;
         private GameObject _currentlyHandledTower;
 

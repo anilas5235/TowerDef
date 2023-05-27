@@ -12,7 +12,7 @@ namespace Scrips.Towers
 
         private StandardProjectilePool Pool;
         private float _attackDelay = 1; 
-        private  int _attackDamage = 1, _multiHit = 2;
+        private  int _attackDamage = 1, _multiHit = 1;
         
         protected override void Start()
         {
@@ -47,7 +47,7 @@ namespace Scrips.Towers
             BarrelPivotGameObject.transform.localRotation = Quaternion.Euler(0,0,angle);
             if (Time.time >= timeForNextAttack)
             {
-                AudioManager.Instance.PlayShootSound();
+                AudioManager.Instance.PlayShootSound(11);
                 Projectile shoot = Pool.GetObjectFromPool().GetComponent<Projectile>();
                 shoot.ResetProjectileValues();
                 shoot.gameObject.transform.position = barrelTip.position;

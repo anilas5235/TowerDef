@@ -405,6 +405,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5c0e61247f5eb6549aafa429214672ee, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  blockRadius: 0.6
   upgradeLevel: {x: 0, y: 0, z: 0}
   placed: 0
   indicator: {fileID: 5219271899957719761}

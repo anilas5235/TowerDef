@@ -12,7 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d7ca83c19207e0146820aaf9d17339af, type: 3}
   m_Name: SniperTower
   m_EditorClassIdentifier: 
-  placingCosts: 400
+  placingCosts: 550
   upgradeCostsSlot0: 2c010000f401000020030000dc050000
   upgradeCostsSlot1: 960000002c0100002602000084030000
   upgradeCostsSlot2: 5e010000f401000020030000b0040000

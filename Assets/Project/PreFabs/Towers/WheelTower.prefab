@@ -1079,6 +1079,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b43395e7e94d3234787722841bef30e0, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  blockRadius: 0.6
   upgradeLevel: {x: 0, y: 0, z: 0}
   placed: 0
   indicator: {fileID: 5219271899957719761}

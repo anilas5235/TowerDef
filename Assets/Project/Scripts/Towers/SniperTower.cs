@@ -1,3 +1,4 @@
+using Background.Audio;
 using Towers;
 using UnityEngine;
 
@@ -30,6 +31,7 @@ namespace Scrips.Towers
             BarrelPivotGameObject.transform.localRotation = Quaternion.Euler(0,0,angle);
             if (Time.time >= timeForNextAttack)
             {
+                AudioManager.Instance.PlayShootSound(10);
                 int allowedHits = _multiHit;
                 RaycastHit2D[] possibleHitEnemies = Physics2D.RaycastAll(transform.position, targetDirection, 100f, enemyLayer);
                 Debug.DrawRay(transform.position, targetDirection.normalized*100, Color.red,1f);

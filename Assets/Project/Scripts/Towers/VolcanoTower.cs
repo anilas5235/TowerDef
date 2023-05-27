@@ -1,3 +1,4 @@
+using Background.Audio;
 using Background.Pooling;
 using Projectiles;
 using UnityEngine;
@@ -38,6 +39,7 @@ namespace Towers
         {
             if (Time.time >= timeForNextAttack)
             {
+                AudioManager.Instance.PlayShootSound(12);
                 ThrowLavaShoot();
                 timeForNextAttack = Time.time + _attackDelay;
             }

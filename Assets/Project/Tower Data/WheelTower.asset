@@ -12,7 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d7ca83c19207e0146820aaf9d17339af, type: 3}
   m_Name: WheelTower
   m_EditorClassIdentifier: 
-  placingCosts: 350
+  placingCosts: 380
   upgradeCostsSlot0: c8000000c20100000c0300001a040000
   upgradeCostsSlot1: af0000002c0100002602000020030000
   upgradeCostsSlot2: 960000002c010000f401000084030000

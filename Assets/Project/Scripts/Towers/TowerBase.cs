@@ -8,6 +8,7 @@ namespace Towers
 {
     public abstract class TowerBase : MonoBehaviour
     {
+        [SerializeField] private float blockRadius = 0.5f;
         public Vector3 upgradeLevel = Vector3.zero;
         public bool placed;
         public SpriteRenderer indicator; 
@@ -16,15 +17,10 @@ namespace Towers
         private int towerInvestmentsTillNow = 0;
 
         public int TowerInvestmentsTillNow
-        {
-            get => towerInvestmentsTillNow;
-
+        { get => towerInvestmentsTillNow;
             set
             {
-                if (value >0)
-                {
-                    towerInvestmentsTillNow += value;
-                }
+                if (value >0) towerInvestmentsTillNow += value;
             }
         }
             
@@ -65,7 +61,7 @@ namespace Towers
                 ownCollider.OverlapCollider(_placeableFilter, cols);               
 
                 Collider[] result = new Collider[1];
-                Physics.OverlapSphereNonAlloc(transform.position, 0.5f, result);
+                Physics.OverlapSphereNonAlloc(transform.position, blockRadius, result);
                 _nowPlaceable = result[0] == null && cols.Count <1 && StatsKeeper.Money >= towerData.placingCosts;
                
                 Vector3 mousePosition = _camera.ScreenToWorldPoint(Input.mousePosition);

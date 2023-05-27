@@ -1,4 +1,5 @@
 using TMPro;
+using UIScripts;
 using UnityEngine;
 
 namespace Background.Keeper
@@ -18,7 +19,9 @@ namespace Background.Keeper
         public int Hp
         {
             get => hp;
-            set { hp = value; UpdateUI(); }
+            set { hp = value; UpdateUI();
+                if (hp < 1) UIMaster.Instance.ChangeUIStateWithIndex(4);
+            }
         }
 
 
