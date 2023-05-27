@@ -25,7 +25,7 @@ namespace UIScripts
             Main = 1,
         }
 
-        private enum UIStates
+        public enum UIStates
         {
             Normal = 0,
             Pause = 1,
@@ -122,6 +122,19 @@ namespace UIScripts
                     break;
                 case UIStates.AudioOptions: windowControllers[2].SetActive(true);
                     break;
+            }
+        }
+
+        public void ChangeUIState(UIStates newState)
+        {
+            switch (scene)
+            {
+                case Scenes.Title: ChangeUIStateInTitle(newState);
+                    break;
+                case Scenes.Main: ChangeUIStateInGame(newState);
+                    break;
+                default:
+                    throw new ArgumentOutOfRangeException();
             }
         }
         
@@ -248,6 +261,6 @@ namespace UIScripts
             }
         }
 
-        public static void ChangeScene(int id)=> SceneManager.LoadScene(id);
+        public void ChangeScene(int id)=> SceneManager.LoadScene(id);
     }
 }

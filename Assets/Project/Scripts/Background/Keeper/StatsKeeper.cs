@@ -39,8 +39,8 @@ namespace Background.Keeper
 
         private void UpdateUI()
         {
-            if(HPUI )  HPUI.text = "Lives :" + hp ;
-            if(MoneyUI)  MoneyUI.text = "Money :" + Money ;
+            if(HPUI )  HPUI.text = $"{hp}" ;
+            if(MoneyUI)  MoneyUI.text = $"{Money}" ;
         }
     }
 }
